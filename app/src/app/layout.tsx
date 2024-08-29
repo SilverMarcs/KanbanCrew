@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
-import "./globals.css";
+import { Karla as FontSans } from "next/font/google";
+import "../styles/globals.css";
+import Sidebar from "@/components/Sidebar";
 
 import { cn } from "@/lib/utils";
 
@@ -23,11 +24,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased flex",
           fontSans.variable
         )}
       >
-        {children}
+        {/* Sidebar */}
+        <Sidebar />
+
+        {/* Main content area */}
+        <div className="flex-1 p-4">{children}</div>
       </body>
     </html>
   );
