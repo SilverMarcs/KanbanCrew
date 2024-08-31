@@ -32,9 +32,9 @@ export const getTagColor = (tag: TaskCardProps["tag"]) => {
 export const getPriorityColor = (priority: TaskCardProps["priority"]) => {
   switch (priority) {
     case "Important":
-      return { bgColor: "bg-orange-400", textColor: "text-orange-800" };
+      return { bgColor: "bg-orange-300", textColor: "text-orange-600" };
     case "Urgent":
-      return { bgColor: "bg-red-400", textColor: "text-red-800" };
+      return { bgColor: "bg-red-300", textColor: "text-red-600" };
     case "Low":
       return { bgColor: "bg-green-300", textColor: "text-green-600" };
     default:

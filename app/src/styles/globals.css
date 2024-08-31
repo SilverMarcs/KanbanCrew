@@ -70,6 +70,9 @@
     color: #fce7e7;
     text-transform: uppercase;
   }
+  p {
+    @apply text-foreground;
+  }
 }
 
 .sidebar {
