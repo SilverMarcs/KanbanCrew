@@ -2,8 +2,6 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -15,22 +13,48 @@ import { getTagColor, getPriorityColor } from "@/lib/utils";
 export interface TaskCardProps {
   index: number;
   title: string;
-  storyPoints: number;
-  priority: "Important" | "Urgent" | "Low";
+  storyPoints: number; // Need to ensure it's between 1 and 10 I think
+  priority: Priority;
   avatarUrl: string;
-  tag:
-    | "Frontend"
-    | "Backend"
-    | "API"
-    | "Database"
-    | "Testing"
-    | "UI/UX"
-    | "Framework";
+  tag: Tag;
   assignee: string;
   description: string;
-  projectStage: string;
-  status: string;
-  type: string;
+  projectStage: ProjectStage;
+  status: Status;
+  type: Type;
+}
+
+export enum Priority {
+  Important = "Important",
+  Urgent = "Urgent",
+  Low = "Low",
+}
+
+export enum Tag {
+  Frontend = "Frontend",
+  Backend = "Backend",
+  API = "API",
+  Database = "Database",
+  Testing = "Testing",
+  "UI/UX" = "UI/UX",
+  Framework = "Framework",
+}
+
+export enum ProjectStage {
+  Planning = "Planning",
+  Testing = "Testing",
+  Integration = "Integration",
+}
+
+export enum Status {
+  NotStarted = "Not Started",
+  InProgress = "In Progress",
+  Done = "Done",
+}
+
+export enum Type {
+  Bug = "Bug",
+  UserStory = "User Story",
 }
 
 export const TaskCard = ({
