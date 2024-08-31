@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { EllipsisIcon } from "lucide-react";
+import { BotIcon, EllipsisIcon } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { getTagColor, getPriorityColor } from "@/lib/utils";
 
@@ -16,7 +16,7 @@ export interface TaskCardProps {
   index: number;
   title: string;
   storyPoints: number;
-  priority: string;
+  priority: "Important" | "Urgent" | "Low";
   avatarUrl: string;
   tag:
     | "Frontend"
@@ -26,6 +26,11 @@ export interface TaskCardProps {
     | "Testing"
     | "UI/UX"
     | "Framework";
+  assignee: string;
+  description: string;
+  projectStage: string;
+  status: string;
+  type: string;
 }
 
 export const TaskCard = ({
@@ -35,6 +40,11 @@ export const TaskCard = ({
   priority,
   avatarUrl,
   tag,
+  assignee,
+  description,
+  projectStage,
+  status,
+  type,
 }: TaskCardProps) => {
   const { bgColor: tagBgColor, textColor: tagTextColor } = getTagColor(tag);
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
@@ -58,7 +68,9 @@ export const TaskCard = ({
             <div className="text-gray-500">Story point - {storyPoints}</div>
             <Avatar className="mt-6">
               <AvatarImage src={avatarUrl} />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>
+                <BotIcon />
+              </AvatarFallback>
             </Avatar>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
@@ -71,13 +83,20 @@ export const TaskCard = ({
         </Card>
       </DialogTrigger>
       {/* Dialog content */}
-      <DialogContent className="bg-white">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="bg-white max-w-3xl">
         <DialogDescription>
           <TaskCardExpanded
-            {...{ index, title, storyPoints, priority, avatarUrl, tag }}
+            index={index}
+            title={title}
+            storyPoints={storyPoints}
+            priority={priority}
+            avatarUrl={avatarUrl}
+            tag={tag}
+            assignee={assignee}
+            description={description}
+            projectStage={projectStage}
+            status={status}
+            type={type}
           />
         </DialogDescription>
       </DialogContent>
