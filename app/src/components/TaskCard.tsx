@@ -2,65 +2,60 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { EllipsisIcon } from "lucide-react";
+import { BotIcon, EllipsisIcon } from "lucide-react";
+import { TaskCardExpanded } from "./TaskCardExpanded";
+import { getTagColor, getPriorityColor } from "@/lib/utils";
 
 export interface TaskCardProps {
   index: number;
   title: string;
-  storyPoints: number;
-  priority: string;
+  storyPoints: number; // Need to ensure it's between 1 and 10 I think
+  priority: Priority;
   avatarUrl: string;
-  tag:
-    | "Frontend"
-    | "Backend"
-    | "API"
-    | "Database"
-    | "Testing"
-    | "UI/UX"
-    | "Framework";
+  tag: Tag;
+  assignee: string;
+  description: string;
+  projectStage: ProjectStage;
+  status: Status;
+  type: Type;
 }
 
-// Function to map tags to their respective colors
-const getTagColor = (tag: TaskCardProps["tag"]) => {
-  switch (tag) {
-    case "Frontend":
-      return { bgColor: "bg-blue-300", textColor: "text-blue-600" };
-    case "Backend":
-      return { bgColor: "bg-green-300", textColor: "text-green-600" };
-    case "API":
-      return { bgColor: "bg-yellow-300", textColor: "text-yellow-600" };
-    case "Database":
-      return { bgColor: "bg-red-300", textColor: "text-red-600" };
-    case "Testing":
-      return { bgColor: "bg-purple-300", textColor: "text-purple-600" };
-    case "UI/UX":
-      return { bgColor: "bg-pink-300", textColor: "text-pink-600" };
-    case "Framework":
-      return { bgColor: "bg-indigo-300", textColor: "text-indigo-600" };
-    default:
-      return { bgColor: "bg-gray-300", textColor: "text-gray-600" };
-  }
-};
+export enum Priority {
+  Important = "Important",
+  Urgent = "Urgent",
+  Low = "Low",
+}
 
-// Function to map priorities to their respective colors
-const getPriorityColor = (priority: TaskCardProps["priority"]) => {
-  switch (priority) {
-    case "Important":
-      return { bgColor: "bg-orange-400", textColor: "text-orange-800" };
-    case "Urgent":
-      return { bgColor: "bg-red-400", textColor: "text-red-800" };
-    case "Low":
-      return { bgColor: "bg-green-300", textColor: "text-green-600" };
-    default:
-      return { bgColor: "bg-gray-300", textColor: "text-gray-600" };
-  }
-};
+export enum Tag {
+  Frontend = "Frontend",
+  Backend = "Backend",
+  API = "API",
+  Database = "Database",
+  Testing = "Testing",
+  "UI/UX" = "UI/UX",
+  Framework = "Framework",
+}
+
+export enum ProjectStage {
+  Planning = "Planning",
+  Testing = "Testing",
+  Integration = "Integration",
+}
+
+export enum Status {
+  NotStarted = "Not Started",
+  InProgress = "In Progress",
+  Done = "Done",
+}
+
+export enum Type {
+  Bug = "Bug",
+  UserStory = "User Story",
+}
 
 export const TaskCard = ({
   index,
@@ -69,8 +64,13 @@ export const TaskCard = ({
   priority,
   avatarUrl,
   tag,
+  assignee,
+  description,
+  projectStage,
+  status,
+  type,
 }: TaskCardProps) => {
-  const { bgColor, textColor } = getTagColor(tag);
+  const { bgColor: tagBgColor, textColor: tagTextColor } = getTagColor(tag);
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
@@ -92,12 +92,14 @@ export const TaskCard = ({
             <div className="text-gray-500">Story point - {storyPoints}</div>
             <Avatar className="mt-6">
               <AvatarImage src={avatarUrl} />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>
+                <BotIcon />
+              </AvatarFallback>
             </Avatar>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
             <div
-              className={`${bgColor} ${textColor} py-2 px-4 rounded-3xl text-xs font-bold absolute bottom-3 right-3`}
+              className={`${tagBgColor} ${tagTextColor} py-2 px-4 rounded-3xl text-xs font-bold absolute bottom-3 right-3`}
             >
               {tag}
             </div>
@@ -105,12 +107,21 @@ export const TaskCard = ({
         </Card>
       </DialogTrigger>
       {/* Dialog content */}
-      <DialogContent className="bg-white">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="bg-white max-w-3xl">
         <DialogDescription>
-          This is the detailed description of card {title}.
+          <TaskCardExpanded
+            index={index}
+            title={title}
+            storyPoints={storyPoints}
+            priority={priority}
+            avatarUrl={avatarUrl}
+            tag={tag}
+            assignee={assignee}
+            description={description}
+            projectStage={projectStage}
+            status={status}
+            type={type}
+          />
         </DialogDescription>
       </DialogContent>
     </Dialog>
