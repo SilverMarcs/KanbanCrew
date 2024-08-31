@@ -1,17 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 import { collection, getDocs, getDoc } from "firebase/firestore"; // Correct imports
-import { db } from "../lib/firebaseConfig"; // Adjust the path if necessary
-import { TaskCard, type TaskCardProps } from "@/components/TaskCard";
+import { db } from "@/lib/firebaseConfig"; // Adjust the path if necessary
+import { Task } from '@/models/Task';
 import { CreateTaskCard } from "@/components/CreateTaskCard";
+import { TaskCard } from "@/components/TaskCard";
 
 export default function Home() {
-  const [tasks, setTasks] = useState<TaskCardProps[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const querySnapshot = await getDocs(collection(db, "tasks")); // Replace "tasks" with your actual collection name
-      const tasksData: TaskCardProps[] = [];
+      const querySnapshot = await getDocs(collection(db, "tasks")); // "tasks" is name of the collection
+      const tasksData: Task[] = [];
 
       // Loop through each document in the collection (each document represents a task)
       for (const docSnapshot of querySnapshot.docs) {

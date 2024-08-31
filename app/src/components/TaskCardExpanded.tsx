@@ -1,6 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { TaskCardProps } from "./TaskCard";
-import { getTagColor, getPriorityColor } from "@/lib/utils";
+import { Task } from "@/models/Task";
+import { getTagColor } from "@/models/Tag";
+import { getPriorityColor } from "@/models/Priority";
 
 export const TaskCardExpanded = ({
   title,
@@ -13,7 +14,7 @@ export const TaskCardExpanded = ({
   status,
   type,
   assignee,
-}: TaskCardProps) => {
+}: Task) => {
   const { bgColor, textColor } = getTagColor(tag);
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);

@@ -8,54 +8,9 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { BotIcon, EllipsisIcon } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
-import { getTagColor, getPriorityColor } from "@/lib/utils";
-
-export interface TaskCardProps {
-  index: number;
-  title: string;
-  storyPoints: number; // Need to ensure it's between 1 and 10 I think
-  priority: Priority;
-  avatarUrl: string;
-  tag: Tag;
-  assignee: string;
-  description: string;
-  projectStage: ProjectStage;
-  status: Status;
-  type: Type;
-}
-
-export enum Priority {
-  Important = "Important",
-  Urgent = "Urgent",
-  Low = "Low",
-}
-
-export enum Tag {
-  Frontend = "Frontend",
-  Backend = "Backend",
-  API = "API",
-  Database = "Database",
-  Testing = "Testing",
-  "UI/UX" = "UI/UX",
-  Framework = "Framework",
-}
-
-export enum ProjectStage {
-  Planning = "Planning",
-  Testing = "Testing",
-  Integration = "Integration",
-}
-
-export enum Status {
-  NotStarted = "Not Started",
-  InProgress = "In Progress",
-  Done = "Done",
-}
-
-export enum Type {
-  Bug = "Bug",
-  UserStory = "User Story",
-}
+import { Task } from "@/models/Task";
+import { getTagColor } from "@/models/Tag";
+import { getPriorityColor } from "@/models/Priority";
 
 export const TaskCard = ({
   index,
@@ -69,7 +24,7 @@ export const TaskCard = ({
   projectStage,
   status,
   type,
-}: TaskCardProps) => {
+}: Task) => {
   const { bgColor: tagBgColor, textColor: tagTextColor } = getTagColor(tag);
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
