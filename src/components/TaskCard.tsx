@@ -9,8 +9,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { BotIcon, EllipsisIcon } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
-import { getTagColor } from "@/models/Tag";
 import { getPriorityColor } from "@/models/Priority";
+import { TagBadge } from "@/components/TagBadge";
 
 export const TaskCard = ({
   index,
@@ -25,7 +25,6 @@ export const TaskCard = ({
   status,
   type,
 }: Task) => {
-  const { bgColor: tagBgColor, textColor: tagTextColor } = getTagColor(tag);
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
@@ -53,11 +52,7 @@ export const TaskCard = ({
             </Avatar>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
-            <div
-              className={`${tagBgColor} ${tagTextColor} py-2 px-4 rounded-3xl text-xs font-bold absolute bottom-3 right-3`}
-            >
-              {tag}
-            </div>
+            <TagBadge tag={tag} />
           </CardFooter>
         </Card>
       </DialogTrigger>

@@ -1,30 +1,31 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import { collection, getDocs, getDoc, DocumentReference } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { Task } from '@/models/Task';
+import { Task } from "@/models/Task";
 import { CreateTaskCard } from "@/components/CreateTaskCard";
 import { TaskCard } from "@/components/TaskCard";
+import { TagFilter } from "@/components/TagFilter";
+import { Tag } from "@/models/Tag";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   useEffect(() => {
     const fetchTasks = async () => {
       const querySnapshot = await getDocs(collection(db, "tasks")); // "tasks" is name of the collection
       const tasksData: Task[] = [];
 
-      // Loop through each document in the collection (each document represents a task)
       for (const docSnapshot of querySnapshot.docs) {
         const data = docSnapshot.data();
 
         let assigneeName = "Unknown Assignee";
 
-        // Check if assignee is a DocumentReference
         if (data.assignee instanceof DocumentReference) {
           const assigneeDoc = await getDoc(data.assignee);
           if (assigneeDoc.exists()) {
-            // Get the assignee's first and last name
             const assigneeData = assigneeDoc.data() as {
               firstName: string;
               lastName: string;
@@ -54,16 +55,29 @@ export default function Home() {
       }
 
       setTasks(tasksData);
+      setFilteredTasks(tasksData);
     };
 
     fetchTasks();
   }, []);
 
+  useEffect(() => {
+    if (selectedTags.length > 0) {
+      setFilteredTasks(tasks.filter((task) => selectedTags.includes(task.tag)));
+    } else {
+      setFilteredTasks(tasks);
+    }
+  }, [selectedTags, tasks]);
+
   return (
     <div className="p-16">
-      <h1 className="text-5xl font-bold">Product Backlog</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-5xl font-bold">Product Backlog</h1>
+        <TagFilter selectedTags={selectedTags} onTagChange={setSelectedTags} />
+      </div>
+
       <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
-        {tasks.map((task, index) => (
+        {filteredTasks.map((task, index) => (
           <TaskCard
             key={index}
             index={task.index}
