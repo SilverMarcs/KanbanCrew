@@ -1,7 +1,7 @@
-"use client";
+"use client"
 import { useEffect, useState } from "react";
-import { collection, getDocs, getDoc } from "firebase/firestore"; // Correct imports
-import { db } from "@/lib/firebaseConfig"; // Adjust the path if necessary
+import { collection, getDocs, getDoc, DocumentReference } from "firebase/firestore";
+import { db } from "@/lib/firebaseConfig";
 import { Task } from '@/models/Task';
 import { CreateTaskCard } from "@/components/CreateTaskCard";
 import { TaskCard } from "@/components/TaskCard";
@@ -21,10 +21,7 @@ export default function Home() {
         let assigneeName = "Unknown Assignee";
 
         // Check if assignee is a DocumentReference
-        if (
-          data.assignee &&
-          data.assignee.constructor.name === "DocumentReference"
-        ) {
+        if (data.assignee instanceof DocumentReference) {
           const assigneeDoc = await getDoc(data.assignee);
           if (assigneeDoc.exists()) {
             // Get the assignee's first and last name
