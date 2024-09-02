@@ -2,6 +2,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
 import { getTagColor } from "@/models/Tag";
 import { getPriorityColor } from "@/models/Priority";
+import { TagBadge } from "@/components/TagBadge";
 
 export const TaskCardExpanded = ({
   title,
@@ -15,7 +16,6 @@ export const TaskCardExpanded = ({
   type,
   assignee,
 }: Task) => {
-  const { bgColor, textColor } = getTagColor(tag);
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
@@ -27,11 +27,7 @@ export const TaskCardExpanded = ({
         >
           {priority}
         </div>
-        <div
-          className={`${bgColor} ${textColor} py-1 px-4 rounded-3xl text-xs font-bold bottom-3 right-3`}
-        >
-          {tag}
-        </div>
+        <TagBadge tag={tag} />
       </div>
       <div className="flex space-x-2 align-middle items-center mt-2">
         <p className="text-3xl text-black font-bold ">{title}</p>
