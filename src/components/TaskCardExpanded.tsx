@@ -27,7 +27,7 @@ export const TaskCardExpanded = ({
     <div className="text-start px-3">
       <div className="w-full flex space-x-2">
         <div
-          className={`${priorityBgColor} ${priorityTextColor} flex py-3 px-4 rounded-md w-fit text-xs font-bold`}
+          className={`${priorityBgColor} ${priorityTextColor} flex py-2 px-4 rounded-md w-fit text-xs font-bold`}
         >
           {priority}
         </div>
