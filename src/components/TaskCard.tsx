@@ -52,7 +52,9 @@ export const TaskCard = ({
             </Avatar>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
-            <TagBadge tag={tag} />
+            <div className="absolute bottom-3 right-3">
+              <TagBadge tag={tag} />
+            </div>
           </CardFooter>
         </Card>
       </DialogTrigger>
