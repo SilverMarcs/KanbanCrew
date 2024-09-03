@@ -9,14 +9,15 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { BotIcon, EllipsisIcon } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
-import { getPriorityColor } from "@/models/Priority";
+import { getPriorityColor, Priority } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
+import { useState } from "react";
 
 export const TaskCard = ({
   index,
   title,
   storyPoints,
-  priority,
+  priority: initialPriority,
   avatarUrl,
   tag,
   assignee,
@@ -25,6 +26,7 @@ export const TaskCard = ({
   status,
   type,
 }: Task) => {
+  const [priority, setPriority] = useState<Priority>(initialPriority);
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
@@ -66,6 +68,7 @@ export const TaskCard = ({
             title={title}
             storyPoints={storyPoints}
             priority={priority}
+            setPriority={setPriority}
             avatarUrl={avatarUrl}
             tag={tag}
             assignee={assignee}
