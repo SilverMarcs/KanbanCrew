@@ -10,7 +10,7 @@ export const TagBadge: React.FC<TagBadgeProps> = ({ tag }) => {
 
     return (
         <div
-            className={`${bgColor} ${textColor} py-2 px-4 rounded-3xl text-xs font-bold`}
+            className={`${bgColor} ${textColor} py-3 px-4 rounded-3xl text-xs font-bold`}
         >
             {tag}
         </div>
