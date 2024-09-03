@@ -1,13 +1,16 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
 import { getTagColor } from "@/models/Tag";
-import { getPriorityColor } from "@/models/Priority";
+import { getPriorityColor, Priority } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
+import { DropdownPriority } from "./PriorityDropdown";
+import { useState } from "react";
 
 export const TaskCardExpanded = ({
   title,
   storyPoints,
   priority,
+  setPriority, // prop
   avatarUrl,
   tag,
   description,
@@ -15,18 +18,20 @@ export const TaskCardExpanded = ({
   status,
   type,
   assignee,
-}: Task) => {
+}: Task & { setPriority: (priority: Priority) => void }) => {
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
+  const [, setSelectedTags] = useState<Priority[]>([]);
   return (
     <div className="text-start px-3">
       <div className="w-full flex space-x-2">
         <div
-          className={`${priorityBgColor} ${priorityTextColor} py-1 px-3 rounded-md w-fit text-xs font-bold`}
+          className={`${priorityBgColor} ${priorityTextColor} flex py-3 px-4 rounded-md w-fit text-xs font-bold`}
         >
           {priority}
         </div>
+        <DropdownPriority priority={priority} setPriority={setPriority} ></DropdownPriority>
         <TagBadge tag={tag} />
       </div>
       <div className="flex space-x-2 align-middle items-center mt-2">
