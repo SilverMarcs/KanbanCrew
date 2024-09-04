@@ -5,6 +5,7 @@ import { getPriorityColor, Priority } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
 import { DropdownTag } from "./TagDropdown";
 import { useState } from "react";
+import { DropdownPriority } from "./PriorityDropdown";
 
 export const TaskCardExpanded = ({
   title,
@@ -26,11 +27,9 @@ export const TaskCardExpanded = ({
 
   return (
     <div className="text-start px-3">
-      <div className="w-full flex space-x-2">
-        <div
-          className={`${priorityBgColor} ${priorityTextColor} flex py-2 px-4 rounded-md w-fit text-xs font-bold`}
-        >
-          {priority}
+      <div className="w-full flex space-x-2 place-items">
+        <div>
+          <DropdownPriority priority={priority} setPriority={setPriority} ></DropdownPriority>
         </div>
         <div className="flex space-x-2">
             {tags.map((tag,i) => (

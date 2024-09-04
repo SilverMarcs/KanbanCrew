@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Priority } from "@/models/Priority";
+import { getPriorityColor, Priority } from "@/models/Priority";
 import { ChevronDown } from "lucide-react";
 
 export function DropdownPriority({
@@ -25,14 +25,17 @@ export function DropdownPriority({
     setPriority(newPriority);
   };
 
+  const { bgColor: priorityBgColor, textColor: priorityTextColor } =
+    getPriorityColor(priority);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          size="icon"
-          className="h-6 w-6 mt-1 bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors"
-        >
-          <ChevronDown className="h-4 w-4 text-black" />
+          className={`${priorityBgColor} ${priorityTextColor} flex px-3 rounded-md w-fit text-xs font-bold`}
+          >
+            {priority}
+            <ChevronDown className="ml-2" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
