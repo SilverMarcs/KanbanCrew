@@ -15,14 +15,14 @@ export default function Home() {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const querySnapshot = await getDocs(collection(db, "tasks")); // "tasks" is name of the collection
+      const querySnapshot = await getDocs(collection(db, "tasks"));
       const tasksData: Task[] = [];
-
+  
       for (const docSnapshot of querySnapshot.docs) {
         const data = docSnapshot.data();
-
+  
         let assigneeName = "Unknown Assignee";
-
+  
         if (data.assignee instanceof DocumentReference) {
           const assigneeDoc = await getDoc(data.assignee);
           if (assigneeDoc.exists()) {
@@ -38,8 +38,9 @@ export default function Home() {
             data.assignee
           );
         }
-
+  
         tasksData.push({
+          id: docSnapshot.id,
           index: data.index,
           title: data.title,
           storyPoints: data.storyPoints,
@@ -53,13 +54,13 @@ export default function Home() {
           type: data.type,
         });
       }
-
+  
       setTasks(tasksData);
       setFilteredTasks(tasksData);
     };
-
+  
     fetchTasks();
-  }, []);
+  }, []);  
 
   // useEffect(() => {
   //   if (selectedTags.length > 0) {
@@ -79,6 +80,7 @@ export default function Home() {
       <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
         {filteredTasks.map((task, index) => (
           <TaskCard
+            id={task.id}
             key={index}
             index={task.index}
             title={task.title}

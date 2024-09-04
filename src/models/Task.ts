@@ -5,9 +5,10 @@ import { Tag } from "./Tag";
 import { Type } from "./Type";
 
 export interface Task {
+    id: string;
     index: number;
     title: string;
-    storyPoints: number; // Need to ensure it's between 1 and 10 I think
+    storyPoints: number;
     priority: Priority;
     avatarUrl: string;
     tags: Tag[];
@@ -16,4 +17,4 @@ export interface Task {
     projectStage: ProjectStage;
     status: Status;
     type: Type;
-}
+  }
