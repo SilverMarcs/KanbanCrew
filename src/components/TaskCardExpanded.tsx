@@ -6,7 +6,7 @@ import { TagDropdown } from "./TagDropdown";
 import { useState } from "react";
 import { PriorityDropdown } from "./PriorityDropdown";
 import { Priority } from "@/models/Priority";
-import HistoryLog from "@/components/HistoryLog";
+import HistoryLogs from "@/components/HistoryLogs";
 
 export const TaskCardExpanded = ({
   id,
