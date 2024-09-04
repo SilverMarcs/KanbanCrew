@@ -3,6 +3,7 @@ import { Task } from "@/models/Task";
 import { getTagColor } from "@/models/Tag";
 import { getPriorityColor } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
+import { SliderDemo } from "./StoryPointsSlider";
 
 export const TaskCardExpanded = ({
   title,
@@ -36,6 +37,7 @@ export const TaskCardExpanded = ({
       <div className="flex space-x-2">
         <p className="text-gray-500 font-bold">{storyPoints} SP</p>
         <p className="font-bold">- {status}</p>
+        <SliderDemo />
       </div>
       <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
       <div className="mt-2 flex space-x-2 w-full items-center">
