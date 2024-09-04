@@ -27,7 +27,7 @@ export const TaskCardExpanded = ({
   return (
     <div className="px-3">
       <div className="flex">
-        <div className="text-start">
+        <div className="text-start min-w-96">
           <div className="w-full flex items-center space-x-2">
             <PriorityDropdown
               priority={priority}
@@ -56,7 +56,7 @@ export const TaskCardExpanded = ({
             <p className="text-gray-600">{description}</p>
           </div>
         </div>
-        <div className="mt-14 ml-10">
+        <div className="mt-14">
           <HistoryLogs />
         </div>
       </div>
