@@ -1,15 +1,17 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
 import { getTagColor, Tag } from "@/models/Tag";
-import { getPriorityColor } from "@/models/Priority";
+import { getPriorityColor, Priority } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
 import { DropdownTag } from "./TagDropdown";
 import { useState } from "react";
+import { DropdownPriority } from "./PriorityDropdown";
 
 export const TaskCardExpanded = ({
   title,
   storyPoints,
   priority,
+  setPriority, // prop
   avatarUrl,
   tags,
   description,
@@ -17,7 +19,7 @@ export const TaskCardExpanded = ({
   status,
   type,
   assignee,
-}: Task) => {
+}: Task & { setPriority: (priority: Priority) => void }) => {
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
@@ -25,11 +27,9 @@ export const TaskCardExpanded = ({
 
   return (
     <div className="text-start px-3">
-      <div className="w-full flex space-x-2">
-        <div
-          className={`${priorityBgColor} ${priorityTextColor} py-1 px-3 rounded-md w-fit text-xs font-bold`}
-        >
-          {priority}
+      <div className="w-full flex space-x-2 place-items">
+        <div>
+          <DropdownPriority priority={priority} setPriority={setPriority} ></DropdownPriority>
         </div>
         <div className="flex space-x-2">
             {tags.map((tag,i) => (
