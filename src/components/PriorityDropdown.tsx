@@ -1,9 +1,10 @@
 import * as React from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuRadioItemProps } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -12,8 +13,6 @@ import {
 import { Priority } from "@/models/Priority";
 import { ChevronDown } from "lucide-react";
 
-type Checked = DropdownMenuCheckboxItemProps["checked"];
-
 export function DropdownPriority({
   priority,
   setPriority,
@@ -21,38 +20,35 @@ export function DropdownPriority({
   priority: Priority;
   setPriority: (priority: Priority) => void;
 }) {
-  const handlePriorityChange = (newPriority: Priority) => {
+  const handlePriorityChange = (value: string) => {
+    const newPriority = value as Priority; // Convert string to Priority enum
     setPriority(newPriority);
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" className="bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors">
-          <ChevronDown className="h-4 w-4 text-black"/>
+        <Button
+          size="icon"
+          className="h-6 w-6 mt-1 bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors"
+        >
+          <ChevronDown className="h-4 w-4 text-black" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent>
         <DropdownMenuLabel>Task Priority</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuCheckboxItem
-          checked={priority === Priority.Important}
-          onCheckedChange={() => handlePriorityChange(Priority.Important)}
-        >
-          Important
-        </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem
-          checked={priority === Priority.Urgent}
-          onCheckedChange={() => handlePriorityChange(Priority.Urgent)}
-        >
-          Urgent
-        </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem
-          checked={priority === Priority.Low}
-          onCheckedChange={() => handlePriorityChange(Priority.Low)}
-        >
-          Low
-        </DropdownMenuCheckboxItem>
+        <DropdownMenuRadioGroup value={priority} onValueChange={handlePriorityChange}>
+          <DropdownMenuRadioItem value={Priority.Important}>
+            Important
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Priority.Urgent}>
+            Urgent
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Priority.Low}>
+            Low
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
