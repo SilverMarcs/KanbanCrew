@@ -5,6 +5,7 @@ import { db } from "@/lib/firebaseConfig";
 import { Member } from "@/models/Member";
 import { HistoryLog } from "@/models/HistoryLog";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const HistoryLogs: React.FC = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -36,7 +37,7 @@ const HistoryLogs: React.FC = () => {
     if (members.length > 0) {
       // Ensure members are loaded before creating history logs
       const newHistoryLog: HistoryLog[] = [];
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 6; i++) {
         newHistoryLog.push({
           id: i.toString(),
           member: members[i % members.length], // Rotate through members
@@ -78,10 +79,10 @@ const HistoryLogs: React.FC = () => {
         <History size={28} />
         <div className="font-semibold text-lg">History log</div>
       </div>
-      <div className="mt-2 ml-16 flex flex-col">
+      <ScrollArea className="mt-2 ml-16 flex flex-col max-h-60 min-w-full">
         {historyLog.map((log: HistoryLog) => (
           <div key={log.id} className="flex space-x-2">
-            <div className="h-12 w-0.5 bg-gray-400 opacity-80"></div>
+            <div className="h-12 w-0.5 mr-0.5 bg-gray-400 opacity-80"></div>
             <Avatar>
               <AvatarImage src={""} />
               <AvatarFallback>
@@ -97,7 +98,7 @@ const HistoryLogs: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
+      </ScrollArea>
     </div>
   );
 };
