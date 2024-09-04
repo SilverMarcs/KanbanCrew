@@ -1,18 +1,17 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
 import { getTagColor, Tag } from "@/models/Tag";
-import { getPriorityColor, Priority } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
-import { DropdownTag } from "./TagDropdown";
+import { TagDropdown } from "./TagDropdown";
 import { useState } from "react";
 import { PriorityDropdown } from "./PriorityDropdown";
+import { Priority } from "@/models/Priority";
 
 export const TaskCardExpanded = ({
   id,
   title,
   storyPoints,
-  priority,
-  setPriority,
+  priority: initialPriority,
   avatarUrl,
   tags,
   description,
@@ -20,30 +19,17 @@ export const TaskCardExpanded = ({
   status,
   type,
   assignee,
-}: Task & { setPriority: (priority: Priority) => void }) => {
-  const { bgColor: priorityBgColor, textColor: priorityTextColor } =
-    getPriorityColor(priority);
-
+}: Task) => {
+  const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
 
   return (
     <div className="text-start px-3">
-      <div className="w-full flex space-x-2 place-items">
-        <div>
-          <PriorityDropdown
-            priority={priority}
-            setPriority={setPriority}
-            taskId={id}
-          />
-        </div>
-        <div className="flex space-x-2">
-          {tags.map((tag, i) => (
-            <TagBadge key={i} tag={tag} />
-          ))}
-        </div>
-        <DropdownTag
-          selectedTags={selectedTags}
-          onTagChange={setSelectedTags}
+      <div className="w-full flex items-center space-x-2">
+        <PriorityDropdown
+          priority={priority}
+          setPriority={setPriority}
+          taskId={id}
         />
       </div>
       <div className="flex space-x-2 align-middle items-center mt-2">
@@ -66,9 +52,21 @@ export const TaskCardExpanded = ({
         <p className="font-bold text-xl">Description</p>
         <p className="text-gray-600">{description}</p>
       </div>
-      <div className="mt-20 flex space-x-3">
-        <p className="font-semobold text-gray-600">Project stage</p>
-        <p className="font-bold">{projectStage}</p>
+      <div className="mt-20 flex justify-between items-center">
+        <div className="flex space-x-3 items-center">
+          <p className="font-semobold text-gray-600">Project stage</p>
+          <p className="font-bold">{projectStage}</p>
+        </div>
+        <div className="flex items-center space-x-2">
+          {selectedTags.map((tag, i) => (
+            <TagBadge key={i} tag={tag} />
+          ))}
+          <TagDropdown
+            selectedTags={selectedTags}
+            onTagChange={setSelectedTags}
+            taskId={id}
+          />
+        </div>
       </div>
     </div>
   );
