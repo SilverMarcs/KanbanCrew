@@ -74,11 +74,11 @@ const HistoryLogs: React.FC = () => {
 
   return (
     <div>
-      <div className="flex space-x-2 place-items-center justify-center">
+      <div className="flex space-x-2 ml-12">
         <History size={28} />
         <div className="font-semibold text-lg">History log</div>
       </div>
-      <div className="mt-2 ml-20 mr-2 flex flex-col place-items-center justify-center">
+      <div className="mt-2 ml-16 flex flex-col">
         {historyLog.map((log: HistoryLog) => (
           <div key={log.id} className="flex space-x-2">
             <div className="h-12 w-0.5 bg-gray-400 opacity-80"></div>
@@ -89,9 +89,9 @@ const HistoryLogs: React.FC = () => {
                 {log.member.lastName[0]}
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-28">
               <div className="text-xs">{getRelativeTime(log.timestamp)}</div>
-              <div className="text-black font-bold text-start">
+              <div className="text-black font-bold">
                 {log.member.firstName} {log.member.lastName}
               </div>
             </div>
