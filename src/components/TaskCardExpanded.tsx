@@ -1,11 +1,12 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
-import { getTagColor, Tag } from "@/models/Tag";
+import { Tag } from "@/models/Tag";
 import { TagBadge } from "@/components/TagBadge";
 import { TagDropdown } from "./TagDropdown";
 import { useState } from "react";
 import { PriorityDropdown } from "./PriorityDropdown";
 import { Priority } from "@/models/Priority";
+import HistoryLog from "@/components/HistoryLog";
 
 export const TaskCardExpanded = ({
   id,
