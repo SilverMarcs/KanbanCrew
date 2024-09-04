@@ -17,7 +17,7 @@ import { db } from "@/lib/firebaseConfig";
 interface TagDropdownProps {
   selectedTags: Tag[];
   onTagChange: (tags: Tag[]) => void;
-  taskId: string;
+  taskId?: string; // Make taskId optional
 }
 
 export const TagDropdown: React.FC<TagDropdownProps> = ({
@@ -36,7 +36,11 @@ export const TagDropdown: React.FC<TagDropdownProps> = ({
     }
 
     onTagChange(newSelectedTags);
-    await updateTaskTags(taskId, newSelectedTags);
+
+    if (taskId) {
+      // Only update Firebase if taskId is provided
+      await updateTaskTags(taskId, newSelectedTags);
+    }
   };
 
   return (
