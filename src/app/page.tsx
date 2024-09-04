@@ -45,7 +45,7 @@ export default function Home() {
           storyPoints: data.storyPoints,
           priority: data.priority,
           avatarUrl: data.avatarUrl,
-          tag: data.tag,
+          tags: data.tags,
           assignee: assigneeName,
           description: data.description,
           projectStage: data.projectStage,
@@ -61,13 +61,13 @@ export default function Home() {
     fetchTasks();
   }, []);
 
-  useEffect(() => {
-    if (selectedTags.length > 0) {
-      setFilteredTasks(tasks.filter((task) => selectedTags.includes(task.tag)));
-    } else {
-      setFilteredTasks(tasks);
-    }
-  }, [selectedTags, tasks]);
+  // useEffect(() => {
+  //   if (selectedTags.length > 0) {
+  //     setFilteredTasks(tasks.filter((task) => selectedTags.includes(task.tags)));
+  //   } else {
+  //     setFilteredTasks(tasks);
+  //   }
+  // }, [selectedTags, tasks]);
 
   return (
     <div className="p-16">
@@ -85,7 +85,7 @@ export default function Home() {
             storyPoints={task.storyPoints}
             priority={task.priority}
             avatarUrl={task.avatarUrl}
-            tag={task.tag}
+            tags={task.tags}
             assignee={task.assignee}
             description={task.description}
             projectStage={task.projectStage}

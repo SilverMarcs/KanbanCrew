@@ -10,7 +10,7 @@ export interface Task {
     storyPoints: number; // Need to ensure it's between 1 and 10 I think
     priority: Priority;
     avatarUrl: string;
-    tag: Tag;
+    tags: Tag[];
     assignee: string;
     description: string;
     projectStage: ProjectStage;
