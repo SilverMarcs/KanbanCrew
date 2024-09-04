@@ -1,5 +1,4 @@
 import * as React from "react";
-import { DropdownMenuRadioItemProps } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
