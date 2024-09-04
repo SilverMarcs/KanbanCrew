@@ -18,7 +18,7 @@ export const TaskCard = ({
   storyPoints,
   priority,
   avatarUrl,
-  tag,
+  tags,
   assignee,
   description,
   projectStage,
@@ -52,9 +52,11 @@ export const TaskCard = ({
             </Avatar>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
-            <div className="absolute bottom-3 right-3">
-              <TagBadge tag={tag} />
-            </div>
+          <div className="absolute bottom-3 right-3">
+            {tags.map((tag,i) => (
+              <TagBadge key={i} tag={tag} />
+            ))}
+          </div>
           </CardFooter>
         </Card>
       </DialogTrigger>
@@ -67,7 +69,7 @@ export const TaskCard = ({
             storyPoints={storyPoints}
             priority={priority}
             avatarUrl={avatarUrl}
-            tag={tag}
+            tags={tags}
             assignee={assignee}
             description={description}
             projectStage={projectStage}
