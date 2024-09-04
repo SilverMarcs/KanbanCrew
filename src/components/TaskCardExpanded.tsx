@@ -22,7 +22,6 @@ export const TaskCardExpanded = ({
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
-  const [, setSelectedTags] = useState<Priority[]>([]);
   return (
     <div className="text-start px-3">
       <div className="w-full flex space-x-2">
