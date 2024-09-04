@@ -14,6 +14,7 @@ import { TagBadge } from "@/components/TagBadge";
 import { useState } from "react";
 
 export const TaskCard = ({
+  id,
   index,
   title,
   storyPoints,
@@ -66,6 +67,7 @@ export const TaskCard = ({
       <DialogContent className="bg-white max-w-3xl">
         <DialogDescription>
           <TaskCardExpanded
+            id={id}
             index={index}
             title={title}
             storyPoints={storyPoints}
