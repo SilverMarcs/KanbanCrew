@@ -21,13 +21,16 @@ export function PriorityDropdown({
 }: {
   priority: Priority;
   setPriority: (priority: Priority) => void;
-  taskId: string;
+  taskId?: string; // Make taskId optional
 }) {
   const handlePriorityChange = async (value: string) => {
     const newPriority = value as Priority;
     setPriority(newPriority);
 
-    await updateTaskPriority(taskId, newPriority);
+    if (taskId) {
+      // Only update Firebase if taskId is provided
+      await updateTaskPriority(taskId, newPriority);
+    }
   };
 
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
@@ -37,10 +40,10 @@ export function PriorityDropdown({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          className={`${priorityBgColor} ${priorityTextColor} flex px-3 rounded-md w-fit text-xs font-bold`}
+          className={`${priorityBgColor} ${priorityTextColor} font-bold hover:${priorityBgColor} hover:${priorityTextColor}`}
         >
           {priority}
-          <ChevronDown className="ml-2" />
+          <ChevronDown className="ml-1" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

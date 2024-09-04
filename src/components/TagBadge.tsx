@@ -2,17 +2,17 @@ import React from "react";
 import { Tag, getTagColor } from "@/models/Tag";
 
 interface TagBadgeProps {
-    tag: Tag;
+  tag: Tag;
 }
 
 export const TagBadge: React.FC<TagBadgeProps> = ({ tag }) => {
-    const { bgColor, textColor } = getTagColor(tag);
+  const { bgColor, textColor } = getTagColor(tag);
 
-    return (
-        <div
-            className={`${bgColor} ${textColor} py-1 px-3 rounded-md w-fit text-sm font-bold`}
-        >
-            {tag}
-        </div>
-    );
+  return (
+    <div
+      className={`${bgColor} ${textColor} py-1 px-3 rounded-full w-fit text-sm font-bold`}
+    >
+      {tag}
+    </div>
+  );
 };

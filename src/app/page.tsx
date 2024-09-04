@@ -1,6 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { collection, getDocs, getDoc, DocumentReference } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  DocumentReference,
+} from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Task } from "@/models/Task";
 import { CreateTaskCard } from "@/components/CreateTaskCard";
@@ -17,12 +22,12 @@ export default function Home() {
     const fetchTasks = async () => {
       const querySnapshot = await getDocs(collection(db, "tasks"));
       const tasksData: Task[] = [];
-  
+
       for (const docSnapshot of querySnapshot.docs) {
         const data = docSnapshot.data();
-  
+
         let assigneeName = "Unknown Assignee";
-  
+
         if (data.assignee instanceof DocumentReference) {
           const assigneeDoc = await getDoc(data.assignee);
           if (assigneeDoc.exists()) {
@@ -38,7 +43,7 @@ export default function Home() {
             data.assignee
           );
         }
-  
+
         tasksData.push({
           id: docSnapshot.id,
           index: data.index,
@@ -54,21 +59,25 @@ export default function Home() {
           type: data.type,
         });
       }
-  
+
       setTasks(tasksData);
       setFilteredTasks(tasksData);
     };
-  
-    fetchTasks();
-  }, []);  
 
-  // useEffect(() => {
-  //   if (selectedTags.length > 0) {
-  //     setFilteredTasks(tasks.filter((task) => selectedTags.includes(task.tags)));
-  //   } else {
-  //     setFilteredTasks(tasks);
-  //   }
-  // }, [selectedTags, tasks]);
+    fetchTasks();
+  }, []);
+
+  useEffect(() => {
+    if (selectedTags.length > 0) {
+      setFilteredTasks(
+        tasks.filter((task) =>
+          task.tags.some((tag) => selectedTags.includes(tag))
+        )
+      );
+    } else {
+      setFilteredTasks(tasks);
+    }
+  }, [selectedTags, tasks]);
 
   return (
     <div className="p-16">

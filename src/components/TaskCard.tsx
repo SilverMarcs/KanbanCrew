@@ -3,22 +3,22 @@ import {
   DialogContent,
   DialogTrigger,
   DialogDescription,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { BotIcon, EllipsisIcon } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
-import { getPriorityColor, Priority } from "@/models/Priority";
+import { getPriorityColor } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
-import { useState } from "react";
 
 export const TaskCard = ({
   id,
   index,
   title,
   storyPoints,
-  priority: initialPriority,
+  priority,
   avatarUrl,
   tags,
   assignee,
@@ -27,7 +27,6 @@ export const TaskCard = ({
   status,
   type,
 }: Task) => {
-  const [priority, setPriority] = useState<Priority>(initialPriority);
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
@@ -55,16 +54,18 @@ export const TaskCard = ({
             </Avatar>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
-          <div className="absolute bottom-3 right-3">
-            {tags.map((tag,i) => (
-              <TagBadge key={i} tag={tag} />
-            ))}
-          </div>
+            <div className="absolute bottom-3 right-3">
+              {tags.map((tag, i) => (
+                <TagBadge key={i} tag={tag} />
+              ))}
+            </div>
           </CardFooter>
         </Card>
       </DialogTrigger>
       {/* Dialog content */}
       <DialogContent className="bg-white max-w-3xl">
+        <DialogTitle className="hidden" />{" "}
+        {/* Hidden DialogTitle to avoid warnings */}
         <DialogDescription>
           <TaskCardExpanded
             id={id}
@@ -72,7 +73,6 @@ export const TaskCard = ({
             title={title}
             storyPoints={storyPoints}
             priority={priority}
-            setPriority={setPriority}
             avatarUrl={avatarUrl}
             tags={tags}
             assignee={assignee}
