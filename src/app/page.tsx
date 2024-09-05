@@ -7,6 +7,7 @@ import { CreateTaskCard } from "@/components/CreateTaskCard";
 import { TaskCard } from "@/components/TaskCard";
 import { TagFilter } from "@/components/TagFilter";
 import { Tag } from "@/models/Tag";
+import { SortButton } from "@/components/SortButton";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -73,7 +74,10 @@ export default function Home() {
     <div className="p-16">
       <div className="flex justify-between items-center">
         <h1 className="text-5xl font-bold">Product Backlog</h1>
-        <TagFilter selectedTags={selectedTags} onTagChange={setSelectedTags} />
+        <div className="flex space-x-4">
+          <TagFilter selectedTags={selectedTags} onTagChange={setSelectedTags} />
+          <SortButton />
+        </div>
       </div>
 
       <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
