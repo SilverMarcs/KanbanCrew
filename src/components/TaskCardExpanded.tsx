@@ -7,6 +7,7 @@ import { useState } from "react";
 import { PriorityDropdown } from "./PriorityDropdown";
 import { Priority } from "@/models/Priority";
 import HistoryLogs from "@/components/HistoryLogs";
+import DeleteButton from "@/components/DeleteButton";
 
 export const TaskCardExpanded = ({
   id,
@@ -20,7 +21,8 @@ export const TaskCardExpanded = ({
   status,
   type,
   assignee,
-}: Task) => {
+  closeDialog,
+}: Task & { closeDialog?: () => void }) => {
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
 
@@ -75,6 +77,7 @@ export const TaskCardExpanded = ({
               onTagChange={setSelectedTags}
               taskId={id}
             />
+            <DeleteButton taskId={id} closeDialog={closeDialog || (() => {})} />
           </div>
         </div>
       </div>

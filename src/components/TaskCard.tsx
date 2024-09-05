@@ -12,6 +12,7 @@ import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
 import { getPriorityColor } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
+import { useState } from "react";
 
 export const TaskCard = ({
   id,
@@ -30,8 +31,15 @@ export const TaskCard = ({
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Function to close the dialog
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger className="w-96">
         {/* Card component */}
         <Card className="relative rounded-xl">
@@ -80,6 +88,7 @@ export const TaskCard = ({
             projectStage={projectStage}
             status={status}
             type={type}
+            closeDialog={closeDialog}
           />
         </DialogDescription>
       </DialogContent>
