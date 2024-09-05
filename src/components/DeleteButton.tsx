@@ -16,9 +16,15 @@ import { useRouter } from "next/navigation";
 
 interface DeleteButtonProps {
   taskId: string;
+  closeDialog: () => void; // Function to close the dialog
+  onDelete: (taskId: string) => void; // Callback to remove the task from the UI
 }
 
-const DeleteButton: React.FC<DeleteButtonProps> = ({ taskId }) => {
+const DeleteButton: React.FC<DeleteButtonProps> = ({
+  taskId,
+  closeDialog,
+  onDelete,
+}) => {
   const router = useRouter();
 
   // Function to handle deletion
@@ -26,6 +32,8 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({ taskId }) => {
     try {
       const taskDocRef = doc(db, "tasks", taskId);
       await deleteDoc(taskDocRef);
+      onDelete(taskId); // Remove the task from the UI
+      closeDialog(); // Close the dialog
       router.push("/"); // Redirect to home page after deletion
     } catch (error) {
       console.error("Error deleting task:", error);

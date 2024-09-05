@@ -79,6 +79,11 @@ export default function Home() {
     }
   }, [selectedTags, tasks]);
 
+  // Function to remove a task from the state
+  const handleDeleteTask = (taskId: string) => {
+    setTasks(tasks.filter((task) => task.id !== taskId));
+  };
+
   return (
     <div className="p-16">
       <div className="flex justify-between items-center">
@@ -102,6 +107,7 @@ export default function Home() {
             projectStage={task.projectStage}
             status={task.status}
             type={task.type}
+            onDelete={handleDeleteTask}
           />
         ))}
         <CreateTaskCard />
