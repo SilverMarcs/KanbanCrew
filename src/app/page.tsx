@@ -8,6 +8,7 @@ import { TaskCard } from "@/components/TaskCard";
 import { TagFilter } from "@/components/TagFilter";
 import { Tag } from "@/models/Tag";
 import { SortButton } from "@/components/SortButton";
+import { Priority } from "@/models/Priority"; // Import your Priority enum
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -16,14 +17,13 @@ export default function Home() {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const querySnapshot = await getDocs(collection(db, "tasks")); // "tasks" is name of the collection
+      const querySnapshot = await getDocs(collection(db, "tasks"));
       const tasksData: Task[] = [];
 
       for (const docSnapshot of querySnapshot.docs) {
         const data = docSnapshot.data();
 
         let assigneeName = "Unknown Assignee";
-
         if (data.assignee instanceof DocumentReference) {
           const assigneeDoc = await getDoc(data.assignee);
           if (assigneeDoc.exists()) {
@@ -33,18 +33,13 @@ export default function Home() {
             };
             assigneeName = `${assigneeData.firstName} ${assigneeData.lastName}`;
           }
-        } else {
-          console.error(
-            "Expected a DocumentReference for assignee, but got:",
-            data.assignee
-          );
         }
 
         tasksData.push({
           index: data.index,
           title: data.title,
           storyPoints: data.storyPoints,
-          priority: data.priority,
+          priority: data.priority as Priority, // Cast to Priority enum
           avatarUrl: data.avatarUrl,
           tags: data.tags,
           assignee: assigneeName,
@@ -62,13 +57,32 @@ export default function Home() {
     fetchTasks();
   }, []);
 
-  // useEffect(() => {
-  //   if (selectedTags.length > 0) {
-  //     setFilteredTasks(tasks.filter((task) => selectedTags.includes(task.tags)));
-  //   } else {
-  //     setFilteredTasks(tasks);
-  //   }
-  // }, [selectedTags, tasks]);
+  // Define a numeric mapping for priority levels
+  const priorityOrder = {
+    [Priority.Urgent]: 1,
+    [Priority.Important]: 2,
+    [Priority.Low]: 3,
+  };
+
+  const handleSortChange = (sortFields: { field: "date" | "priority"; order: "ascending" | "descending" }[]) => {
+    let sortedTasks = [...tasks];
+
+    sortFields.forEach(({ field, order }) => {
+      if (field === "date") {
+        sortedTasks = sortedTasks.sort((a, b) =>
+          order === "ascending" ? a.index - b.index : b.index - a.index
+        );
+      } else if (field === "priority") {
+        sortedTasks = sortedTasks.sort((a, b) => {
+          const aPriority = priorityOrder[a.priority]; // Convert priority to numeric value
+          const bPriority = priorityOrder[b.priority]; // Convert priority to numeric value
+          return order === "ascending" ? aPriority - bPriority : bPriority - aPriority;
+        });
+      }
+    });
+
+    setFilteredTasks(sortedTasks);
+  };
 
   return (
     <div className="p-16">
@@ -76,7 +90,7 @@ export default function Home() {
         <h1 className="text-5xl font-bold">Product Backlog</h1>
         <div className="flex space-x-4">
           <TagFilter selectedTags={selectedTags} onTagChange={setSelectedTags} />
-          <SortButton />
+          <SortButton onSortChange={handleSortChange} />
         </div>
       </div>
 
