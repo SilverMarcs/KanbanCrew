@@ -76,6 +76,8 @@ export default function Home() {
         sortedTasks = sortedTasks.sort((a, b) => {
           const aPriority = priorityOrder[a.priority]; // Convert priority to numeric value
           const bPriority = priorityOrder[b.priority]; // Convert priority to numeric value
+          // For ascending order, sort by bPriority - aPriority (Urgent > Important > Low)
+          // For descending order, sort by aPriority - bPriority (Low > Important > Urgent)
           return order === "ascending" ? bPriority - aPriority : aPriority - bPriority;
         });
       }
