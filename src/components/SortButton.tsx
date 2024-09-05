@@ -16,26 +16,23 @@ interface SortButtonProps {
 export const SortButton: React.FC<SortButtonProps> = ({ onSortChange }) => {
     const [sortByDate, setSortByDate] = useState(false);
     const [sortByPriority, setSortByPriority] = useState(false);
-    const [sortOrder, setSortOrder] = useState<"ascending" | "descending">("ascending");
+    const [sortOrder, setSortOrder] = useState<"ascending" | "descending" | null>(null);
 
     useEffect(() => {
-        handleSortChange();
+        if (sortOrder !== null) { 
+            handleSortChange();
+        }
     }, [sortByDate, sortByPriority, sortOrder]);
 
     const handleSortChange = () => {
         const sortFields: { field: "date" | "priority"; order: "ascending" | "descending" }[] = [];
         if (sortByDate) {
-            sortFields.push({ field: "date", order: sortOrder });
+            sortFields.push({ field: "date", order: sortOrder! });
         }
         if (sortByPriority) {
-            sortFields.push({ field: "priority", order: sortOrder });
+            sortFields.push({ field: "priority", order: sortOrder! });
         }
         onSortChange(sortFields);
-    };
-
-    const handleSortOrderChange = (order: "ascending" | "descending") => {
-        setSortOrder(order);
-        handleSortChange();
     };
 
     return (
@@ -55,7 +52,7 @@ export const SortButton: React.FC<SortButtonProps> = ({ onSortChange }) => {
                     checked={sortByDate}
                     onCheckedChange={(checked) => {
                         setSortByDate(checked);
-                        handleSortChange();
+                        setSortByPriority(false); 
                     }}
                 >
                     Date
@@ -64,7 +61,7 @@ export const SortButton: React.FC<SortButtonProps> = ({ onSortChange }) => {
                     checked={sortByPriority}
                     onCheckedChange={(checked) => {
                         setSortByPriority(checked);
-                        handleSortChange();
+                        setSortByDate(false); // Ensure only one is selected
                     }}
                 >
                     Priority
@@ -72,13 +69,13 @@ export const SortButton: React.FC<SortButtonProps> = ({ onSortChange }) => {
                 <DropdownMenuSeparator className="bg-gray-300" />
                 <DropdownMenuCheckboxItem
                     checked={sortOrder === "ascending"}
-                    onCheckedChange={() => handleSortOrderChange("ascending")}
+                    onCheckedChange={() => setSortOrder("ascending")} 
                 >
                     Ascending
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem
                     checked={sortOrder === "descending"}
-                    onCheckedChange={() => handleSortOrderChange("descending")}
+                    onCheckedChange={() => setSortOrder("descending")} 
                 >
                     Descending
                 </DropdownMenuCheckboxItem>
