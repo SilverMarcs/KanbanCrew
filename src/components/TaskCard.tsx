@@ -3,6 +3,7 @@ import {
   DialogContent,
   DialogTrigger,
   DialogDescription,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -11,8 +12,10 @@ import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
 import { getPriorityColor } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
+import { useState } from "react";
 
 export const TaskCard = ({
+  id,
   index,
   title,
   storyPoints,
@@ -28,8 +31,15 @@ export const TaskCard = ({
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Function to close the dialog
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger className="w-96">
         {/* Card component */}
         <Card className="relative rounded-xl">
@@ -52,18 +62,21 @@ export const TaskCard = ({
             </Avatar>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
-          <div className="absolute bottom-3 right-3">
-            {tags.map((tag,i) => (
-              <TagBadge key={i} tag={tag} />
-            ))}
-          </div>
+            <div className="absolute bottom-3 right-3">
+              {tags.map((tag, i) => (
+                <TagBadge key={i} tag={tag} />
+              ))}
+            </div>
           </CardFooter>
         </Card>
       </DialogTrigger>
       {/* Dialog content */}
       <DialogContent className="bg-white max-w-3xl">
+        <DialogTitle className="hidden" />{" "}
+        {/* Hidden DialogTitle to avoid warnings */}
         <DialogDescription>
           <TaskCardExpanded
+            id={id}
             index={index}
             title={title}
             storyPoints={storyPoints}
@@ -75,6 +88,7 @@ export const TaskCard = ({
             projectStage={projectStage}
             status={status}
             type={type}
+            closeDialog={closeDialog}
           />
         </DialogDescription>
       </DialogContent>

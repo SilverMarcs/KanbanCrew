@@ -1,6 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { collection, getDocs, getDoc, DocumentReference } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  getDoc,
+  DocumentReference,
+} from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Task } from "@/models/Task";
 import { CreateTaskCard } from "@/components/CreateTaskCard";
@@ -16,47 +21,70 @@ export default function Home() {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      const querySnapshot = await getDocs(collection(db, "tasks"));
-      const tasksData: Task[] = [];
+    // Real-time sync with Firestore
+    const unsubscribe = onSnapshot(
+      collection(db, "tasks"),
+      async (snapshot) => {
+        const tasksData: Task[] = [];
 
-      for (const docSnapshot of querySnapshot.docs) {
-        const data = docSnapshot.data();
+        for (const docSnapshot of snapshot.docs) {
+          const data = docSnapshot.data();
 
-        let assigneeName = "Unknown Assignee";
-        if (data.assignee instanceof DocumentReference) {
-          const assigneeDoc = await getDoc(data.assignee);
-          if (assigneeDoc.exists()) {
-            const assigneeData = assigneeDoc.data() as {
-              firstName: string;
-              lastName: string;
-            };
-            assigneeName = `${assigneeData.firstName} ${assigneeData.lastName}`;
+          let assigneeName = "Unknown Assignee";
+
+          if (data.assignee instanceof DocumentReference) {
+            const assigneeDoc = await getDoc(data.assignee);
+            if (assigneeDoc.exists()) {
+              const assigneeData = assigneeDoc.data() as {
+                firstName: string;
+                lastName: string;
+              };
+              assigneeName = `${assigneeData.firstName} ${assigneeData.lastName}`;
+            }
+          } else {
+            console.error(
+              "Expected a DocumentReference for assignee, but got:",
+              data.assignee
+            );
           }
+
+          tasksData.push({
+            id: docSnapshot.id,
+            index: data.index,
+            title: data.title,
+            storyPoints: data.storyPoints,
+            priority: data.priority as Priority, // Cast to Priority enum
+            avatarUrl: data.avatarUrl,
+            tags: data.tags,
+            assignee: assigneeName,
+            description: data.description,
+            projectStage: data.projectStage,
+            status: data.status,
+            type: data.type,
+          });
         }
 
-        tasksData.push({
-          index: data.index,
-          title: data.title,
-          storyPoints: data.storyPoints,
-          priority: data.priority as Priority, // Cast to Priority enum
-          avatarUrl: data.avatarUrl,
-          tags: data.tags,
-          assignee: assigneeName,
-          description: data.description,
-          projectStage: data.projectStage,
-          status: data.status,
-          type: data.type,
-        });
+        setTasks(tasksData); // Set tasks with real-time data
+        setFilteredTasks(tasksData); // Apply filtering if needed
       }
+    );
 
-      setTasks(tasksData);
-      setFilteredTasks(tasksData);
-    };
-
-    fetchTasks();
+    return () => unsubscribe(); // Cleanup listener on component unmount
   }, []);
 
+  // Filter tasks by selected tags
+  useEffect(() => {
+    if (selectedTags.length > 0) {
+      setFilteredTasks(
+        tasks.filter((task) =>
+          task.tags.some((tag) => selectedTags.includes(tag))
+        )
+      );
+    } else {
+      setFilteredTasks(tasks);
+    }
+  }, [selectedTags, tasks]);
+  
   // Define a numeric mapping for priority levels
   const priorityOrder = {
     [Priority.Urgent]: 1,
@@ -99,6 +127,7 @@ export default function Home() {
       <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
         {filteredTasks.map((task, index) => (
           <TaskCard
+            id={task.id}
             key={index}
             index={task.index}
             title={task.title}
