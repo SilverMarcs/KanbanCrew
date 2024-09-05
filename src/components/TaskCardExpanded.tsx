@@ -76,7 +76,7 @@ export const TaskCardExpanded = ({
               onTagChange={setSelectedTags}
               taskId={id}
             />
-            <DeleteButton />
+            <DeleteButton taskId={id} />
           </div>
         </div>
       </div>

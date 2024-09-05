@@ -9,9 +9,29 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DeleteIcon, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebaseConfig";
+import { useRouter } from "next/navigation";
 
-const DeleteButton: React.FC = () => {
+interface DeleteButtonProps {
+  taskId: string;
+}
+
+const DeleteButton: React.FC<DeleteButtonProps> = ({ taskId }) => {
+  const router = useRouter();
+
+  // Function to handle deletion
+  const handleDelete = async () => {
+    try {
+      const taskDocRef = doc(db, "tasks", taskId);
+      await deleteDoc(taskDocRef);
+      router.push("/"); // Redirect to home page after deletion
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -24,11 +44,13 @@ const DeleteButton: React.FC = () => {
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. Are you sure you want to permanently
-            delete this file from our servers?
+            delete this task from our servers?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="destructive">Confirm</Button>
+          <Button variant="destructive" onClick={handleDelete}>
+            Confirm
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
