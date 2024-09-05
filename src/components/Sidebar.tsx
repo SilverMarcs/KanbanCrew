@@ -5,7 +5,7 @@ const Sidebar = () => {
   const menuItems = [{ icon: <Component size={36} />, link: "/" }];
 
   return (
-    <div className="sidebar w-16 text-white flex flex-col items-center justify-center py-4 space-y-6">
+    <div className="sidebar fixed h-full w-16 text-white flex flex-col items-center justify-center py-4 space-y-6">
       {menuItems.map((item, index) => (
         <a
           key={index}
