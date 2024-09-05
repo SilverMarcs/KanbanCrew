@@ -17,6 +17,4 @@ export interface Task {
   projectStage: ProjectStage;
   status: Status;
   type: Type;
-  closeDialog?: () => void;
-  onDelete?: (taskId: string) => void;
 }

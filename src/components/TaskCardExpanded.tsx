@@ -22,8 +22,7 @@ export const TaskCardExpanded = ({
   type,
   assignee,
   closeDialog,
-  onDelete,
-}: Task) => {
+}: Task & { closeDialog?: () => void }) => {
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
 
@@ -78,11 +77,7 @@ export const TaskCardExpanded = ({
               onTagChange={setSelectedTags}
               taskId={id}
             />
-            <DeleteButton
-              taskId={id}
-              closeDialog={closeDialog || (() => {})}
-              onDelete={onDelete || (() => {})}
-            />
+            <DeleteButton taskId={id} closeDialog={closeDialog || (() => {})} />
           </div>
         </div>
       </div>

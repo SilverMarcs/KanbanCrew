@@ -27,7 +27,6 @@ export const TaskCard = ({
   projectStage,
   status,
   type,
-  onDelete,
 }: Task) => {
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
@@ -90,7 +89,6 @@ export const TaskCard = ({
             status={status}
             type={type}
             closeDialog={closeDialog}
-            onDelete={onDelete}
           />
         </DialogDescription>
       </DialogContent>
