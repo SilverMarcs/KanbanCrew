@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import { Priority } from "./Priority";
 import { ProjectStage } from "./ProjectStage";
 import { Status } from "./Status";
@@ -17,4 +18,5 @@ export interface Task {
   projectStage: ProjectStage;
   status: Status;
   type: Type;
+  creationDate: Timestamp;
 }
