@@ -6,11 +6,11 @@ interface TagBadgeProps {
 }
 
 export const TagBadge: React.FC<TagBadgeProps> = ({ tag }) => {
-  const { bgColor, textColor } = getTagColor(tag);
+  const { bgColor } = getTagColor(tag);
 
   return (
     <div
-      className={`${bgColor} ${textColor} py-1 px-3 rounded-full w-fit text-sm font-bold`}
+      className={`${bgColor} py-1 px-3 rounded-full w-fit text-sm font-bold`}
     >
       {tag}
     </div>
