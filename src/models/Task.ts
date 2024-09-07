@@ -4,6 +4,7 @@ import { ProjectStage } from "./ProjectStage";
 import { Status } from "./Status";
 import { Tag } from "./Tag";
 import { Type } from "./Type";
+import { Member } from "./Member";
 
 export interface Task {
   id: string;
@@ -19,4 +20,11 @@ export interface Task {
   status: Status;
   type: Type;
   creationDate: Timestamp;
+  historyLogs: HistoryLog[];
+}
+
+export interface HistoryLog {
+  id: string;
+  member: Member;
+  timestamp: Date;
 }
