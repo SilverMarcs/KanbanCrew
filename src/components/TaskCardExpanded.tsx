@@ -11,6 +11,9 @@ import DeleteButton from "@/components/DeleteButton";
 import { DescriptionEditable } from "@/components//DescriptionEditable";
 import { TitleEditable } from "@/components//TitleEditable";
 import { StoryPointsField } from "@/components//StoryPointsField";
+import { TaskTypeDropdown } from "./TaskTypeDropdown";
+import { Type } from '@/models/Type';
+
 
 export const TaskCardExpanded = ({
   id,
@@ -29,7 +32,8 @@ export const TaskCardExpanded = ({
 }: Task & { closeDialog?: () => void }) => {
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
-
+  const [taskType, setTaskType] = useState<Type>(type); 
+ 
   return (
     <div className="px-3">
       <div className="flex">
@@ -40,7 +44,7 @@ export const TaskCardExpanded = ({
               setPriority={setPriority}
               taskId={id}
             />
-            <p> - {type}</p>
+            <TaskTypeDropdown taskId={id} currentType={taskType} setTaskType={setTaskType} />
           </div>
           <div className="my-2">
             <TitleEditable title={title} taskId={id} />
