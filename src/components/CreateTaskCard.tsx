@@ -29,6 +29,7 @@ import { ProjectStage } from "@/models/ProjectStage";
 import { Status } from "@/models/Status";
 import { Type } from "@/models/Type";
 import { TagBadge } from "@/components/TagBadge";
+import { TaskTypePicker } from "./TaskTypePicker";
 
 export const CreateTaskCard = () => {
   const defaultTitle = "New Task";
@@ -141,6 +142,7 @@ export const CreateTaskCard = () => {
         <div className="text-start px-3">
           <div className="w-full flex items-center space-x-2">
             <PriorityDropdown priority={priority} setPriority={setPriority} />
+            <TaskTypePicker currentType={type} setTaskType={setType} />
           </div>
           <div className="flex space-x-2 align-middle items-center mt-2">
             <Input
