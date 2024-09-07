@@ -5,6 +5,7 @@ import {
   onSnapshot,
   getDoc,
   DocumentReference,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Task } from "@/models/Task";
@@ -12,8 +13,8 @@ import { CreateTaskCard } from "@/components/CreateTaskCard";
 import { TaskCard } from "@/components/TaskCard";
 import { TagFilter } from "@/components/TagFilter";
 import { Tag } from "@/models/Tag";
-import { SortButton } from "@/components/SortButton";
-import { Priority } from "@/models/Priority"; // Import your Priority enum
+import { SortButton, SortField, SortOrder } from "@/components/SortButton";
+import { Priority, PriorityOrder } from "@/models/Priority";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -53,7 +54,7 @@ export default function Home() {
             index: data.index,
             title: data.title,
             storyPoints: data.storyPoints,
-            priority: data.priority as Priority, // Cast to Priority enum
+            priority: data.priority as Priority,
             avatarUrl: data.avatarUrl,
             tags: data.tags,
             assignee: assigneeName,
@@ -61,6 +62,7 @@ export default function Home() {
             projectStage: data.projectStage,
             status: data.status,
             type: data.type,
+            creationDate: data.creationDate,
           });
         }
 
@@ -84,29 +86,28 @@ export default function Home() {
       setFilteredTasks(tasks);
     }
   }, [selectedTags, tasks]);
-  
-  // Define a numeric mapping for priority levels
-  const priorityOrder = {
-    [Priority.Urgent]: 1,
-    [Priority.Important]: 2,
-    [Priority.Low]: 3,
-  };
 
-  const handleSortChange = (sortFields: { field: "date" | "priority"; order: "ascending" | "descending" }[]) => {
+  const handleSortChange = (
+    sortFields: { field: SortField; order: SortOrder }[]
+  ) => {
     let sortedTasks = [...tasks];
 
     sortFields.forEach(({ field, order }) => {
-      if (field === "date") {
-        sortedTasks = sortedTasks.sort((a, b) =>
-          order === "ascending" ? a.index - b.index : b.index - a.index
-        );
-      } else if (field === "priority") {
+      if (field === SortField.Priority) {
         sortedTasks = sortedTasks.sort((a, b) => {
-          const aPriority = priorityOrder[a.priority]; // Convert priority to numeric value
-          const bPriority = priorityOrder[b.priority]; // Convert priority to numeric value
-          // For ascending order, sort by bPriority - aPriority (Urgent > Important > Low)
-          // For descending order, sort by aPriority - bPriority (Low > Important > Urgent)
-          return order === "ascending" ? bPriority - aPriority : aPriority - bPriority;
+          const aPriority = PriorityOrder[a.priority];
+          const bPriority = PriorityOrder[b.priority];
+          return order === SortOrder.Ascending
+            ? bPriority - aPriority
+            : aPriority - bPriority;
+        });
+      } else if (field === SortField.CreationDate) {
+        sortedTasks = sortedTasks.sort((a, b) => {
+          const aDate = a.creationDate.toDate();
+          const bDate = b.creationDate.toDate();
+          return order === SortOrder.Ascending
+            ? aDate.getTime() - bDate.getTime()
+            : bDate.getTime() - aDate.getTime();
         });
       }
     });
@@ -119,7 +120,10 @@ export default function Home() {
       <div className="flex justify-between items-center">
         <h1 className="text-5xl font-bold">Product Backlog</h1>
         <div className="flex space-x-4">
-          <TagFilter selectedTags={selectedTags} onTagChange={setSelectedTags} />
+          <TagFilter
+            selectedTags={selectedTags}
+            onTagChange={setSelectedTags}
+          />
           <SortButton onSortChange={handleSortChange} />
         </div>
       </div>
@@ -140,6 +144,7 @@ export default function Home() {
             projectStage={task.projectStage}
             status={task.status}
             type={task.type}
+            creationDate={task.creationDate}
           />
         ))}
         <CreateTaskCard />

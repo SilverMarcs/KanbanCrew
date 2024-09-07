@@ -21,6 +21,7 @@ import {
   getDocs,
   DocumentReference,
   doc,
+  Timestamp,
 } from "firebase/firestore";
 import { Priority } from "@/models/Priority";
 import { Tag } from "@/models/Tag";
@@ -30,6 +31,16 @@ import { Type } from "@/models/Type";
 import { TagBadge } from "@/components/TagBadge";
 
 export const CreateTaskCard = () => {
+  const defaultTitle = "New Task";
+  const defaultStoryPoints = 3;
+  const defaultPriority = Priority.Low;
+  const defaultAvatarUrl = "";
+  const defaultTags: Tag[] = [];
+  const defaultDescription = "Task description...";
+  const defaultProjectStage = ProjectStage.Integration;
+  const defaultStatus = Status.NotStarted;
+  const defaultType = Type.UserStory;
+
   const [title, setTitle] = useState("New Task");
   const [storyPoints, setStoryPoints] = useState(3);
   const [priority, setPriority] = useState<Priority>(Priority.Low);
@@ -59,6 +70,8 @@ export const CreateTaskCard = () => {
     fetchFirstMember();
   }, []);
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleCreateTask = async () => {
     if (!assignee) {
       console.error("No assignee selected");
@@ -76,15 +89,42 @@ export const CreateTaskCard = () => {
       projectStage,
       status,
       type,
+      creationDate: Timestamp.now(),
     };
 
     // Add the new task to Firebase
     await addDoc(collection(db, "tasks"), newTask);
+
+    // Reset all states to default values
+    resetStates();
+
+    // Close the dialog
+    setIsOpen(false);
+  };
+
+  const resetStates = () => {
+    setTitle(defaultTitle);
+    setStoryPoints(defaultStoryPoints);
+    setPriority(defaultPriority);
+    setAvatarUrl(defaultAvatarUrl);
+    setTags(defaultTags);
+    setDescription(defaultDescription);
+    setProjectStage(defaultProjectStage);
+    setStatus(defaultStatus);
+    setType(defaultType);
   };
 
   return (
-    <Dialog>
-      <DialogTrigger className="w-96 h-full">
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        if (!open) {
+          resetStates();
+        }
+      }}
+    >
+      <DialogTrigger className="w-96 h-full" onClick={() => setIsOpen(true)}>
         <Card className="rounded-xl border-dashed border-2 border-gray-300 bg-transparent h-full">
           <CardContent className="flex justify-center h-full items-center p-0">
             <PlusCircleIcon size={50} className="text-gray-300" />

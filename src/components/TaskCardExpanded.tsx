@@ -21,6 +21,7 @@ export const TaskCardExpanded = ({
   status,
   type,
   assignee,
+  creationDate,
   closeDialog,
 }: Task & { closeDialog?: () => void }) => {
   const [priority, setPriority] = useState<Priority>(initialPriority);

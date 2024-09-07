@@ -27,6 +27,7 @@ export const TaskCard = ({
   projectStage,
   status,
   type,
+  creationDate,
 }: Task) => {
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
@@ -88,6 +89,7 @@ export const TaskCard = ({
             projectStage={projectStage}
             status={status}
             type={type}
+            creationDate={creationDate}
             closeDialog={closeDialog}
           />
         </DialogDescription>
