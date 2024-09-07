@@ -77,7 +77,7 @@ export function DescriptionEditable({
               height: descriptionHeight ? `${descriptionHeight}px` : "auto",
             }} // Ensure Textarea has the same height
           />
-          <div className="flex space-x-2 mt-2">
+          <div className="flex justify-end space-x-2 mt-2">
             <Button onClick={handleSave} disabled={isLoading}>
               {isLoading ? "Saving..." : "Save"}
             </Button>
