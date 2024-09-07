@@ -8,8 +8,9 @@ import { PriorityDropdown } from "./PriorityDropdown";
 import { Priority } from "@/models/Priority";
 import HistoryLogs from "@/components/HistoryLogs";
 import DeleteButton from "@/components/DeleteButton";
-import { DescriptionEditable } from "./DescriptionEditable";
-import { TitleEditable } from "./TitleEditable";
+import { DescriptionEditable } from "@/components//DescriptionEditable";
+import { TitleEditable } from "@/components//TitleEditable";
+import { StoryPointsField } from "@/components//StoryPointsField";
 
 export const TaskCardExpanded = ({
   id,
@@ -45,7 +46,7 @@ export const TaskCardExpanded = ({
             <TitleEditable title={title} taskId={id} />
           </div>
           <div className="flex space-x-2">
-            <p className="text-gray-500 font-bold">{storyPoints} SP</p>
+            <StoryPointsField storyPoints={storyPoints} taskId={id} />
             <p className="font-bold">- {status}</p>
           </div>
           <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
