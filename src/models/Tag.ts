@@ -9,13 +9,13 @@ export enum Tag {
 }
 
 export const TagColors: Record<Tag, ColorScheme> = {
-    [Tag.Frontend]: { bgColor: "bg-blue-300", textColor: "text-blue-600" },
-    [Tag.Backend]: { bgColor: "bg-green-300", textColor: "text-green-600" },
-    [Tag.API]: { bgColor: "bg-yellow-300", textColor: "text-yellow-600" },
-    [Tag.Database]: { bgColor: "bg-red-300", textColor: "text-red-600" },
-    [Tag.Testing]: { bgColor: "bg-purple-300", textColor: "text-purple-600" },
-    [Tag.UIUX]: { bgColor: "bg-pink-300", textColor: "text-pink-600" },
-    [Tag.Framework]: { bgColor: "bg-indigo-300", textColor: "text-indigo-600" },
+    [Tag.Frontend]: { bgColor: "tag-frontend", textColor: "" },
+    [Tag.Backend]: { bgColor: "tag-backend", textColor: "" },
+    [Tag.API]: { bgColor: "tag-api", textColor: "" },
+    [Tag.Database]: { bgColor: "tag-database", textColor: "" },
+    [Tag.Testing]: { bgColor: "tag-testing", textColor: "" },
+    [Tag.UIUX]: { bgColor: "tag-uiux", textColor: "" },
+    [Tag.Framework]: { bgColor: "tag-framework", textColor: "" },
 };
 
 export const getTagColor = (tag: Tag): ColorScheme => {

@@ -64,8 +64,8 @@ export const TaskCard = ({
           </CardContent>
           <CardFooter className="flex w-full justify-end">
             <div className="absolute bottom-3 right-3">
-              {tags.map((tag, i) => (
-                <TagBadge key={i} tag={tag} />
+              {tags.map((tag) => (
+                <TagBadge key={tag} tag={tag} />
               ))}
             </div>
           </CardFooter>
