@@ -10,9 +10,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { BotIcon, EllipsisIcon } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
+import { Member } from "@/models/Member"; // Import Member type
 import { getPriorityColor } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
 import { useState } from "react";
+
+interface TaskCardProps extends Task {
+  members: Member[]; // Add members prop to TaskCard
+}
 
 export const TaskCard = ({
   id,
@@ -28,7 +33,9 @@ export const TaskCard = ({
   status,
   type,
   creationDate,
-}: Task) => {
+  historyLogs,
+  members, // Pass members to TaskCardExpanded
+}: TaskCardProps) => {
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
@@ -91,6 +98,8 @@ export const TaskCard = ({
             type={type}
             creationDate={creationDate}
             closeDialog={closeDialog}
+            historyLogs={historyLogs}
+            members={members} // Pass members to TaskCardExpanded
           />
         </DialogDescription>
       </DialogContent>

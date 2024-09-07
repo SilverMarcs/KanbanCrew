@@ -1,7 +1,11 @@
-import { Member } from "./Member";
+import { DocumentReference } from "@firebase/firestore";
 
 export interface HistoryLog {
-  id: string;
-  member: Member;
-  timestamp: Date;
+  member: DocumentReference;
+  time: TimeStamp;
+}
+
+export interface TimeStamp {
+  seconds: number;
+  nanoseconds: number;
 }

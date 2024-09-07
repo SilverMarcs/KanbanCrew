@@ -15,6 +15,12 @@ import { ProjectStagesDropdown } from "@/components/ProjectStagesDropdown";
 import { ProjectStage } from "@/models/ProjectStage";
 import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
 import { Status } from "@/models/Status";
+import { Member } from "@/models/Member";
+
+interface TaskCardExpandedProps extends Task {
+  closeDialog?: () => void;
+  members: Member[]; // Add members prop
+}
 
 export const TaskCardExpanded = ({
   id,
@@ -28,12 +34,14 @@ export const TaskCardExpanded = ({
   status: initialStatus,
   type,
   assignee,
-  creationDate,
   closeDialog,
-}: Task & { closeDialog?: () => void }) => {
+  historyLogs,
+  members,
+}: Task & TaskCardExpandedProps) => {
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
-  const [projectStage, setProjectStage] = useState<ProjectStage>(initialProjectStage);
+  const [projectStage, setProjectStage] =
+    useState<ProjectStage>(initialProjectStage);
   const [status, setStatus] = useState<Status>(initialStatus);
 
   return (
@@ -53,9 +61,14 @@ export const TaskCardExpanded = ({
           </div>
           <div className="flex space-x-1">
             <StoryPointsField storyPoints={storyPoints} taskId={id} />
-            <p className="font-bold">-<TaskStatusDropdown status={status}
-              setStatus={setStatus}
-              taskId={id}/></p>
+            <p className="font-bold">
+              -
+              <TaskStatusDropdown
+                status={status}
+                setStatus={setStatus}
+                taskId={id}
+              />
+            </p>
           </div>
           <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
           <div className="mt-2 flex space-x-2 w-full items-center">
@@ -67,20 +80,24 @@ export const TaskCardExpanded = ({
           </div>
           <DescriptionEditable description={description} taskId={id} />
         </div>
+
+        {/* Pass members to HistoryLogs */}
         <div className="mt-14">
-          <HistoryLogs />
+          <HistoryLogs historyLogs={historyLogs} members={members} />
         </div>
       </div>
+
       <div>
         <div className="mt-20 flex justify-between items-center">
           <div className="flex space-x-3 items-center">
             <p className="font-semobold text-gray-600">Project stage</p>
             <p className="font-bold">
               <ProjectStagesDropdown
-              projectStage={projectStage}
-              setProjectStage={setProjectStage}
-              taskId={id}
-            /></p>
+                projectStage={projectStage}
+                setProjectStage={setProjectStage}
+                taskId={id}
+              />
+            </p>
           </div>
           <div className="flex items-center space-x-2">
             {selectedTags.map((tag, i) => (

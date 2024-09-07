@@ -5,10 +5,10 @@ import {
   onSnapshot,
   getDoc,
   DocumentReference,
-  Timestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Task } from "@/models/Task";
+import { Member } from "@/models/Member";
 import { CreateTaskCard } from "@/components/CreateTaskCard";
 import { TaskCard } from "@/components/TaskCard";
 import { TagFilter } from "@/components/TagFilter";
@@ -18,11 +18,12 @@ import { Priority, PriorityOrder } from "@/models/Priority";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
+  // Real-time sync for tasks
   useEffect(() => {
-    // Real-time sync with Firestore
     const unsubscribe = onSnapshot(
       collection(db, "tasks"),
       async (snapshot) => {
@@ -30,7 +31,6 @@ export default function Home() {
 
         for (const docSnapshot of snapshot.docs) {
           const data = docSnapshot.data();
-
           let assigneeName = "Unknown Assignee";
 
           if (data.assignee instanceof DocumentReference) {
@@ -42,11 +42,6 @@ export default function Home() {
               };
               assigneeName = `${assigneeData.firstName} ${assigneeData.lastName}`;
             }
-          } else {
-            console.error(
-              "Expected a DocumentReference for assignee, but got:",
-              data.assignee
-            );
           }
 
           tasksData.push({
@@ -63,6 +58,7 @@ export default function Home() {
             status: data.status,
             type: data.type,
             creationDate: data.creationDate,
+            historyLogs: data.historyLogs,
           });
         }
 
@@ -70,6 +66,19 @@ export default function Home() {
         setFilteredTasks(tasksData); // Apply filtering if needed
       }
     );
+
+    return () => unsubscribe(); // Cleanup listener on component unmount
+  }, []);
+
+  // Real-time sync for members
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "members"), (snapshot) => {
+      const membersData: Member[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Member[];
+      setMembers(membersData);
+    });
 
     return () => unsubscribe(); // Cleanup listener on component unmount
   }, []);
@@ -130,22 +139,7 @@ export default function Home() {
 
       <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
         {filteredTasks.map((task, index) => (
-          <TaskCard
-            id={task.id}
-            key={index}
-            index={task.index}
-            title={task.title}
-            storyPoints={task.storyPoints}
-            priority={task.priority}
-            avatarUrl={task.avatarUrl}
-            tags={task.tags}
-            assignee={task.assignee}
-            description={task.description}
-            projectStage={task.projectStage}
-            status={task.status}
-            type={task.type}
-            creationDate={task.creationDate}
-          />
+          <TaskCard key={index} {...task} members={members} />
         ))}
         <CreateTaskCard />
       </div>
