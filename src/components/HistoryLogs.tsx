@@ -1,5 +1,5 @@
 import { History } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { HistoryLog } from "@/models/HistoryLog";
@@ -8,6 +8,8 @@ import { Member } from "@/models/Member";
 const HistoryLogs: React.FC<
   { historyLogs: HistoryLog[] } & { members: Member[] }
 > = ({ historyLogs, members }) => {
+  const [sortedLogs, setSortedLogs] = useState<HistoryLog[]>([]);
+
   const getMemberName = (memberId: string) => {
     const member = members.find((m) => m.id === memberId);
     return member
@@ -22,7 +24,12 @@ const HistoryLogs: React.FC<
     return new Date(time.seconds * 1000); // Convert seconds to milliseconds
   };
 
-  console.log(historyLogs);
+  useEffect(() => {
+    const sorted = [...historyLogs].sort((a, b) => {
+      return convertToDate(b.time).getTime() - convertToDate(a.time).getTime();
+    });
+    setSortedLogs(sorted);
+  }, [historyLogs]);
 
   // Function to calculate relative time
   const getRelativeTime = (timestamp: Date): string => {
@@ -56,14 +63,13 @@ const HistoryLogs: React.FC<
         <div className="font-semibold text-lg">History log</div>
       </div>
       <ScrollArea className="mt-2 ml-16 flex flex-col max-h-60 min-w-full">
-        {historyLogs.map((log: HistoryLog, index) => (
+        {sortedLogs.map((log: HistoryLog, index) => (
           <div key={index} className="flex space-x-2">
             <div className="h-12 w-0.5 mr-0.5 bg-gray-400 opacity-80"></div>
             <Avatar>
               <AvatarImage src={""} />
               <AvatarFallback>
                 {getMemberName(log.member.id).firstName[0]}
-                {""}
                 {getMemberName(log.member.id).lastName[0]}
               </AvatarFallback>
             </Avatar>
