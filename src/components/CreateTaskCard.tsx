@@ -78,6 +78,11 @@ export const CreateTaskCard = () => {
       return;
     }
 
+    if (tags.length === 0) {
+      console.error("No tags selected"); // Ensure that at least one tag is selected
+      return;
+    }
+
     const newTask = {
       title,
       storyPoints,
@@ -134,7 +139,7 @@ export const CreateTaskCard = () => {
       <DialogContent className="bg-white">
         <DialogHeader>
           <DialogTitle>Create a new task</DialogTitle>
-          <Button className="ml-auto" onClick={handleCreateTask}>
+          <Button className="ml-auto" onClick={handleCreateTask} disabled={tags.length===0}>
             Create Task
           </Button>
         </DialogHeader>
