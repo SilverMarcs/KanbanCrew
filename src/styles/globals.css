@@ -82,3 +82,38 @@
 .sidebar-icon {
   color: #fce79c;
 }
+
+.tag-frontend {
+  background-color: #D8C8EC;
+  color: #9025AA;
+}
+
+.tag-backend {
+  background-color: #B9EEFF;
+  color: #3498D0;
+}
+
+.tag-api {
+  background-color: #FFC0CB;
+  color: #AA117F;
+}
+
+.tag-database {
+  background-color: #FFBB6C;
+  color: #DF590E;
+}
+
+.tag-testing {
+  background-color: #A6FFA4;
+  color: #0D6E05;
+}
+
+.tag-uiux {
+  background-color: #FAEF90; 
+  color: #B58200;
+}
+
+.tag-framework {
+  background-color: #FFA5A5;
+  color: #D00000;
+}

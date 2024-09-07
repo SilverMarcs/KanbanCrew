@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import { Priority } from "./Priority";
 import { ProjectStage } from "./ProjectStage";
 import { Status } from "./Status";
@@ -5,15 +6,17 @@ import { Tag } from "./Tag";
 import { Type } from "./Type";
 
 export interface Task {
-    index: number;
-    title: string;
-    storyPoints: number; // Need to ensure it's between 1 and 10 I think
-    priority: Priority;
-    avatarUrl: string;
-    tags: Tag[];
-    assignee: string;
-    description: string;
-    projectStage: ProjectStage;
-    status: Status;
-    type: Type;
+  id: string;
+  index: number;
+  title: string;
+  storyPoints: number;
+  priority: Priority;
+  avatarUrl: string;
+  tags: Tag[];
+  assignee: string;
+  description: string;
+  projectStage: ProjectStage;
+  status: Status;
+  type: Type;
+  creationDate: Timestamp;
 }

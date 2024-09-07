@@ -37,3 +37,9 @@ next-env.d.ts
 
 # environments
 .env
+
+# bun
+bun.lockb
+
+# biome
+biome.json
