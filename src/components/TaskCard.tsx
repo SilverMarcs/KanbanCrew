@@ -34,16 +34,20 @@ export const TaskCard = ({
   type,
   creationDate,
   historyLogs,
-  members, // Pass members to TaskCardExpanded
+  members,
 }: TaskCardProps) => {
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentAssignee, setCurrentAssignee] = useState(assignee);
 
-  // Function to close the dialog
   const closeDialog = () => {
     setIsDialogOpen(false);
+  };
+
+  const handleAssigneeChange = (newAssignee: string) => {
+    setCurrentAssignee(newAssignee);
   };
 
   return (
@@ -91,7 +95,7 @@ export const TaskCard = ({
             priority={priority}
             avatarUrl={avatarUrl}
             tags={tags}
-            assignee={assignee}
+            assignee={currentAssignee}
             description={description}
             projectStage={projectStage}
             status={status}
@@ -100,6 +104,7 @@ export const TaskCard = ({
             closeDialog={closeDialog}
             historyLogs={historyLogs}
             members={members} // Pass members to TaskCardExpanded
+            onAssigneeChange={handleAssigneeChange}
           />
         </DialogDescription>
       </DialogContent>
