@@ -11,6 +11,8 @@ import DeleteButton from "@/components/DeleteButton";
 import { DescriptionEditable } from "@/components//DescriptionEditable";
 import { TitleEditable } from "@/components//TitleEditable";
 import { StoryPointsField } from "@/components//StoryPointsField";
+import { ProjectStagesDropdown } from "./ProjectStagesDropdown";
+import { ProjectStage } from "@/models/ProjectStage";
 
 export const TaskCardExpanded = ({
   id,
@@ -20,7 +22,7 @@ export const TaskCardExpanded = ({
   avatarUrl,
   tags,
   description,
-  projectStage,
+  projectStage: initialProjectStage,
   status,
   type,
   assignee,
@@ -29,6 +31,7 @@ export const TaskCardExpanded = ({
 }: Task & { closeDialog?: () => void }) => {
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
+  const [projectStage, setProjectStage] = useState<ProjectStage>(initialProjectStage);
 
   return (
     <div className="px-3">
@@ -67,7 +70,12 @@ export const TaskCardExpanded = ({
         <div className="mt-20 flex justify-between items-center">
           <div className="flex space-x-3 items-center">
             <p className="font-semobold text-gray-600">Project stage</p>
-            <p className="font-bold">{projectStage}</p>
+            <p className="font-bold">
+              <ProjectStagesDropdown
+              projectStage={projectStage}
+              setProjectStage={setProjectStage}
+              taskId={id}
+            /></p>
           </div>
           <div className="flex items-center space-x-2">
             {selectedTags.map((tag, i) => (
