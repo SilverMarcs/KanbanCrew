@@ -9,10 +9,12 @@ import { Priority } from "@/models/Priority";
 import HistoryLogs from "@/components/HistoryLogs";
 import DeleteButton from "@/components/DeleteButton";
 import { DescriptionEditable } from "@/components//DescriptionEditable";
-import { TitleEditable } from "@/components//TitleEditable";
-import { StoryPointsField } from "@/components//StoryPointsField";
-import { ProjectStagesDropdown } from "./ProjectStagesDropdown";
+import { TitleEditable } from "@/components/TitleEditable";
+import { StoryPointsField } from "@/components/StoryPointsField";
+import { ProjectStagesDropdown } from "@/components/ProjectStagesDropdown";
 import { ProjectStage } from "@/models/ProjectStage";
+import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
+import { Status } from "@/models/Status";
 
 export const TaskCardExpanded = ({
   id,
@@ -23,7 +25,7 @@ export const TaskCardExpanded = ({
   tags,
   description,
   projectStage: initialProjectStage,
-  status,
+  status: initialStatus,
   type,
   assignee,
   creationDate,
@@ -32,6 +34,7 @@ export const TaskCardExpanded = ({
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
   const [projectStage, setProjectStage] = useState<ProjectStage>(initialProjectStage);
+  const [status, setStatus] = useState<Status>(initialStatus);
 
   return (
     <div className="px-3">
@@ -48,9 +51,11 @@ export const TaskCardExpanded = ({
           <div className="my-2">
             <TitleEditable title={title} taskId={id} />
           </div>
-          <div className="flex space-x-2">
+          <div className="flex space-x-1">
             <StoryPointsField storyPoints={storyPoints} taskId={id} />
-            <p className="font-bold">- {status}</p>
+            <p className="font-bold">-<TaskStatusDropdown status={status}
+              setStatus={setStatus}
+              taskId={id}/></p>
           </div>
           <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
           <div className="mt-2 flex space-x-2 w-full items-center">
