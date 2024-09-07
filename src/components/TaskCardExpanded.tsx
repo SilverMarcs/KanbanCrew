@@ -8,12 +8,12 @@ import { PriorityDropdown } from "./PriorityDropdown";
 import { Priority } from "@/models/Priority";
 import HistoryLogs from "@/components/HistoryLogs";
 import DeleteButton from "@/components/DeleteButton";
-import { DescriptionEditable } from "@/components//DescriptionEditable";
+import { DescriptionEditable } from "@/components/DescriptionEditable";
 import { TitleEditable } from "@/components/TitleEditable";
 import { StoryPointsField } from "@/components/StoryPointsField";
 import { ProjectStagesDropdown } from "@/components/ProjectStagesDropdown";
 import { ProjectStage } from "@/models/ProjectStage";
-import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
+import { TaskStatusDropdown,StatusIndicator } from "@/components/TaskStatusDropdown";
 import { Status } from "@/models/Status";
 import { Member } from "@/models/Member";
 import { AssigneeDropdown } from "./AssigneeDropdown";
@@ -37,7 +37,7 @@ export const TaskCardExpanded = ({
   tags,
   description,
   projectStage: initialProjectStage,
-  status: initialStatus,
+  status: initialStatus = Status.NotStarted,
   type,
   assignee,
   closeDialog,
@@ -60,21 +60,24 @@ export const TaskCardExpanded = ({
               setPriority={setPriority}
               taskId={id}
             />
-            <p> - {type}</p>
+            <div className="flex items-center">
+              <p>{type}</p>
+            </div>
           </div>
           <div className="my-2">
             <TitleEditable title={title} taskId={id} />
           </div>
-          <div className="flex space-x-1">
+          <div className="flex items-center space-x-1">
             <StoryPointsField storyPoints={storyPoints} taskId={id} />
-            <p className="font-bold">
-              -
+            {/* Add StatusIndicator here */}
+            <div className="flex items-center">
+              <StatusIndicator status={status} />
               <TaskStatusDropdown
                 status={status}
                 setStatus={setStatus}
                 taskId={id}
               />
-            </p>
+            </div>
           </div>
           <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
           <AssigneeDropdown
@@ -92,7 +95,7 @@ export const TaskCardExpanded = ({
       <div>
         <div className="mt-20 flex justify-between items-center">
           <div className="flex space-x-3 items-center">
-            <p className="font-semobold text-gray-600">Project stage</p>
+            <p className="font-sembold text-gray-600">Project stage</p>
             <p className="font-bold">
               <ProjectStagesDropdown
                 projectStage={projectStage}
