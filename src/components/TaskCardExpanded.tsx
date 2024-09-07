@@ -10,6 +10,7 @@ import { Priority } from "@/models/Priority";
 import HistoryLogs from "@/components/HistoryLogs";
 import DeleteButton from "@/components/DeleteButton";
 import { DescriptionEditable } from "./DescriptionEditable";
+import { TitleEditable } from "./TitleEditable";
 
 export const TaskCardExpanded = ({
   id,
@@ -39,10 +40,10 @@ export const TaskCardExpanded = ({
               setPriority={setPriority}
               taskId={id}
             />
-          </div>
-          <div className="flex space-x-2 align-middle items-center mt-2">
-            <p className="text-3xl text-black font-bold ">{title}</p>
             <p> - {type}</p>
+          </div>
+          <div className="my-2">
+            <TitleEditable title={title} taskId={id} />
           </div>
           <div className="flex space-x-2">
             <p className="text-gray-500 font-bold">{storyPoints} SP</p>
@@ -56,7 +57,6 @@ export const TaskCardExpanded = ({
             </Avatar>
             <p className="font-semibold">{assignee}</p>
           </div>
-          {/* Replace static description with DescriptionEditable */}
           <DescriptionEditable description={description} taskId={id} />
         </div>
         <div className="mt-14">
