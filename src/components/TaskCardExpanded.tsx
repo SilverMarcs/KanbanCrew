@@ -9,8 +9,10 @@ import { Priority } from "@/models/Priority";
 import HistoryLogs from "@/components/HistoryLogs";
 import DeleteButton from "@/components/DeleteButton";
 import { DescriptionEditable } from "@/components//DescriptionEditable";
-import { TitleEditable } from "@/components/TitleEditable";
-import { StoryPointsField } from "@/components/StoryPointsField";
+import { TitleEditable } from "@/components//TitleEditable";
+import { StoryPointsField } from "@/components//StoryPointsField";
+import { TaskTypePicker } from "@/components/TaskTypePicker";
+import { Type } from "@/models/Type";
 import { ProjectStagesDropdown } from "@/components/ProjectStagesDropdown";
 import { ProjectStage } from "@/models/ProjectStage";
 import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
@@ -40,6 +42,7 @@ export const TaskCardExpanded = ({
 }: Task & TaskCardExpandedProps) => {
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
+  const [taskType, setTaskType] = useState<Type>(type);
   const [projectStage, setProjectStage] =
     useState<ProjectStage>(initialProjectStage);
   const [status, setStatus] = useState<Status>(initialStatus);
@@ -54,7 +57,11 @@ export const TaskCardExpanded = ({
               setPriority={setPriority}
               taskId={id}
             />
-            <p> - {type}</p>
+            <TaskTypePicker
+              taskId={id}
+              currentType={taskType}
+              setTaskType={setTaskType}
+            />
           </div>
           <div className="my-2">
             <TitleEditable title={title} taskId={id} />
