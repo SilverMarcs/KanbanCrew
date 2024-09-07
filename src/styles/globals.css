@@ -117,3 +117,8 @@
   background-color: #FFA5A5;
   color: #D00000;
 }
+
+textarea {
+  resize: none; /* Prevent resizing of the textarea */
+  overflow: hidden; /* Ensure the height remains consistent */
+}

@@ -8,6 +8,7 @@ import { PriorityDropdown } from "./PriorityDropdown";
 import { Priority } from "@/models/Priority";
 import HistoryLogs from "@/components/HistoryLogs";
 import DeleteButton from "@/components/DeleteButton";
+import { DescriptionEditable } from "./DescriptionEditable";
 
 export const TaskCardExpanded = ({
   id,
@@ -54,10 +55,8 @@ export const TaskCardExpanded = ({
             </Avatar>
             <p className="font-semibold">{assignee}</p>
           </div>
-          <div className="mt-6">
-            <p className="font-bold text-xl">Description</p>
-            <p className="text-gray-600">{description}</p>
-          </div>
+          {/* Replace static description with DescriptionEditable */}
+          <DescriptionEditable description={description} taskId={id} />
         </div>
         <div className="mt-14">
           <HistoryLogs />
