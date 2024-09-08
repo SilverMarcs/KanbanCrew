@@ -8,14 +8,14 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { BotIcon, EllipsisIcon, Scroll, Bug } from "lucide-react";
+import { EllipsisIcon, Scroll, Bug } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
 import { Member } from "@/models/Member";
 import { getPriorityColor } from "@/models/Priority";
-import { TagBadge } from "@/components/TagBadge";
 import { useState } from "react";
-import { Type } from "@/models/Type"; // Make sure to import the Type enum
+import { Type } from "@/models/Type";
+import { TagDot } from "./TagDot";
 
 interface TaskCardProps extends Task {
   members: Member[];
@@ -69,22 +69,21 @@ export const TaskCard = ({
             </div>
             <div className="text-xl font-bold mt-2">{title}</div>
             <div className="text-gray-500">Story point - {storyPoints}</div>
-
-            <Avatar className="mt-6">
-              <AvatarImage src={avatarUrl} />
-              <AvatarFallback>
-                {assignee.firstName[0]}
-                {assignee.lastName[0]} {/* Use initials */}
-              </AvatarFallback>
-            </Avatar>
-          </CardContent>
-          <CardFooter className="flex w-full justify-end">
-            <div className="absolute bottom-3 right-3">
-              {tags.map((tag) => (
-                <TagBadge key={tag} tag={tag} />
-              ))}
+            <div className="flex justify-between items-end">
+              <Avatar className="mt-6">
+                <AvatarImage src={avatarUrl} />
+                <AvatarFallback>
+                  {assignee.firstName[0]}
+                  {assignee.lastName[0]} {/* Use initials */}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex space-x-1">
+                {tags.map((tag) => (
+                  <TagDot key={tag} tag={tag} />
+                ))}
+              </div>
             </div>
-          </CardFooter>
+          </CardContent>
         </Card>
       </DialogTrigger>
       <DialogContent className="bg-white max-w-3xl">
