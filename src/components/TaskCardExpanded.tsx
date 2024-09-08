@@ -16,10 +16,7 @@ import { TaskTypePicker } from "@/components/TaskTypePicker";
 import { Type } from "@/models/Type";
 import { ProjectStagesDropdown } from "@/components/ProjectStagesDropdown";
 import { ProjectStage } from "@/models/ProjectStage";
-import {
-  TaskStatusDropdown,
-  StatusIndicator,
-} from "@/components/TaskStatusDropdown";
+import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
 import { Status } from "@/models/Status";
 import { Member } from "@/models/Member";
 import { AssigneeDropdown } from "./AssigneeDropdown";
@@ -70,19 +67,16 @@ export const TaskCardExpanded = ({
               setTaskType={setTaskType}
             />
           </div>
-          <div className="my-1">
+          <div className="mt-1">
             <TitleEditable title={title} taskId={id} />
           </div>
           <div className="flex items-center space-x-1">
             <StoryPointsField storyPoints={storyPoints} taskId={id} />
-            <div className="flex items-center">
-              <StatusIndicator status={status} />
-              <TaskStatusDropdown
-                status={status}
-                setStatus={setStatus}
-                taskId={id}
-              />
-            </div>
+            <TaskStatusDropdown
+              status={status}
+              setStatus={setStatus}
+              taskId={id}
+            />
           </div>
           <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
           <AssigneeDropdown

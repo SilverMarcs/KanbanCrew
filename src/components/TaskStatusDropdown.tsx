@@ -14,7 +14,15 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Status } from "@/models/Status";
 
-export function StatusIndicator({ status }: { status: Status }) {
+export function TaskStatusDropdown({
+  status,
+  setStatus,
+  taskId,
+}: {
+  status: Status;
+  setStatus: (status: Status) => void;
+  taskId?: string;
+}) {
   const getStatusColor = (status: Status) => {
     switch (status) {
       case Status.NotStarted:
@@ -26,23 +34,6 @@ export function StatusIndicator({ status }: { status: Status }) {
     }
   };
 
-  return (
-    <div
-      className="w-2 h-2 rounded-full inline-block"
-      style={{ backgroundColor: getStatusColor(status) }}
-    />
-  );
-}
-
-export function TaskStatusDropdown({
-  status,
-  setStatus,
-  taskId,
-}: {
-  status: Status;
-  setStatus: (status: Status) => void;
-  taskId?: string;
-}) {
   const handleStatusChange = async (value: string) => {
     const newStatus = value as Status;
     setStatus(newStatus);
@@ -60,7 +51,11 @@ export function TaskStatusDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="bg-transparent font-bold hover:bg-transparent text-black">
+        <Button className="bg-transparent font-bold hover:bg-transparent text-black flex items-center">
+          <div
+            className="w-2 h-2 rounded-full inline-block mr-2"
+            style={{ backgroundColor: getStatusColor(status) }}
+          />
           {status}
           <ChevronDown className="ml-1 h-4 w-4" />
         </Button>

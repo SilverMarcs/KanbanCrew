@@ -46,9 +46,12 @@ export function ProjectStagesDropdown({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Change Project Stage</DropdownMenuLabel>
+        <DropdownMenuLabel>Project Stage</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={projectStage} onValueChange={handleStageChange}>
+        <DropdownMenuRadioGroup
+          value={projectStage}
+          onValueChange={handleStageChange}
+        >
           {Object.values(ProjectStage).map((stage) => (
             <DropdownMenuRadioItem key={stage} value={stage}>
               {stage}
@@ -59,4 +62,3 @@ export function ProjectStagesDropdown({
     </DropdownMenu>
   );
 }
-
