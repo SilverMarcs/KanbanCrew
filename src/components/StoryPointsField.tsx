@@ -5,15 +5,17 @@ import { db } from "@/lib/firebaseConfig";
 
 interface StoryPointsFieldProps {
   storyPoints: number;
+  setStoryPoints: (points: number) => void;
   taskId?: string;
 }
 
 export const StoryPointsField: React.FC<StoryPointsFieldProps> = ({
   storyPoints,
+  setStoryPoints,
   taskId,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [points, setPoints] = useState(storyPoints);
+  const [localPoints, setLocalPoints] = useState(storyPoints);
 
   const handleClick = () => {
     setIsEditing(true);
@@ -22,14 +24,15 @@ export const StoryPointsField: React.FC<StoryPointsFieldProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
     if (value >= 1 && value <= 10) {
-      setPoints(value);
+      setLocalPoints(value);
     }
   };
 
   const handleBlur = async () => {
     setIsEditing(false);
+    setStoryPoints(localPoints);
     if (taskId) {
-      await updateStoryPoints(taskId, points);
+      await updateStoryPoints(taskId, localPoints);
     }
   };
 
@@ -49,7 +52,7 @@ export const StoryPointsField: React.FC<StoryPointsFieldProps> = ({
       {isEditing ? (
         <Input
           type="number"
-          value={points}
+          value={localPoints}
           onChange={handleChange}
           onBlur={handleBlur}
           min={1}
@@ -63,7 +66,7 @@ export const StoryPointsField: React.FC<StoryPointsFieldProps> = ({
           onClick={handleClick}
           className="w-full h-full flex items-center justify-center cursor-pointer text-gray-500 font-bold text-sm"
         >
-          {points} SP
+          {storyPoints} SP
         </div>
       )}
     </div>

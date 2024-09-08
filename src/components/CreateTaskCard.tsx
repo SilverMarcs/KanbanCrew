@@ -8,21 +8,11 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircleIcon } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { TagDropdown } from "@/components/TagDropdown";
 import { PriorityDropdown } from "@/components/PriorityDropdown";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/firebaseConfig";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  DocumentReference,
-  doc,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, addDoc, getDocs, Timestamp } from "firebase/firestore";
 import { Priority } from "@/models/Priority";
 import { Tag } from "@/models/Tag";
 import { ProjectStage } from "@/models/ProjectStage";
@@ -30,6 +20,13 @@ import { Status } from "@/models/Status";
 import { Type } from "@/models/Type";
 import { TagBadge } from "@/components/TagBadge";
 import { TaskTypePicker } from "./TaskTypePicker";
+import { DescriptionEditable } from "./DescriptionEditable";
+import { ProjectStagesDropdown } from "./ProjectStagesDropdown";
+import { TitleEditable } from "./TitleEditable";
+import { StoryPointsField } from "./StoryPointsField";
+import { AssigneeDropdown } from "./AssigneeDropdown";
+import { Member } from "@/models/Member";
+import { TaskStatusDropdown } from "./TaskStatusDropdown";
 
 export const CreateTaskCard = () => {
   const defaultTitle = "New Task";
@@ -47,7 +44,7 @@ export const CreateTaskCard = () => {
   const [priority, setPriority] = useState<Priority>(Priority.Low);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [tags, setTags] = useState<Tag[]>([]);
-  const [assignee, setAssignee] = useState<DocumentReference | null>(null);
+  const [assignee, setAssignee] = useState<Member | null>(null);
   const [description, setDescription] = useState("Task description...");
   const [projectStage, setProjectStage] = useState<ProjectStage>(
     ProjectStage.Planning
@@ -63,8 +60,17 @@ export const CreateTaskCard = () => {
 
       if (!membersSnapshot.empty) {
         const firstMemberDoc = membersSnapshot.docs[0];
-        setAssignee(doc(db, "members", firstMemberDoc.id));
-        setAvatarUrl(firstMemberDoc.data().avatarUrl || "");
+        const memberData = firstMemberDoc.data();
+
+        // Create a Member object
+        const member: Member = {
+          id: firstMemberDoc.id,
+          firstName: memberData.firstName || "",
+          lastName: memberData.lastName || "",
+        };
+
+        setAssignee(member);
+        setAvatarUrl(memberData.avatarUrl || "");
       }
     };
 
@@ -138,64 +144,58 @@ export const CreateTaskCard = () => {
           </CardContent>
         </Card>
       </DialogTrigger>
-      <DialogContent className="bg-white">
+      <DialogContent className="bg-white max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Create a new task</DialogTitle>
-          <Button
-            className="ml-auto"
-            onClick={handleCreateTask}
-            disabled={tags.length === 0}
-          >
-            Create Task
-          </Button>
+          <DialogTitle className="flex items-center justify-between pr-7">
+            <span>Create a new task</span>
+            <Button onClick={handleCreateTask} disabled={tags.length === 0}>
+              Create Task
+            </Button>
+          </DialogTitle>
         </DialogHeader>
-        <div className="text-start px-3">
-          <div className="w-full flex items-center space-x-2">
-            <PriorityDropdown priority={priority} setPriority={setPriority} />
-            <TaskTypePicker currentType={type} setTaskType={setType} />
-          </div>
-          <div className="flex space-x-2 align-middle items-center mt-2">
-            <Input
-              className="text-3xl text-black font-bold"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <p> - {type}</p>
-          </div>
-          <div className="flex space-x-2">
-            <Input
-              type="number"
-              className="text-gray-500 font-bold"
-              value={storyPoints}
-              onChange={(e) => setStoryPoints(Number(e.target.value))}
-            />
-            <p className="font-bold">- {status}</p>
-          </div>
-          <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
-          <div className="mt-2 flex space-x-2 w-full items-center">
-            <Avatar>
-              <AvatarImage src={avatarUrl} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Input value={assignee ? assignee.id : ""} readOnly />
-          </div>
-          <div className="mt-6">
-            <p className="font-bold text-xl">Description</p>
-            <Textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-          <div className="mt-20 flex justify-between items-center">
-            <div className="flex space-x-3 items-center">
-              <p className="font-semibold text-gray-600">Project stage</p>
-              <Input value={projectStage} readOnly />
+        <div className="px-3">
+          <div className="flex">
+            <div className="text-start">
+              <div className="w-full flex items-center space-x-3">
+                <PriorityDropdown
+                  priority={priority}
+                  setPriority={setPriority}
+                />
+                <TaskTypePicker currentType={type} setTaskType={setType} />
+              </div>
+              <div className="mt-1">
+                <TitleEditable title={title} setTitle={setTitle} />
+              </div>
+              <div className="flex items-center space-x-1">
+                <StoryPointsField
+                  storyPoints={storyPoints}
+                  setStoryPoints={setStoryPoints}
+                />
+                <TaskStatusDropdown status={status} setStatus={setStatus} />
+              </div>
+              <p className="text-muted-foreground font-semibold mt-6">
+                Assignee
+              </p>
+              <AssigneeDropdown assignee={assignee} setAssignee={setAssignee} />
+              <DescriptionEditable
+                description={description}
+                setDescription={setDescription}
+              />
             </div>
-            <div className="flex items-center space-x-2">
-              {tags.map((tag, i) => (
-                <TagBadge key={i} tag={tag} />
-              ))}
-              <TagDropdown selectedTags={tags} onTagChange={setTags} />
+          </div>
+
+          <div>
+            <div className="mt-20 flex justify-between items-center">
+              <ProjectStagesDropdown
+                projectStage={projectStage}
+                setProjectStage={setProjectStage}
+              />
+              <div className="flex items-center space-x-2">
+                {tags.map((tag, i) => (
+                  <TagBadge key={i} tag={tag} />
+                ))}
+                <TagDropdown selectedTags={tags} onTagChange={setTags} />
+              </div>
             </div>
           </div>
         </div>

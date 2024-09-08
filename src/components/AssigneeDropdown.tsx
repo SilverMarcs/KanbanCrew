@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState, useEffect } from "react";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebaseConfig"; // Ensure this path is correct for your Firebase setup
+import { db } from "@/lib/firebaseConfig";
 
 interface Member {
   id: string;
@@ -17,7 +17,7 @@ interface Member {
 
 interface AssigneeDropdownProps {
   assignee: Member | null;
-  onAssigneeChange: (newAssignee: Member) => void;
+  setAssignee: (newAssignee: Member) => void;
   taskId?: string;
 }
 
@@ -27,7 +27,7 @@ const getInitials = (firstName: string, lastName: string) => {
 
 export const AssigneeDropdown = ({
   assignee,
-  onAssigneeChange,
+  setAssignee,
   taskId,
 }: AssigneeDropdownProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -48,7 +48,7 @@ export const AssigneeDropdown = ({
   }, []);
 
   const handleAssigneeChange = async (newAssignee: Member) => {
-    onAssigneeChange(newAssignee);
+    setAssignee(newAssignee);
     setIsDropdownOpen(false);
 
     if (taskId) {

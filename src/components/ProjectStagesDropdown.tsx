@@ -21,14 +21,13 @@ export function ProjectStagesDropdown({
 }: {
   projectStage: ProjectStage;
   setProjectStage: (stage: ProjectStage) => void;
-  taskId?: string; // Make taskId optional
+  taskId?: string;
 }) {
   const handleStageChange = async (value: string) => {
     const newStage = value as ProjectStage;
     setProjectStage(newStage);
 
     if (taskId) {
-      // Only update Firebase if taskId is provided
       await updateProjectStage(taskId, newStage);
     }
   };
@@ -39,26 +38,29 @@ export function ProjectStagesDropdown({
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="flex items-center bg-transparent font-bold hover:bg-transparent text-black">
-          {projectStage} <ChevronDown className="ml-2 h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>Project Stage</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup
-          value={projectStage}
-          onValueChange={handleStageChange}
-        >
-          {Object.values(ProjectStage).map((stage) => (
-            <DropdownMenuRadioItem key={stage} value={stage}>
-              {stage}
-            </DropdownMenuRadioItem>
-          ))}
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex space-x-3 items-center">
+      <p className="font-semibold text-gray-600">Project stage</p>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button className="flex items-center bg-transparent font-bold hover:bg-transparent text-black">
+            {projectStage} <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Project Stage</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup
+            value={projectStage}
+            onValueChange={handleStageChange}
+          >
+            {Object.values(ProjectStage).map((stage) => (
+              <DropdownMenuRadioItem key={stage} value={stage}>
+                {stage}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }
