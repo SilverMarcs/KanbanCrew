@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { TagBadge } from "@/components/TagBadge";
 import { Tag } from "@/models/Tag";
-import { Filter, ChevronDown, CalendarCog } from "lucide-react";
+import { Filter, ChevronDown } from "lucide-react";
 
 interface TagFilterProps {
     selectedTags: Tag[];

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,16 +8,17 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { BotIcon, EllipsisIcon } from "lucide-react";
+import { BotIcon, EllipsisIcon, Scroll, Bug } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
-import { Member } from "@/models/Member"; // Import Member type
+import { Member } from "@/models/Member";
 import { getPriorityColor } from "@/models/Priority";
 import { TagBadge } from "@/components/TagBadge";
 import { useState } from "react";
+import { Type } from "@/models/Type"; // Make sure to import the Type enum
 
 interface TaskCardProps extends Task {
-  members: Member[]; // Add members prop to TaskCard
+  members: Member[];
 }
 
 export const TaskCard = ({
@@ -34,40 +36,57 @@ export const TaskCard = ({
   type,
   creationDate,
   historyLogs,
-  members, // Pass members to TaskCardExpanded
+  members,
 }: TaskCardProps) => {
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentAssignee, setCurrentAssignee] = useState(assignee);
 
-  // Function to close the dialog
   const closeDialog = () => {
     setIsDialogOpen(false);
   };
 
+  const handleAssigneeChange = (newAssignee: Member) => {
+    // Update type to Member
+    setCurrentAssignee(newAssignee);
+  };
+
+  const TypeIcon = type === Type.UserStory ? Scroll : Bug;
+  const typeIconColor =
+    type === Type.UserStory ? "text-blue-500" : "text-orange-500";
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger className="w-96">
-        {/* Card component */}
         <Card className="relative rounded-xl">
           <CardContent className="text-start mt-6">
-            <div className="w-full flex justify-between">
-              <p
-                className={`${priorityBgColor} ${priorityTextColor} py-1 px-3 rounded-md w-fit text-sm font-bold`}
-              >
-                {priority}
-              </p>
+            <div className="w-full flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <p
+                  className={`${priorityBgColor} ${priorityTextColor} py-1 px-3 rounded-md w-fit text-sm font-bold`}
+                >
+                  {priority}
+                </p>
+                <TypeIcon className={`${typeIconColor}`} size={16} />
+              </div>
               <EllipsisIcon />
             </div>
             <div className="text-xl font-bold mt-2">{title}</div>
             <div className="text-gray-500">Story point - {storyPoints}</div>
+
+            {/* Display the assignee's name */}
             <Avatar className="mt-6">
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>
-                <BotIcon />
+                {assignee.firstName[0]}
+                {assignee.lastName[0]} {/* Use initials */}
               </AvatarFallback>
             </Avatar>
+            <div className="text-gray-500 mt-2">
+              Assigned to: {assignee.firstName} {assignee.lastName}
+            </div>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
             <div className="absolute bottom-3 right-3">
@@ -78,10 +97,8 @@ export const TaskCard = ({
           </CardFooter>
         </Card>
       </DialogTrigger>
-      {/* Dialog content */}
       <DialogContent className="bg-white max-w-3xl">
-        <DialogTitle className="hidden" />{" "}
-        {/* Hidden DialogTitle to avoid warnings */}
+        <DialogTitle className="hidden" />
         <DialogDescription>
           <TaskCardExpanded
             id={id}
@@ -91,7 +108,7 @@ export const TaskCard = ({
             priority={priority}
             avatarUrl={avatarUrl}
             tags={tags}
-            assignee={assignee}
+            assignee={currentAssignee}
             description={description}
             projectStage={projectStage}
             status={status}
@@ -99,7 +116,8 @@ export const TaskCard = ({
             creationDate={creationDate}
             closeDialog={closeDialog}
             historyLogs={historyLogs}
-            members={members} // Pass members to TaskCardExpanded
+            members={members}
+            onAssigneeChange={handleAssigneeChange}
           />
         </DialogDescription>
       </DialogContent>

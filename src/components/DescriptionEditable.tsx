@@ -15,18 +15,10 @@ export function DescriptionEditable({
   const [description, setDescription] = useState(initialDescription);
   const [tempDescription, setTempDescription] = useState(initialDescription);
   const [isLoading, setIsLoading] = useState(false);
-  const [descriptionHeight, setDescriptionHeight] = useState<number | null>(
-    null
-  );
+  const [descriptionHeight, setDescriptionHeight] = useState<number | null>(70); // Set a smaller default height
+  const [descriptionWidth, setDescriptionWidth] = useState<number | null>(375); // Set a fixed width
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null); // Ref for Textarea
-
-  // Set the height of the description text for consistent height with the Textarea
-  useEffect(() => {
-    if (descriptionRef.current) {
-      setDescriptionHeight(descriptionRef.current.clientHeight);
-    }
-  }, [description]);
 
   // Focus the Textarea when editing mode is activated
   useEffect(() => {
@@ -64,7 +56,8 @@ export function DescriptionEditable({
       {isEditing ? (
         <div
           style={{
-            height: descriptionHeight ? `${descriptionHeight}px` : "auto", // Apply the same height as the normal text
+            height: `${descriptionHeight}px`, // Apply the fixed height
+            width: `${descriptionWidth}px`, // Apply the fixed width
           }}
         >
           <Textarea
@@ -74,8 +67,9 @@ export function DescriptionEditable({
             onChange={(e) => setTempDescription(e.target.value)}
             disabled={isLoading}
             style={{
-              height: descriptionHeight ? `${descriptionHeight}px` : "auto",
-            }} // Ensure Textarea has the same height
+              height: `${descriptionHeight}px`, // Ensure Textarea has the same height
+              width: `${descriptionWidth}px`, // Ensure Textarea has the same fixed width
+            }}
           />
           <div className="flex space-x-2 mt-2">
             <Button onClick={handleSave} disabled={isLoading}>
@@ -96,7 +90,8 @@ export function DescriptionEditable({
           className="text-gray-600 mt-2 cursor-pointer"
           onClick={() => setIsEditing(true)}
           style={{
-            minHeight: descriptionHeight ? `${descriptionHeight}px` : "auto", // Ensure static text has the same height as Textarea
+            height: `${descriptionHeight}px`, // Ensure static text has the same height
+            width: `${descriptionWidth}px`, // Ensure static text has the same fixed width
           }}
         >
           {description || "No description available. Click to add one."}

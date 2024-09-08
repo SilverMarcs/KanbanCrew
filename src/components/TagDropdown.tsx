@@ -13,7 +13,7 @@ import { TagBadge } from "./TagBadge";
 import { Tag } from "@/models/Tag";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 
 interface TagDropdownProps {
   selectedTags: Tag[];
