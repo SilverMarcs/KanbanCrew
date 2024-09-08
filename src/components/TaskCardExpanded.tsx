@@ -55,7 +55,7 @@ export const TaskCardExpanded = ({
     <div className="px-3">
       <div className="flex">
         <div className="text-start min-w-96">
-          <div className="w-full flex items-center space-x-2">
+          <div className="w-full flex items-center space-x-3">
             <PriorityDropdown
               priority={priority}
               setPriority={setPriority}
@@ -67,7 +67,7 @@ export const TaskCardExpanded = ({
               setTaskType={setTaskType}
             />
           </div>
-          <div className="my-2">
+          <div className="my-1">
             <TitleEditable title={title} taskId={id} />
           </div>
           <div className="flex space-x-1">
