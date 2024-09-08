@@ -1,5 +1,4 @@
 import React from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
 import { Tag } from "@/models/Tag";
 import { TagBadge } from "@/components/TagBadge";
@@ -19,43 +18,45 @@ import { ProjectStage } from "@/models/ProjectStage";
 import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
 import { Status } from "@/models/Status";
 import { Member } from "@/models/Member";
-import { AssigneeDropdown } from "./AssigneeDropdown";
+import { AssigneeDropdown } from "@/components/AssigneeDropdown";
 
 interface TaskCardExpandedProps extends Task {
   closeDialog?: () => void;
   members: Member[];
-  onAssigneeChange: (newAssignee: Member) => void;
 }
 
 export const TaskCardExpanded = ({
   id,
-  title,
-  storyPoints,
+  title: initialTitle,
+  storyPoints: initialStoryPoints,
   priority: initialPriority,
   avatarUrl,
   tags,
-  description,
+  description: initialDescription,
   projectStage: initialProjectStage,
   status: initialStatus = Status.NotStarted,
   type,
-  assignee,
+  assignee: initialAssignee,
   closeDialog,
   historyLogs,
   members,
-  onAssigneeChange,
 }: TaskCardExpandedProps) => {
+  const [title, setTitle] = useState(initialTitle);
+  const [storyPoints, setStoryPoints] = useState(initialStoryPoints);
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
   const [taskType, setTaskType] = useState<Type>(type);
   const [projectStage, setProjectStage] =
     useState<ProjectStage>(initialProjectStage);
   const [status, setStatus] = useState<Status>(initialStatus);
+  const [description, setDescription] = useState(initialDescription);
+  const [assignee, setAssignee] = useState<Member | null>(initialAssignee);
 
   return (
     <div className="px-3">
       <div className="flex">
-        <div className="text-start min-w-96">
-          <div className="w-full flex items-center space-x-3">
+        <div className="text-start">
+          <div className="flex space-x-3">
             <PriorityDropdown
               priority={priority}
               setPriority={setPriority}
@@ -68,42 +69,42 @@ export const TaskCardExpanded = ({
             />
           </div>
           <div className="mt-1">
-            <TitleEditable title={title} taskId={id} />
+            <TitleEditable title={title} taskId={id} setTitle={setTitle} />
           </div>
           <div className="flex items-center space-x-1">
-            <StoryPointsField storyPoints={storyPoints} taskId={id} />
+            <StoryPointsField
+              storyPoints={storyPoints}
+              taskId={id}
+              setStoryPoints={setStoryPoints}
+            />
             <TaskStatusDropdown
               status={status}
               setStatus={setStatus}
               taskId={id}
             />
           </div>
-          <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
           <AssigneeDropdown
             assignee={assignee}
-            onAssigneeChange={onAssigneeChange}
+            setAssignee={setAssignee}
             taskId={id}
           />
-          <DescriptionEditable description={description} taskId={id} />
+          <DescriptionEditable
+            description={description}
+            taskId={id}
+            setDescription={setDescription}
+          />
         </div>
-
         <div className="mt-14">
           <HistoryLogs historyLogs={historyLogs} members={members} />
         </div>
       </div>
-
       <div>
         <div className="mt-20 flex justify-between items-center">
-          <div className="flex space-x-3 items-center">
-            <p className="font-semibold text-gray-600">Project stage</p>
-            <p className="font-bold">
-              <ProjectStagesDropdown
-                projectStage={projectStage}
-                setProjectStage={setProjectStage}
-                taskId={id}
-              />
-            </p>
-          </div>
+          <ProjectStagesDropdown
+            projectStage={projectStage}
+            setProjectStage={setProjectStage}
+            taskId={id}
+          />
           <div className="flex items-center space-x-2">
             {selectedTags.map((tag, i) => (
               <TagBadge key={i} tag={tag} />

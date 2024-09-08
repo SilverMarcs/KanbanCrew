@@ -1,38 +1,42 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 
-export function TitleEditable({
-  title: initialTitle,
-  taskId,
-}: {
+interface TitleEditableProps {
   title: string;
-  taskId: string;
-}) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(initialTitle);
-  const titleRef = useRef<HTMLHeadingElement>(null);
+  setTitle: (title: string) => void;
+  taskId?: string;
+}
+
+export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
+  const [isEditing, setIsEditing] = useState(!taskId);
+  const [localTitle, setLocalTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
-      inputRef.current.setSelectionRange(title.length, title.length);
+      inputRef.current.setSelectionRange(localTitle.length, localTitle.length);
     }
-  }, [isEditing, title]);
+  }, [isEditing, localTitle]);
 
   const handleUpdate = async (newTitle: string) => {
     if (newTitle !== title) {
-      try {
-        const taskRef = doc(db, "tasks", taskId);
-        await updateDoc(taskRef, { title: newTitle });
-        setTitle(newTitle);
-      } catch (error) {
-        console.error("Error updating title:", error);
+      setTitle(newTitle);
+      setLocalTitle(newTitle);
+      if (taskId) {
+        try {
+          const taskRef = doc(db, "tasks", taskId);
+          await updateDoc(taskRef, { title: newTitle });
+        } catch (error) {
+          console.error("Error updating title:", error);
+        }
       }
     }
-    setIsEditing(false);
+    if (taskId) {
+      setIsEditing(false);
+    }
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -50,14 +54,14 @@ export function TitleEditable({
       {isEditing ? (
         <Input
           ref={inputRef}
-          defaultValue={title}
+          value={localTitle}
+          onChange={(e) => setLocalTitle(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className="text-3xl text-black font-bold p-0 h-auto border-none" // focus-visible:ring-1 focus-visible:ring-offset-0 to make the outline thinner
+          className="text-3xl text-black font-bold p-0 h-auto border-none"
         />
       ) : (
         <h2
-          ref={titleRef}
           className="text-3xl text-black font-bold cursor-pointer"
           onClick={() => setIsEditing(true)}
         >

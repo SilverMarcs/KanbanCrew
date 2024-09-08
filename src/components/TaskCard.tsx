@@ -42,15 +42,9 @@ export const TaskCard = ({
     getPriorityColor(priority);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentAssignee, setCurrentAssignee] = useState(assignee);
 
   const closeDialog = () => {
     setIsDialogOpen(false);
-  };
-
-  const handleAssigneeChange = (newAssignee: Member) => {
-    // Update type to Member
-    setCurrentAssignee(newAssignee);
   };
 
   const TypeIcon = type === Type.UserStory ? Scroll : Bug;
@@ -104,7 +98,7 @@ export const TaskCard = ({
             priority={priority}
             avatarUrl={avatarUrl}
             tags={tags}
-            assignee={currentAssignee}
+            assignee={assignee}
             description={description}
             projectStage={projectStage}
             status={status}
@@ -113,7 +107,6 @@ export const TaskCard = ({
             closeDialog={closeDialog}
             historyLogs={historyLogs}
             members={members}
-            onAssigneeChange={handleAssigneeChange}
           />
         </DialogDescription>
       </DialogContent>
