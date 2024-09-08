@@ -38,7 +38,7 @@ export const CreateTaskCard = () => {
   const defaultAvatarUrl = "";
   const defaultTags: Tag[] = [];
   const defaultDescription = "Task description...";
-  const defaultProjectStage = ProjectStage.Integration;
+  const defaultProjectStage = ProjectStage.Planning;
   const defaultStatus = Status.NotStarted;
   const defaultType = Type.UserStory;
 
@@ -50,7 +50,7 @@ export const CreateTaskCard = () => {
   const [assignee, setAssignee] = useState<DocumentReference | null>(null);
   const [description, setDescription] = useState("Task description...");
   const [projectStage, setProjectStage] = useState<ProjectStage>(
-    ProjectStage.Integration
+    ProjectStage.Planning
   );
   const [status, setStatus] = useState<Status>(Status.NotStarted);
   const [type, setType] = useState<Type>(Type.UserStory);

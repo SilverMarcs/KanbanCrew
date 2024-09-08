@@ -71,7 +71,7 @@ export function DescriptionEditable({
               width: `${descriptionWidth}px`, // Ensure Textarea has the same fixed width
             }}
           />
-          <div className="flex space-x-2 mt-2">
+          <div className="flex justify-end space-x-2 mt-2">
             <Button onClick={handleSave} disabled={isLoading}>
               {isLoading ? "Saving..." : "Save"}
             </Button>

@@ -36,7 +36,7 @@ export const TaskCardExpanded = ({
   tags,
   description,
   projectStage: initialProjectStage,
-  status: initialStatus,
+  status: initialStatus = Status.NotStarted,
   type,
   assignee,
   closeDialog,
@@ -67,19 +67,16 @@ export const TaskCardExpanded = ({
               setTaskType={setTaskType}
             />
           </div>
-          <div className="my-1">
+          <div className="mt-1">
             <TitleEditable title={title} taskId={id} />
           </div>
-          <div className="flex space-x-1">
+          <div className="flex items-center space-x-1">
             <StoryPointsField storyPoints={storyPoints} taskId={id} />
-            <p className="font-bold">
-              -
-              <TaskStatusDropdown
-                status={status}
-                setStatus={setStatus}
-                taskId={id}
-              />
-            </p>
+            <TaskStatusDropdown
+              status={status}
+              setStatus={setStatus}
+              taskId={id}
+            />
           </div>
           <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
           <AssigneeDropdown
@@ -98,7 +95,7 @@ export const TaskCardExpanded = ({
       <div>
         <div className="mt-20 flex justify-between items-center">
           <div className="flex space-x-3 items-center">
-            <p className="font-semobold text-gray-600">Project stage</p>
+            <p className="font-semibold text-gray-600">Project stage</p>
             <p className="font-bold">
               <ProjectStagesDropdown
                 projectStage={projectStage}

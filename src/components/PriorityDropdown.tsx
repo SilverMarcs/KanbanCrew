@@ -43,7 +43,7 @@ export function PriorityDropdown({
           className={`${priorityBgColor} ${priorityTextColor} font-bold hover:${priorityBgColor} hover:${priorityTextColor}`}
         >
           {priority}
-          <ChevronDown className="ml-1" />
+          <ChevronDown className="ml-1 w-5 h-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
