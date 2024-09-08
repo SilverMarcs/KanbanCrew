@@ -46,7 +46,7 @@ export const TaskTypePicker = ({
         >
           <Scroll
             size={16}
-            className={`transition-colors duration-300 ${
+            className={`transition-colors duration-300 ml-2 ${
               currentType === Type.UserStory
                 ? "text-blue-500"
                 : "text-muted-foreground"
@@ -54,7 +54,7 @@ export const TaskTypePicker = ({
           />
           <span
             className={`
-              transition-all duration-300 whitespace-nowrap text-blue-600
+              transition-all duration-300 whitespace-nowrap text-blue-600 mr-2
               ${
                 currentType === Type.UserStory
                   ? "w-16 opacity-100"
@@ -75,7 +75,7 @@ export const TaskTypePicker = ({
         >
           <Bug
             size={16}
-            className={`transition-colors duration-300 ${
+            className={`transition-colors duration-300 ml-2 ${
               currentType === Type.Bug
                 ? "text-orange-500"
                 : "text-muted-foreground"
@@ -83,7 +83,7 @@ export const TaskTypePicker = ({
           />
           <span
             className={`
-              transition-all duration-300 whitespace-nowrap text-orange-600
+              transition-all duration-300 whitespace-nowrap text-orange-600 mr-1
               ${currentType === Type.Bug ? "w-8 opacity-100" : "w-0 opacity-0"}
             `}
           >
