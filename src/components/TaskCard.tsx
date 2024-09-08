@@ -42,9 +42,15 @@ export const TaskCard = ({
     getPriorityColor(priority);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentAssignee, setCurrentAssignee] = useState(assignee);
 
   const closeDialog = () => {
     setIsDialogOpen(false);
+  };
+
+  const handleAssigneeChange = (newAssignee: Member) => {
+    // Update type to Member
+    setCurrentAssignee(newAssignee);
   };
 
   const TypeIcon = type === Type.UserStory ? Scroll : Bug;
@@ -69,12 +75,18 @@ export const TaskCard = ({
             </div>
             <div className="text-xl font-bold mt-2">{title}</div>
             <div className="text-gray-500">Story point - {storyPoints}</div>
+
+            {/* Display the assignee's name */}
             <Avatar className="mt-6">
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>
-                <BotIcon />
+                {assignee.firstName[0]}
+                {assignee.lastName[0]} {/* Use initials */}
               </AvatarFallback>
             </Avatar>
+            <div className="text-gray-500 mt-2">
+              Assigned to: {assignee.firstName} {assignee.lastName}
+            </div>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
             <div className="absolute bottom-3 right-3">
@@ -96,7 +108,7 @@ export const TaskCard = ({
             priority={priority}
             avatarUrl={avatarUrl}
             tags={tags}
-            assignee={assignee}
+            assignee={currentAssignee}
             description={description}
             projectStage={projectStage}
             status={status}
@@ -105,6 +117,7 @@ export const TaskCard = ({
             closeDialog={closeDialog}
             historyLogs={historyLogs}
             members={members}
+            onAssigneeChange={handleAssigneeChange}
           />
         </DialogDescription>
       </DialogContent>

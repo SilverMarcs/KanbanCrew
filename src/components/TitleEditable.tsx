@@ -46,7 +46,7 @@ export function TitleEditable({
   };
 
   return (
-    <div className="inline-block">
+    <div className="inline-block my-2">
       {isEditing ? (
         <Input
           ref={inputRef}

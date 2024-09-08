@@ -5,6 +5,7 @@ import { Status } from "./Status";
 import { Tag } from "./Tag";
 import { Type } from "./Type";
 import { HistoryLog } from "./HistoryLog";
+import { Member } from "./Member";
 
 export interface Task {
   id: string;
@@ -14,7 +15,7 @@ export interface Task {
   priority: Priority;
   avatarUrl: string;
   tags: Tag[];
-  assignee: string;
+  assignee: Member;
   description: string;
   projectStage: ProjectStage;
   status: Status;

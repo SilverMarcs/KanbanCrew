@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
 import { Tag } from "@/models/Tag";
@@ -18,10 +19,12 @@ import { ProjectStage } from "@/models/ProjectStage";
 import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
 import { Status } from "@/models/Status";
 import { Member } from "@/models/Member";
+import { AssigneeDropdown } from "./AssigneeDropdown";
 
 interface TaskCardExpandedProps extends Task {
   closeDialog?: () => void;
-  members: Member[]; // Add members prop
+  members: Member[];
+  onAssigneeChange: (newAssignee: Member) => void;
 }
 
 export const TaskCardExpanded = ({
@@ -39,7 +42,8 @@ export const TaskCardExpanded = ({
   closeDialog,
   historyLogs,
   members,
-}: Task & TaskCardExpandedProps) => {
+  onAssigneeChange,
+}: TaskCardExpandedProps) => {
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
   const [taskType, setTaskType] = useState<Type>(type);
@@ -78,17 +82,14 @@ export const TaskCardExpanded = ({
             </p>
           </div>
           <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
-          <div className="mt-2 flex space-x-2 w-full items-center">
-            <Avatar>
-              <AvatarImage src={avatarUrl} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <p className="font-semibold">{assignee}</p>
-          </div>
+          <AssigneeDropdown
+            assignee={assignee}
+            onAssigneeChange={onAssigneeChange}
+            taskId={id}
+          />
           <DescriptionEditable description={description} taskId={id} />
         </div>
 
-        {/* Pass members to HistoryLogs */}
         <div className="mt-14">
           <HistoryLogs historyLogs={historyLogs} members={members} />
         </div>
