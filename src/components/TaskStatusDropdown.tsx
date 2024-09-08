@@ -18,17 +18,17 @@ export function StatusIndicator({ status }: { status: Status }) {
   const getStatusColor = (status: Status) => {
     switch (status) {
       case Status.NotStarted:
-        return '#FF6E6E';
+        return "#FF6E6E";
       case Status.InProgress:
-        return '#FFA500';
+        return "#FFA500";
       case Status.Completed:
-        return '#34CB5E';
+        return "#34CB5E";
     }
   };
 
   return (
-    <div 
-      className="w-2 h-2 rounded-full inline-block mr-2"
+    <div
+      className="w-2 h-2 rounded-full inline-block"
       style={{ backgroundColor: getStatusColor(status) }}
     />
   );
@@ -57,39 +57,29 @@ export function TaskStatusDropdown({
     await updateDoc(taskRef, { status });
   };
 
-  const getStatusLabel = (status: Status): string => {
-    switch (status) {
-      case Status.NotStarted:
-        return "Not Started";
-      case Status.InProgress:
-        return "In Progress";
-      case Status.Completed:
-        return "Completed";
-      default:
-        return status;
-    }
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="h-8 w-32 bg-transparent font-bold hover:bg-transparent text-black">
-          {getStatusLabel(status)}
+        <Button className="bg-transparent font-bold hover:bg-transparent text-black">
+          {status}
           <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Change Status</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={status} onValueChange={handleStatusChange}>
+        <DropdownMenuRadioGroup
+          value={status}
+          onValueChange={handleStatusChange}
+        >
           <DropdownMenuRadioItem value={Status.NotStarted}>
-            Not Started
+            {Status.NotStarted}
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value={Status.InProgress}>
-            In Progress
+            {Status.InProgress}
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value={Status.Completed}>
-            Completed
+            {Status.Completed}
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

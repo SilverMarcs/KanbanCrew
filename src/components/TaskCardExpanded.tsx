@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
 import { Tag } from "@/models/Tag";
@@ -8,12 +9,17 @@ import { PriorityDropdown } from "./PriorityDropdown";
 import { Priority } from "@/models/Priority";
 import HistoryLogs from "@/components/HistoryLogs";
 import DeleteButton from "@/components/DeleteButton";
-import { DescriptionEditable } from "@/components/DescriptionEditable";
-import { TitleEditable } from "@/components/TitleEditable";
-import { StoryPointsField } from "@/components/StoryPointsField";
+import { DescriptionEditable } from "@/components//DescriptionEditable";
+import { TitleEditable } from "@/components//TitleEditable";
+import { StoryPointsField } from "@/components//StoryPointsField";
+import { TaskTypePicker } from "@/components/TaskTypePicker";
+import { Type } from "@/models/Type";
 import { ProjectStagesDropdown } from "@/components/ProjectStagesDropdown";
 import { ProjectStage } from "@/models/ProjectStage";
-import { TaskStatusDropdown,StatusIndicator } from "@/components/TaskStatusDropdown";
+import {
+  TaskStatusDropdown,
+  StatusIndicator,
+} from "@/components/TaskStatusDropdown";
 import { Status } from "@/models/Status";
 import { Member } from "@/models/Member";
 import { AssigneeDropdown } from "./AssigneeDropdown";
@@ -21,12 +27,8 @@ import { AssigneeDropdown } from "./AssigneeDropdown";
 interface TaskCardExpandedProps extends Task {
   closeDialog?: () => void;
   members: Member[];
-  onAssigneeChange: (newAssignee: string) => void;
+  onAssigneeChange: (newAssignee: Member) => void;
 }
-
-const getInitials = (firstName: string, lastName: string) => {
-  return `${firstName[0]}${lastName[0]}`.toUpperCase();
-};
 
 export const TaskCardExpanded = ({
   id,
@@ -47,29 +49,32 @@ export const TaskCardExpanded = ({
 }: TaskCardExpandedProps) => {
   const [priority, setPriority] = useState<Priority>(initialPriority);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
-  const [projectStage, setProjectStage] = useState<ProjectStage>(initialProjectStage);
+  const [taskType, setTaskType] = useState<Type>(type);
+  const [projectStage, setProjectStage] =
+    useState<ProjectStage>(initialProjectStage);
   const [status, setStatus] = useState<Status>(initialStatus);
 
   return (
     <div className="px-3">
       <div className="flex">
         <div className="text-start min-w-96">
-          <div className="w-full flex items-center space-x-2">
+          <div className="w-full flex items-center space-x-3">
             <PriorityDropdown
               priority={priority}
               setPriority={setPriority}
               taskId={id}
             />
-            <div className="flex items-center">
-              <p>{type}</p>
-            </div>
+            <TaskTypePicker
+              taskId={id}
+              currentType={taskType}
+              setTaskType={setTaskType}
+            />
           </div>
-          <div className="my-2">
+          <div className="my-1">
             <TitleEditable title={title} taskId={id} />
           </div>
           <div className="flex items-center space-x-1">
             <StoryPointsField storyPoints={storyPoints} taskId={id} />
-            {/* Add StatusIndicator here */}
             <div className="flex items-center">
               <StatusIndicator status={status} />
               <TaskStatusDropdown
@@ -83,6 +88,7 @@ export const TaskCardExpanded = ({
           <AssigneeDropdown
             assignee={assignee}
             onAssigneeChange={onAssigneeChange}
+            taskId={id}
           />
           <DescriptionEditable description={description} taskId={id} />
         </div>
@@ -95,7 +101,7 @@ export const TaskCardExpanded = ({
       <div>
         <div className="mt-20 flex justify-between items-center">
           <div className="flex space-x-3 items-center">
-            <p className="font-sembold text-gray-600">Project stage</p>
+            <p className="font-semibold text-gray-600">Project stage</p>
             <p className="font-bold">
               <ProjectStagesDropdown
                 projectStage={projectStage}
