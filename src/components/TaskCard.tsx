@@ -48,9 +48,11 @@ export const TaskCard = ({
     setIsDialogOpen(false);
   };
 
-  const handleAssigneeChange = (newAssignee: string) => {
+  const handleAssigneeChange = (newAssignee: Member) => {
+    // Update type to Member
     setCurrentAssignee(newAssignee);
   };
+
   const TypeIcon = type === Type.UserStory ? Scroll : Bug;
   const typeIconColor =
     type === Type.UserStory ? "text-blue-500" : "text-orange-500";
@@ -73,12 +75,18 @@ export const TaskCard = ({
             </div>
             <div className="text-xl font-bold mt-2">{title}</div>
             <div className="text-gray-500">Story point - {storyPoints}</div>
+
+            {/* Display the assignee's name */}
             <Avatar className="mt-6">
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>
-                <BotIcon />
+                {assignee.firstName[0]}
+                {assignee.lastName[0]} {/* Use initials */}
               </AvatarFallback>
             </Avatar>
+            <div className="text-gray-500 mt-2">
+              Assigned to: {assignee.firstName} {assignee.lastName}
+            </div>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
             <div className="absolute bottom-3 right-3">

@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
 import { Tag } from "@/models/Tag";
@@ -23,12 +24,8 @@ import { AssigneeDropdown } from "./AssigneeDropdown";
 interface TaskCardExpandedProps extends Task {
   closeDialog?: () => void;
   members: Member[];
-  onAssigneeChange: (newAssignee: string) => void;
+  onAssigneeChange: (newAssignee: Member) => void;
 }
-
-const getInitials = (firstName: string, lastName: string) => {
-  return `${firstName[0]}${lastName[0]}`.toUpperCase();
-};
 
 export const TaskCardExpanded = ({
   id,
@@ -88,6 +85,7 @@ export const TaskCardExpanded = ({
           <AssigneeDropdown
             assignee={assignee}
             onAssigneeChange={onAssigneeChange}
+            taskId={id}
           />
           <DescriptionEditable description={description} taskId={id} />
         </div>

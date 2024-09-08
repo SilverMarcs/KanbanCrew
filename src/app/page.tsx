@@ -31,16 +31,13 @@ export default function Home() {
 
         for (const docSnapshot of snapshot.docs) {
           const data = docSnapshot.data();
-          let assigneeName = "Unknown Assignee";
+
+          let assignee: Member | null = null;
 
           if (data.assignee instanceof DocumentReference) {
             const assigneeDoc = await getDoc(data.assignee);
             if (assigneeDoc.exists()) {
-              const assigneeData = assigneeDoc.data() as {
-                firstName: string;
-                lastName: string;
-              };
-              assigneeName = `${assigneeData.firstName} ${assigneeData.lastName}`;
+              assignee = assigneeDoc.data() as Member;
             }
           }
 
@@ -52,7 +49,11 @@ export default function Home() {
             priority: data.priority as Priority,
             avatarUrl: data.avatarUrl,
             tags: data.tags,
-            assignee: assigneeName,
+            assignee: assignee || {
+              id: "",
+              firstName: "Unknown",
+              lastName: "Assignee",
+            }, // Default if no assignee
             description: data.description,
             projectStage: data.projectStage,
             status: data.status,
