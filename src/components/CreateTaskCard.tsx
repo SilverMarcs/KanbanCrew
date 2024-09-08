@@ -12,7 +12,13 @@ import { TagDropdown } from "@/components/TagDropdown";
 import { PriorityDropdown } from "@/components/PriorityDropdown";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/firebaseConfig";
-import { collection, addDoc, getDocs, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  Timestamp,
+  doc,
+} from "firebase/firestore";
 import { Priority } from "@/models/Priority";
 import { Tag } from "@/models/Tag";
 import { ProjectStage } from "@/models/ProjectStage";
@@ -39,18 +45,18 @@ export const CreateTaskCard = () => {
   const defaultStatus = Status.NotStarted;
   const defaultType = Type.UserStory;
 
-  const [title, setTitle] = useState("New Task");
-  const [storyPoints, setStoryPoints] = useState(3);
-  const [priority, setPriority] = useState<Priority>(Priority.Low);
-  const [avatarUrl, setAvatarUrl] = useState("");
+  const [title, setTitle] = useState(defaultTitle);
+  const [storyPoints, setStoryPoints] = useState(defaultStoryPoints);
+  const [priority, setPriority] = useState<Priority>(defaultPriority);
+  const [avatarUrl, setAvatarUrl] = useState(defaultAvatarUrl);
   const [tags, setTags] = useState<Tag[]>([]);
+  const [description, setDescription] = useState(defaultDescription);
+  const [projectStage, setProjectStage] =
+    useState<ProjectStage>(defaultProjectStage);
+  const [status, setStatus] = useState<Status>(defaultStatus);
+  const [type, setType] = useState<Type>(defaultType);
+
   const [assignee, setAssignee] = useState<Member | null>(null);
-  const [description, setDescription] = useState("Task description...");
-  const [projectStage, setProjectStage] = useState<ProjectStage>(
-    ProjectStage.Planning
-  );
-  const [status, setStatus] = useState<Status>(Status.NotStarted);
-  const [type, setType] = useState<Type>(Type.UserStory);
 
   // Fetch the first member from the members collection
   useEffect(() => {
@@ -65,8 +71,8 @@ export const CreateTaskCard = () => {
         // Create a Member object
         const member: Member = {
           id: firstMemberDoc.id,
-          firstName: memberData.firstName || "",
-          lastName: memberData.lastName || "",
+          firstName: memberData.firstName || "No",
+          lastName: memberData.lastName || "Members",
         };
 
         setAssignee(member);
@@ -87,7 +93,7 @@ export const CreateTaskCard = () => {
     }
 
     if (tags.length === 0) {
-      console.error("No tags selected"); // Ensure that at least one tag is selected
+      console.error("No tags selected");
       return;
     }
 
@@ -97,7 +103,7 @@ export const CreateTaskCard = () => {
       priority,
       avatarUrl,
       tags,
-      assignee,
+      assignee: doc(db, "members", assignee.id),
       description,
       projectStage,
       status,
@@ -132,9 +138,7 @@ export const CreateTaskCard = () => {
       open={isOpen}
       onOpenChange={(open) => {
         setIsOpen(open);
-        if (!open) {
-          resetStates();
-        }
+        if (!open) resetStates();
       }}
     >
       <DialogTrigger className="w-96 h-full" onClick={() => setIsOpen(true)}>
@@ -156,7 +160,7 @@ export const CreateTaskCard = () => {
         <div className="px-3">
           <div className="flex">
             <div className="text-start">
-              <div className="w-full flex items-center space-x-3">
+              <div className="flex space-x-3">
                 <PriorityDropdown
                   priority={priority}
                   setPriority={setPriority}
@@ -173,17 +177,17 @@ export const CreateTaskCard = () => {
                 />
                 <TaskStatusDropdown status={status} setStatus={setStatus} />
               </div>
-              <p className="text-muted-foreground font-semibold mt-6">
-                Assignee
-              </p>
               <AssigneeDropdown assignee={assignee} setAssignee={setAssignee} />
-              <DescriptionEditable
-                description={description}
-                setDescription={setDescription}
-              />
+              <div className="-mb-10">
+                {" "}
+                {/* This shoudltn be necessary */}
+                <DescriptionEditable
+                  description={description}
+                  setDescription={setDescription}
+                />
+              </div>
             </div>
           </div>
-
           <div>
             <div className="mt-20 flex justify-between items-center">
               <ProjectStagesDropdown

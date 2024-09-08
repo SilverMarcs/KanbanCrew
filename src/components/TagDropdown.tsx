@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 interface TagDropdownProps {
   selectedTags: Tag[];
   onTagChange: (tags: Tag[]) => void;
-  taskId?: string; // Make taskId optional
+  taskId?: string;
 }
 
 export const TagDropdown: React.FC<TagDropdownProps> = ({
@@ -32,7 +32,6 @@ export const TagDropdown: React.FC<TagDropdownProps> = ({
     let newSelectedTags: Tag[];
     if (selectedTags.includes(tag)) {
       if (selectedTags.length === 1) {
-        // Prevent removing the last tag
         toast.error("At least one tag must be selected");
         return;
       }
@@ -44,8 +43,19 @@ export const TagDropdown: React.FC<TagDropdownProps> = ({
     onTagChange(newSelectedTags);
 
     if (taskId) {
-      // Only update Firebase if taskId is provided
       await updateTaskTags(taskId, newSelectedTags);
+    }
+  };
+
+  const updateTaskTags = async (taskId: string, newTags: Tag[]) => {
+    const taskRef = doc(db, "tasks", taskId);
+
+    try {
+      await updateDoc(taskRef, {
+        tags: newTags,
+      });
+    } catch (error) {
+      console.error("Error updating tags:", error);
     }
   };
 
@@ -53,10 +63,17 @@ export const TagDropdown: React.FC<TagDropdownProps> = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          size="icon"
-          className="h-6 w-6 bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors"
+          // size="icon"
+          className="bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors"
         >
-          <CirclePlus className="h-4 w-4 text-black" />
+          {selectedTags.length === 0 ? (
+            <>
+              <span className="text-sm text-gray-500 mr-2">Select a tag</span>
+              <CirclePlus className="h-4 w-4 text-black" />
+            </>
+          ) : (
+            <CirclePlus className="h-4 w-4 text-black" />
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -75,16 +92,4 @@ export const TagDropdown: React.FC<TagDropdownProps> = ({
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
-
-const updateTaskTags = async (taskId: string, newTags: Tag[]) => {
-  const taskRef = doc(db, "tasks", taskId);
-
-  try {
-    await updateDoc(taskRef, {
-      tags: newTags,
-    });
-  } catch (error) {
-    console.error("Error updating tags:", error);
-  }
 };

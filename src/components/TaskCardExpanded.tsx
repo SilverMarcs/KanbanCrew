@@ -1,5 +1,4 @@
 import React from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Task } from "@/models/Task";
 import { Tag } from "@/models/Tag";
 import { TagBadge } from "@/components/TagBadge";
@@ -19,7 +18,7 @@ import { ProjectStage } from "@/models/ProjectStage";
 import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
 import { Status } from "@/models/Status";
 import { Member } from "@/models/Member";
-import { AssigneeDropdown } from "./AssigneeDropdown";
+import { AssigneeDropdown } from "@/components/AssigneeDropdown";
 
 interface TaskCardExpandedProps extends Task {
   closeDialog?: () => void;
@@ -84,7 +83,6 @@ export const TaskCardExpanded = ({
               taskId={id}
             />
           </div>
-          <p className="text-muted-foreground font-semibold mt-6">Assignee</p>
           <AssigneeDropdown
             assignee={assignee}
             setAssignee={setAssignee}

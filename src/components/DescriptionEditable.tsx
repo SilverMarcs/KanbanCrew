@@ -74,7 +74,7 @@ export function DescriptionEditable({
         ) : (
           <p
             ref={descriptionRef}
-            className="text-gray-600 mt-2 cursor-pointer"
+            className="text-gray-600 mt-2 cursor-pointer text-sm"
             onClick={() => setIsEditing(true)}
           >
             {description || "No description available. Click to add one."}

@@ -64,42 +64,48 @@ export const AssigneeDropdown = ({
   };
 
   return (
-    <div className="mt-2 flex space-x-2 w-full items-center">
-      <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-        <DropdownMenuTrigger asChild>
-          <div
-            className="cursor-pointer flex space-x-2 items-center rounded hover:outline hover:outline-12 hover:outline-black-700"
-            onClick={() => setIsDropdownOpen(true)}
-          >
-            <Avatar>
-              <AvatarFallback>
-                {assignee && getInitials(assignee.firstName, assignee.lastName)}
-              </AvatarFallback>
-            </Avatar>
-            <p className="font-semibold">
-              {assignee
-                ? `${assignee.firstName} ${assignee.lastName}`
-                : "No Assignee"}
-            </p>
-          </div>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent align="start">
-          {members.map((member) => (
-            <DropdownMenuItem
-              key={member.id}
-              onClick={() => handleAssigneeChange(member)}
+    <div>
+      <p className="text-muted-foreground font-semibold mt-6 text-sm">
+        Assignee
+      </p>
+      <div className="mt-2 flex space-x-2 w-full items-center">
+        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+          <DropdownMenuTrigger asChild>
+            <div
+              className="cursor-pointer flex space-x-2 items-center rounded hover:outline hover:outline-12 hover:outline-black-700"
+              onClick={() => setIsDropdownOpen(true)}
             >
-              <Avatar className="h-6 w-6 mr-2">
+              <Avatar>
                 <AvatarFallback>
-                  {getInitials(member.firstName, member.lastName)}
+                  {assignee &&
+                    getInitials(assignee.firstName, assignee.lastName)}
                 </AvatarFallback>
               </Avatar>
-              {`${member.firstName} ${member.lastName}`}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+              <p className="font-semibold">
+                {assignee
+                  ? `${assignee.firstName} ${assignee.lastName}`
+                  : "No Assignee"}
+              </p>
+            </div>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="start">
+            {members.map((member) => (
+              <DropdownMenuItem
+                key={member.id}
+                onClick={() => handleAssigneeChange(member)}
+              >
+                <Avatar className="h-6 w-6 mr-2">
+                  <AvatarFallback>
+                    {getInitials(member.firstName, member.lastName)}
+                  </AvatarFallback>
+                </Avatar>
+                {`${member.firstName} ${member.lastName}`}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 };
