@@ -76,7 +76,6 @@ export const TaskCard = ({
             <div className="text-xl font-bold mt-2">{title}</div>
             <div className="text-gray-500">Story point - {storyPoints}</div>
 
-            {/* Display the assignee's name */}
             <Avatar className="mt-6">
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>
@@ -84,9 +83,6 @@ export const TaskCard = ({
                 {assignee.lastName[0]} {/* Use initials */}
               </AvatarFallback>
             </Avatar>
-            <div className="text-gray-500 mt-2">
-              Assigned to: {assignee.firstName} {assignee.lastName}
-            </div>
           </CardContent>
           <CardFooter className="flex w-full justify-end">
             <div className="absolute bottom-3 right-3">

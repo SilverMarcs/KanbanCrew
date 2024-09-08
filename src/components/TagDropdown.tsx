@@ -13,6 +13,7 @@ import { TagBadge } from "./TagBadge";
 import { Tag } from "@/models/Tag";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
+import { toast } from "react-toastify";
 
 interface TagDropdownProps {
   selectedTags: Tag[];
@@ -30,6 +31,11 @@ export const TagDropdown: React.FC<TagDropdownProps> = ({
   const handleTagToggle = async (tag: Tag) => {
     let newSelectedTags: Tag[];
     if (selectedTags.includes(tag)) {
+      if (selectedTags.length === 1) {
+        // Prevent removing the last tag
+        toast.error("At least one tag must be selected");
+        return;
+      }
       newSelectedTags = selectedTags.filter((t) => t !== tag);
     } else {
       newSelectedTags = [...selectedTags, tag];
@@ -61,6 +67,7 @@ export const TagDropdown: React.FC<TagDropdownProps> = ({
             key={tag}
             checked={selectedTags.includes(tag)}
             onCheckedChange={() => handleTagToggle(tag)}
+            disabled={selectedTags.includes(tag) && selectedTags.length === 1}
           >
             <TagBadge tag={tag} />
           </DropdownMenuCheckboxItem>

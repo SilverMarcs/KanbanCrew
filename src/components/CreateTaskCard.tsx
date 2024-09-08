@@ -75,7 +75,13 @@ export const CreateTaskCard = () => {
 
   const handleCreateTask = async () => {
     if (!assignee) {
+      // TODO: assigne to current user automatically first
       console.error("No assignee selected");
+      return;
+    }
+
+    if (tags.length === 0) {
+      console.error("No tags selected"); // Ensure that at least one tag is selected
       return;
     }
 
@@ -135,7 +141,11 @@ export const CreateTaskCard = () => {
       <DialogContent className="bg-white">
         <DialogHeader>
           <DialogTitle>Create a new task</DialogTitle>
-          <Button className="ml-auto" onClick={handleCreateTask}>
+          <Button
+            className="ml-auto"
+            onClick={handleCreateTask}
+            disabled={tags.length === 0}
+          >
             Create Task
           </Button>
         </DialogHeader>
