@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -19,7 +19,7 @@ interface DeleteButtonProps {
   closeDialog: () => void; // Function to close the dialog
 }
 
-const DeleteButton: React.FC<DeleteButtonProps> = ({ taskId, closeDialog }) => {
+const DeleteButton: FC<DeleteButtonProps> = ({ taskId, closeDialog }) => {
   const router = useRouter();
 
   // Function to handle deletion
