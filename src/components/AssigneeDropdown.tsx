@@ -68,11 +68,11 @@ export const AssigneeDropdown = ({
       <p className="text-muted-foreground font-semibold mt-6 text-sm">
         Assignee
       </p>
-      <div className="mt-2 flex space-x-2 w-full items-center">
+      <div className="flex space-x-2 w-full items-center">
         <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <div
-              className="cursor-pointer flex space-x-2 items-center rounded hover:outline hover:outline-12 hover:outline-black-700"
+              className="cursor-pointer flex space-x-2 items-center rounded-lg hover:bg-gray-100 transition-all py-2 pr-2"
               onClick={() => setIsDropdownOpen(true)}
             >
               <Avatar>

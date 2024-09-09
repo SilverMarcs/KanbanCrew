@@ -31,7 +31,6 @@ export const TaskCardExpanded = ({
   title: initialTitle,
   storyPoints: initialStoryPoints,
   priority: initialPriority,
-  avatarUrl,
   tags,
   description: initialDescription,
   projectStage: initialProjectStage,

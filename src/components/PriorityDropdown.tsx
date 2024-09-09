@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,7 +20,7 @@ export function PriorityDropdown({
 }: {
   priority: Priority;
   setPriority: (priority: Priority) => void;
-  taskId?: string; // Make taskId optional
+  taskId?: string;
 }) {
   const handlePriorityChange = async (value: string) => {
     const newPriority = value as Priority;

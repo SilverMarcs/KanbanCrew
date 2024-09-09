@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
@@ -58,7 +58,7 @@ export const StoryPointsField: React.FC<StoryPointsFieldProps> = ({
           min={1}
           max={10}
           className="w-full h-full text-center p-0 text-sm text-black"
-          style={{ height: "29px", minHeight: "24px" }}
+          style={{ height: "29px", minHeight: "24px", boxShadow: "none" }}
           autoFocus
         />
       ) : (

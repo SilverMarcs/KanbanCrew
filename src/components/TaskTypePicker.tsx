@@ -1,4 +1,3 @@
-import React from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Type } from "@/models/Type";
