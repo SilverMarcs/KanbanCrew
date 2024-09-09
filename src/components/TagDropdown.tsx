@@ -1,3 +1,5 @@
+"use client";
+import { FC, useState } from "react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,11 +23,12 @@ interface TagDropdownProps {
   taskId?: string;
 }
 
-export const TagDropdown: React.FC<TagDropdownProps> = ({
+export const TagDropdown: FC<TagDropdownProps> = ({
   selectedTags,
   onTagChange,
   taskId,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const tags = Object.values(Tag);
 
   const handleTagToggle = async (tag: Tag) => {
@@ -60,11 +63,11 @@ export const TagDropdown: React.FC<TagDropdownProps> = ({
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button
-          // size="icon"
           className="bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors"
+          onClick={() => setIsOpen(true)}
         >
           {selectedTags.length === 0 ? (
             <>
@@ -85,6 +88,7 @@ export const TagDropdown: React.FC<TagDropdownProps> = ({
             checked={selectedTags.includes(tag)}
             onCheckedChange={() => handleTagToggle(tag)}
             disabled={selectedTags.includes(tag) && selectedTags.length === 1}
+            onSelect={(event) => event.preventDefault()}
           >
             <TagBadge tag={tag} />
           </DropdownMenuCheckboxItem>
