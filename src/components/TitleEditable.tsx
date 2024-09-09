@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
@@ -50,7 +50,7 @@ export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
   };
 
   return (
-    <div className="inline-block my-2">
+    <div className="inline-block">
       {isEditing ? (
         <Input
           ref={inputRef}
@@ -58,7 +58,8 @@ export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
           onChange={(e) => setLocalTitle(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className="text-3xl text-black font-bold p-0 h-auto border-none"
+          className="text-3xl text-black font-bold p-0 h-auto border-2 w-80"
+          style={{ boxShadow: "none" }}
         />
       ) : (
         <h2

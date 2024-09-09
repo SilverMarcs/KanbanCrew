@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
@@ -51,7 +51,7 @@ export function DescriptionEditable({
   };
 
   return (
-    <div className="mt-6">
+    <div className="mt-4">
       <p className="font-bold text-xl">Description</p>
       <div
         style={{
@@ -62,13 +62,14 @@ export function DescriptionEditable({
         {isEditing ? (
           <Textarea
             ref={textareaRef}
-            className="mt-2"
+            className="mt-2 border-2 p-1"
             value={description}
             onChange={(e) => handleChange(e.target.value)}
             onBlur={() => setIsEditing(false)}
             style={{
               height: `${descriptionHeight}px`,
               width: `${descriptionWidth}px`,
+              boxShadow: "none",
             }}
           />
         ) : (
