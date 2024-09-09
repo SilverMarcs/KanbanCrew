@@ -94,7 +94,7 @@ export const TaskCardExpanded = ({
             setDescription={setDescription}
           />
         </div>
-        <div className="mt-14">
+        <div className="mt-14 ml-6">
           <HistoryLogs historyLogs={historyLogs} members={members} />
         </div>
       </div>

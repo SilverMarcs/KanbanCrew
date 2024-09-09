@@ -141,7 +141,7 @@ export const CreateTaskCard = () => {
         if (!open) resetStates();
       }}
     >
-      <DialogTrigger className="w-96 h-full" onClick={() => setIsOpen(true)}>
+      <DialogTrigger className="w-96 h-48" onClick={() => setIsOpen(true)}>
         <Card className="rounded-xl border-dashed border-2 border-gray-300 bg-transparent h-full">
           <CardContent className="flex justify-center h-full items-center p-0">
             <PlusCircleIcon size={50} className="text-gray-300" />

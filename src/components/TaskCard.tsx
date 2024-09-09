@@ -16,6 +16,7 @@ import { getPriorityColor } from "@/models/Priority";
 import { useState } from "react";
 import { Type } from "@/models/Type";
 import { TagDot } from "./TagDot";
+import { truncateText } from "@/lib/utils";
 
 interface TaskCardProps extends Task {
   members: Member[];
@@ -67,7 +68,7 @@ export const TaskCard = ({
               </div>
               <EllipsisIcon />
             </div>
-            <div className="text-xl font-bold mt-2">{title}</div>
+            <div className="text-xl font-bold mt-2">{truncateText(title)}</div>
             <div className="text-gray-500">Story point - {storyPoints}</div>
             <div className="flex justify-between items-end">
               <Avatar className="mt-6">

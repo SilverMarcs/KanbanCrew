@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
+import { truncateText } from "@/lib/utils";
 
 interface TitleEditableProps {
   title: string;
@@ -58,7 +59,7 @@ export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
           onChange={(e) => setLocalTitle(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className="text-3xl text-black font-bold p-0 h-auto border-2 w-80"
+          className="text-3xl text-black font-bold p-0 h-auto border-2 w-[350px]"
           style={{ boxShadow: "none" }}
         />
       ) : (
@@ -66,7 +67,7 @@ export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
           className="text-3xl text-black font-bold cursor-pointer"
           onClick={() => setIsEditing(true)}
         >
-          {title}
+          {truncateText(title, 26)}
         </h2>
       )}
     </div>
