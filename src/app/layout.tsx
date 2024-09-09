@@ -38,7 +38,7 @@ export default function RootLayout({
           className="absolute inset-0 -z-10"
           style={{
             opacity: 0.4, // Reduce opacity to make it semi-transparent
-            top: "85px", // Make the image start 100px from the top of the page
+            top: "205px", // Make the image start 100px from the top of the page
           }}
         />
 
