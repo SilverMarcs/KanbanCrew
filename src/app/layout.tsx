@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Karla as FontSans } from "next/font/google";
 import "../styles/globals.css";
 import Sidebar from "@/components/Sidebar";
-import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
@@ -29,19 +28,6 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Image
-          src="/bg-image.png" 
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-          alt="Background"
-          className="absolute inset-0 -z-10"
-          style={{
-            opacity: 0.4, 
-            top: "205px", 
-          }}
-        />
-
         {/* Sidebar */}
         <Sidebar />
 

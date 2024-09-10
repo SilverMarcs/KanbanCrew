@@ -37,3 +37,10 @@ export const convertToDate = (time: {
 }): Date => {
   return new Date(time.seconds * 1000); // Convert seconds to milliseconds
 };
+
+export const truncateText = (text: string, n: number = 30) => {
+  if (text.length > n) {
+    return text.slice(0, n) + "...";
+  }
+  return text;
+};

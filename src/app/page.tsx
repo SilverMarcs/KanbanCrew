@@ -15,6 +15,7 @@ import { TagFilter } from "@/components/TagFilter";
 import { Tag } from "@/models/Tag";
 import { SortButton, SortField, SortOrder } from "@/components/SortButton";
 import { Priority, PriorityOrder } from "@/models/Priority";
+import Image from "next/image";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -127,6 +128,16 @@ export default function Home() {
 
   return (
     <div className="p-16">
+      <Image
+        src="/bg-image.png"
+        fill={true}
+        quality={50}
+        alt="Background"
+        className="inset-0 -z-10 saturate-200 bg-black"
+        style={{
+          opacity: 0.15,
+        }}
+      />
       <div className="flex justify-between items-center">
         <h1 className="text-5xl font-bold">Product Backlog</h1>
         <div className="flex space-x-4">
