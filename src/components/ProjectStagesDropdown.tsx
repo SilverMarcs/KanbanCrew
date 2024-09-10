@@ -38,7 +38,9 @@ export function ProjectStagesDropdown({
 
   return (
     <div className="flex space-x-3 items-center">
-      <p className="font-semibold text-gray-600 text-sm">Project stage</p>
+      <p className="font-semibold text-gray-600 text-sm min-w-fit">
+        Project stage
+      </p>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="flex items-center bg-transparent font-bold hover:bg-transparent text-black">
