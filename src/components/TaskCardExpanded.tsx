@@ -99,7 +99,7 @@ export const TaskCardExpanded = ({
         </div>
       </div>
       <div>
-        <div className="mt-20 flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <ProjectStagesDropdown
             projectStage={projectStage}
             setProjectStage={setProjectStage}

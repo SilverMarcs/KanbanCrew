@@ -189,7 +189,8 @@ export const CreateTaskCard = () => {
             </div>
           </div>
           <div>
-            <div className="mt-20 flex justify-between items-center">
+            {/* dunno why margin top needed here but not expanded card */}
+            <div className="mt-14 flex justify-between items-center">
               <ProjectStagesDropdown
                 projectStage={projectStage}
                 setProjectStage={setProjectStage}
