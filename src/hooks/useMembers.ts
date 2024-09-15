@@ -1,5 +1,3 @@
-// hooks/useMembers.ts
-
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";

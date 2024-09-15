@@ -1,5 +1,3 @@
-// hooks/useFilteredAndSortedTasks.ts
-
 import { useMemo } from "react";
 import { Task } from "@/models/Task";
 import { Tag } from "@/models/Tag";
@@ -29,7 +27,7 @@ export const useFilteredAndSortedTasks = (
 
         switch (field) {
           case SortField.Priority:
-            comparison = PriorityOrder[a.priority] - PriorityOrder[b.priority];
+            comparison = PriorityOrder[b.priority] - PriorityOrder[a.priority];
             break;
           case SortField.CreationDate:
             comparison =

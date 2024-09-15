@@ -1,0 +1,95 @@
+"use client";
+import React from "react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { TaskCard } from "@/components/TaskCard";
+import { Task } from "@/models/Task";
+import { Status } from "@/models/Status";
+import { useMembers } from "@/hooks/useMembers";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebaseConfig";
+import { Grip } from "lucide-react";
+
+interface KanbanBoardProps {
+  tasks: Task[];
+}
+
+const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
+  const members = useMembers();
+
+  const columns = {
+    [Status.NotStarted]: tasks.filter(
+      (task) => task.status === Status.NotStarted
+    ),
+    [Status.InProgress]: tasks.filter(
+      (task) => task.status === Status.InProgress
+    ),
+    [Status.Completed]: tasks.filter(
+      (task) => task.status === Status.Completed
+    ),
+  };
+
+  const onDragEnd = (result: any) => {
+    if (!result.destination) return;
+
+    const { source, destination, draggableId } = result;
+
+    if (source.droppableId !== destination.droppableId) {
+      const newStatus = destination.droppableId as Status;
+      updateTaskStatus(draggableId, newStatus);
+    }
+  };
+
+  const updateTaskStatus = async (taskId: string, status: Status) => {
+    const taskRef = doc(db, "tasks", taskId);
+    await updateDoc(taskRef, { status });
+  };
+
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className="flex space-x-4">
+        {Object.entries(columns).map(([status, tasks]) => (
+          <div key={status} className="flex-1 min-w-[26rem] max-w-[26rem]">
+            {" "}
+            {/* Adjusted min-width to be a bit larger than 24rem */}
+            <h2 className="text-xl font-semibold mb-4">{status}</h2>
+            <Droppable droppableId={status}>
+              {(provided) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className="bg-gray-800 p-4 rounded-lg min-h-[500px]"
+                >
+                  {tasks.map((task, index) => (
+                    <Draggable
+                      key={task.id}
+                      draggableId={task.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="mb-4"
+                        >
+                          <TaskCard
+                            {...task}
+                            members={members}
+                            children={<Grip size={20} color="black" />}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </div>
+        ))}
+      </div>
+    </DragDropContext>
+  );
+};
+
+export default KanbanBoard;

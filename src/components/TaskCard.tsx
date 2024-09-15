@@ -6,9 +6,9 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { EllipsisIcon, Scroll, Bug } from "lucide-react";
+import { Scroll, Bug } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
 import { Member } from "@/models/Member";
@@ -20,6 +20,7 @@ import { truncateText } from "@/lib/utils";
 
 interface TaskCardProps extends Task {
   members: Member[];
+  children?: React.ReactNode; // Add this line to accept children
 }
 
 export const TaskCard = ({
@@ -38,6 +39,7 @@ export const TaskCard = ({
   creationDate,
   historyLogs,
   members,
+  children,
 }: TaskCardProps) => {
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
@@ -66,7 +68,7 @@ export const TaskCard = ({
                 </p>
                 <TypeIcon className={`${typeIconColor}`} size={16} />
               </div>
-              <EllipsisIcon />
+              {children} {/* Render the drag handle here */}
             </div>
             <div className="text-xl font-bold mt-2">{truncateText(title)}</div>
             <div className="text-gray-500">Story point - {storyPoints}</div>
@@ -75,7 +77,7 @@ export const TaskCard = ({
                 <AvatarImage src={avatarUrl} />
                 <AvatarFallback>
                   {assignee.firstName[0]}
-                  {assignee.lastName[0]} {/* Use initials */}
+                  {assignee.lastName[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="flex space-x-1">

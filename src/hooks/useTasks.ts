@@ -1,5 +1,3 @@
-// hooks/useTasks.ts
-
 import { useEffect, useState } from "react";
 import {
   collection,
@@ -10,6 +8,10 @@ import {
 import { db } from "@/lib/firebaseConfig";
 import { Task } from "@/models/Task";
 import { Member } from "@/models/Member";
+import { Type } from "@/models/Type";
+import { Status } from "@/models/Status";
+import { ProjectStage } from "@/models/ProjectStage";
+import { Tag } from "@/models/Tag";
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -39,16 +41,18 @@ export const useTasks = () => {
             storyPoints: data.storyPoints,
             priority: data.priority,
             avatarUrl: data.avatarUrl,
-            tags: data.tags,
-            assignee: assignee || {
-              id: "",
-              firstName: "Unknown",
-              lastName: "Assignee",
-            },
+            tags: data.tags as Tag[],
+            assignee:
+              assignee ||
+              ({
+                id: "",
+                firstName: "Unknown",
+                lastName: "Assignee",
+              } as Member),
             description: data.description,
-            projectStage: data.projectStage,
-            status: data.status,
-            type: data.type,
+            projectStage: data.projectStage as ProjectStage,
+            status: data.status as Status,
+            type: data.type as Type,
             creationDate: data.creationDate,
             historyLogs: data.historyLogs,
           });
