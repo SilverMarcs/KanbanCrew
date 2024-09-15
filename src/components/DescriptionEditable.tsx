@@ -17,8 +17,6 @@ export function DescriptionEditable({
   const [isEditing, setIsEditing] = useState(!taskId);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
-  const [descriptionHeight, setDescriptionHeight] = useState<number>(70);
-  const [descriptionWidth, setDescriptionWidth] = useState<number>(375);
 
   useEffect(() => {
     if (isEditing && textareaRef.current) {
@@ -29,13 +27,6 @@ export function DescriptionEditable({
       );
     }
   }, [isEditing, description]);
-
-  useEffect(() => {
-    if (descriptionRef.current) {
-      setDescriptionHeight(descriptionRef.current.offsetHeight);
-      setDescriptionWidth(descriptionRef.current.offsetWidth);
-    }
-  }, [description]);
 
   const handleChange = async (newDescription: string) => {
     setDescription(newDescription);
@@ -51,14 +42,9 @@ export function DescriptionEditable({
   };
 
   return (
-    <div className="mt-4">
+    <div className="inline-block mt-4">
       <p className="font-bold text-xl">Description</p>
-      <div
-        style={{
-          height: `${descriptionHeight}px`,
-          width: `${descriptionWidth}px`,
-        }}
-      >
+      <div style={{ width: "350px", height: "100px" }}>
         {isEditing ? (
           <Textarea
             ref={textareaRef}
@@ -67,16 +53,22 @@ export function DescriptionEditable({
             onChange={(e) => handleChange(e.target.value)}
             onBlur={() => setIsEditing(false)}
             style={{
-              height: `${descriptionHeight}px`,
-              width: `${descriptionWidth}px`,
               boxShadow: "none",
+              height: "80px", // Match the height of the non-editing <p>
             }}
           />
         ) : (
           <p
             ref={descriptionRef}
-            className="text-gray-600 mt-2 cursor-pointer text-sm"
+            className="text-gray-600 mt-2 cursor-pointer text-sm overflow-hidden"
             onClick={() => setIsEditing(true)}
+            style={{
+              height: "80px", // Ensure this matches the Textarea height
+              maxHeight: "80px",
+              whiteSpace: "pre-wrap", // Keep line breaks
+              overflowY: "hidden", // Hide overflow
+              textOverflow: "ellipsis", // Add ellipsis when content overflows
+            }}
           >
             {description || "No description available. Click to add one."}
           </p>
