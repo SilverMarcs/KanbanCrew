@@ -20,7 +20,7 @@ import { truncateText } from "@/lib/utils";
 
 interface TaskCardProps extends Task {
   members: Member[];
-  children?: React.ReactNode; // Add this line to accept children
+  topTrailingChild?: React.ReactNode; // Add this line to accept children
 }
 
 export const TaskCard = ({
@@ -39,7 +39,7 @@ export const TaskCard = ({
   creationDate,
   historyLogs,
   members,
-  children,
+  topTrailingChild: topTrailingChild,
 }: TaskCardProps) => {
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
@@ -68,7 +68,7 @@ export const TaskCard = ({
                 </p>
                 <TypeIcon className={`${typeIconColor}`} size={16} />
               </div>
-              {children} {/* Render the drag handle here */}
+              {topTrailingChild}
             </div>
             <div className="text-xl font-bold mt-2">{truncateText(title)}</div>
             <div className="text-gray-500">Story point - {storyPoints}</div>

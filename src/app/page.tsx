@@ -10,6 +10,7 @@ import { Tag } from "@/models/Tag";
 import { SortButton, SortField, SortOrder } from "@/components/SortButton";
 import Image from "next/image";
 import { Task } from "@/models/Task";
+import { EllipsisIcon } from "lucide-react";
 
 export default function Home() {
   const tasks = useTasks();
@@ -56,7 +57,12 @@ export default function Home() {
 
       <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
         {filteredAndSortedTasks.map((task: Task) => (
-          <TaskCard key={task.id} {...task} members={members} />
+          <TaskCard
+            key={task.id}
+            {...task}
+            members={members}
+            topTrailingChild={<EllipsisIcon />}
+          />
         ))}
         <CreateTaskCard />
       </div>
