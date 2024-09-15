@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { TaskCard } from "@/components/TaskCard";
 import { Task } from "@/models/Task";
@@ -13,8 +13,13 @@ interface KanbanBoardProps {
   tasks: Task[];
 }
 
-const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
+const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
+  const [tasks, setTasks] = useState(initialTasks);
   const members = useMembers();
+
+  useEffect(() => {
+    setTasks(initialTasks);
+  }, [initialTasks]);
 
   const columns = {
     [Status.NotStarted]: tasks.filter(
@@ -35,13 +40,28 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
 
     if (source.droppableId !== destination.droppableId) {
       const newStatus = destination.droppableId as Status;
+
+      // Optimistic update
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === draggableId ? { ...task, status: newStatus } : task
+        )
+      );
+
+      // Update in Firebase
       updateTaskStatus(draggableId, newStatus);
     }
   };
 
   const updateTaskStatus = async (taskId: string, status: Status) => {
     const taskRef = doc(db, "tasks", taskId);
-    await updateDoc(taskRef, { status });
+    try {
+      await updateDoc(taskRef, { status });
+    } catch (error) {
+      console.error("Error updating task status:", error);
+      // Revert the optimistic update if the Firebase update fails
+      setTasks(initialTasks);
+    }
   };
 
   return (
