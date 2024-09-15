@@ -80,42 +80,46 @@
 }
 
 .sidebar-icon {
+  color: #f7d7d7;
+}
+
+.sidebar-icon-highlighted {
   color: #fce79c;
 }
 
 .tag-frontend {
-  background-color: #D8C8EC;
-  color: #9025AA;
+  background-color: #d8c8ec;
+  color: #9025aa;
 }
 
 .tag-backend {
-  background-color: #B9EEFF;
-  color: #3498D0;
+  background-color: #b9eeff;
+  color: #3498d0;
 }
 
 .tag-api {
-  background-color: #FFC0CB;
-  color: #AA117F;
+  background-color: #ffc0cb;
+  color: #aa117f;
 }
 
 .tag-database {
-  background-color: #FFBB6C;
-  color: #DF590E;
+  background-color: #ffbb6c;
+  color: #df590e;
 }
 
 .tag-testing {
-  background-color: #A6FFA4;
-  color: #0D6E05;
+  background-color: #a6ffa4;
+  color: #0d6e05;
 }
 
 .tag-uiux {
-  background-color: #FAEF90; 
-  color: #B58200;
+  background-color: #faef90;
+  color: #b58200;
 }
 
 .tag-framework {
-  background-color: #FFA5A5;
-  color: #D00000;
+  background-color: #ffa5a5;
+  color: #d00000;
 }
 
 textarea {
