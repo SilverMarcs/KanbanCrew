@@ -1,7 +1,9 @@
 import React from "react";
 import { useSprints } from "@/hooks/useSprints";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
+import { PlusCircleIcon } from "lucide-react";
+import { CreateSprintCard } from "./CreateSprintCard";
 
 const SprintList: React.FC = () => {
   const sprints = useSprints();
@@ -11,10 +13,10 @@ const SprintList: React.FC = () => {
       {sprints.map((sprint) => (
         <Card
           key={sprint.id}
-          className="flex items-center w-full bg-yellow-200 outline-none border-0"
+          className="flex items-center w-full bg-yellow-200 outline-none border-0 rounded-xl"
         >
           <div className="px-16 py-4 flex space-x-16 items-center">
-            <div className="text-xl font-bold">{sprint.name}</div>
+            <div className="text-xl font-extrabold">{sprint.name}</div>
             <div className="font-bold">
               <StatusBadge status={sprint.status} />
             </div>
@@ -25,6 +27,7 @@ const SprintList: React.FC = () => {
           </div>
         </Card>
       ))}
+      <CreateSprintCard />
     </div>
   );
 };
