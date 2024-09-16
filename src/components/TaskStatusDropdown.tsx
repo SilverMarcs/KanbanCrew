@@ -13,6 +13,7 @@ import { ChevronDown } from "lucide-react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Status } from "@/models/Status";
+import { StatusBadge } from "@/components/StatusBadge";
 
 export function TaskStatusDropdown({
   status,
@@ -23,17 +24,6 @@ export function TaskStatusDropdown({
   setStatus: (status: Status) => void;
   taskId?: string;
 }) {
-  const getStatusColor = (status: Status) => {
-    switch (status) {
-      case Status.NotStarted:
-        return "#FF6E6E";
-      case Status.InProgress:
-        return "#FFA500";
-      case Status.Completed:
-        return "#34CB5E";
-    }
-  };
-
   const handleStatusChange = async (value: string) => {
     const newStatus = value as Status;
     setStatus(newStatus);
@@ -52,11 +42,7 @@ export function TaskStatusDropdown({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button className="bg-transparent font-bold hover:bg-transparent text-black flex items-center">
-          <div
-            className="w-2 h-2 rounded-full inline-block mr-2"
-            style={{ backgroundColor: getStatusColor(status) }}
-          />
-          {status}
+          <StatusBadge status={status} />
           <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
