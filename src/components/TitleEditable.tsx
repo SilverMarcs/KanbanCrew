@@ -51,7 +51,7 @@ export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
   };
 
   return (
-    <div className="inline-block" style={{ width: "350px", height: "60px" }}>
+    <div style={{ width: "350px", height: "30px" }}>
       {isEditing ? (
         <Input
           ref={inputRef}
@@ -59,13 +59,14 @@ export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
           onChange={(e) => setLocalTitle(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className="text-3xl text-black font-bold p-0 border-2"
+          className="text-3xl text-black font-bold p-0 border-0"
           style={{ boxShadow: "none" }}
         />
       ) : (
         <h2
-          className="text-3xl text-black font-bold cursor-pointer"
+          className="text-3xl text-black font-bold cursor-pointer truncate"
           onClick={() => setIsEditing(true)}
+          style={{ width: "350px", height: "35px", whiteSpace: "nowrap" }}
         >
           {truncateText(title, 26)}
         </h2>
