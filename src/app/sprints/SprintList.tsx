@@ -1,33 +1,21 @@
-import React from "react";
 import { useSprints } from "@/hooks/useSprints";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { StatusBadge } from "@/components/StatusBadge";
+import { CreateSprintCard } from "./CreateSprintCard";
+import SprintCard from "./SprintCard";
 
 const SprintList: React.FC = () => {
   const sprints = useSprints();
 
+  // Sort sprints by startDate
+  const sortedSprints = sprints.sort(
+    (a, b) => a.startDate.toMillis() - b.startDate.toMillis()
+  );
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {sprints.map((sprint) => (
-        <Card key={sprint.id}>
-          <CardHeader>
-            <CardTitle className="text-xl">{sprint.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-3">
-              <StatusBadge status={sprint.status} />
-            </div>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-semibold">Start Date:</span>{" "}
-              {sprint.startDate.toDate().toLocaleDateString()}
-            </p>
-            <p className="text-sm text-gray-600">
-              <span className="font-semibold">End Date:</span>{" "}
-              {sprint.endDate.toDate().toLocaleDateString()}
-            </p>
-          </CardContent>
-        </Card>
+    <div className="flex flex-col space-y-4 my-4">
+      {sortedSprints.map((sprint) => (
+        <SprintCard key={sprint.id} sprint={sprint} />
       ))}
+      <CreateSprintCard />
     </div>
   );
 };
