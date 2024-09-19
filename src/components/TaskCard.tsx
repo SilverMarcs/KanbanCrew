@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,34 +13,38 @@ import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
 import { Member } from "@/models/Member";
 import { getPriorityColor } from "@/models/Priority";
-import { useState } from "react";
-import { Type } from "@/models/Type";
 import { TagDot } from "./TagDot";
 import { truncateText } from "@/lib/utils";
+import { Type } from "@/models/Type";
 
-interface TaskCardProps extends Task {
+interface TaskCardProps {
+  task: Task; // Changed to pass full Task object
   members: Member[];
-  topTrailingChild?: React.ReactNode; // Add this line to accept children
+  topTrailingChild?: React.ReactNode;
 }
 
-export const TaskCard = ({
-  id,
-  index,
-  title,
-  storyPoints,
-  priority,
-  avatarUrl,
-  tags,
-  assignee,
-  description,
-  projectStage,
-  status,
-  type,
-  creationDate,
-  historyLogs,
+export const TaskCard: React.FC<TaskCardProps> = ({
+  task,
   members,
-  topTrailingChild: topTrailingChild,
-}: TaskCardProps) => {
+  topTrailingChild,
+}) => {
+  const {
+    id,
+    index,
+    title,
+    storyPoints,
+    priority,
+    avatarUrl,
+    tags,
+    assignee,
+    description,
+    projectStage,
+    status,
+    type,
+    creationDate,
+    historyLogs,
+  } = task;
+
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
     getPriorityColor(priority);
 

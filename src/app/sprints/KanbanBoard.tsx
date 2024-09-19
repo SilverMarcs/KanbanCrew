@@ -91,7 +91,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                           className="mb-4"
                         >
                           <TaskCard
-                            {...task}
+                            task={task}
                             members={members}
                             topTrailingChild={<Grip size={20} color="black" />}
                           />
