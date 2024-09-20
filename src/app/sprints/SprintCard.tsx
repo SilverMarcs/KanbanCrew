@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
   DialogHeader,
 } from "@/components/ui/dialog";
 import {
@@ -133,7 +132,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
           </DropdownMenu>
 
           {/* Sprint Details */}
-          <DialogTrigger className="w-full cursor-pointer">
+          <div className="w-full cursor-pointer">
             <div className="px-6 py-4 flex space-x-16 items-center">
               <div className="text-xl font-extrabold">{sprint.name}</div>
               <div className="font-bold">
@@ -144,7 +143,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
                 {sprint.endDate.toDate().toLocaleDateString()}
               </p>
             </div>
-          </DialogTrigger>
+          </div>
         </Card>
 
         {/* Dialog Content for Sprint Form */}
