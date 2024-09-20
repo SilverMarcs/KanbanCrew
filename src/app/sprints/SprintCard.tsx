@@ -109,7 +109,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
             <DropdownMenuTrigger asChild>
               <Button 
               variant="ghost" 
-              className="ml-4 hover:bg-transparent focus:ring-0 focus:outline-none"
+              className="ml-1 hover:bg-transparent focus:ring-0 focus:outline-none"
               >
                 <EllipsisVertical 
                 className="bg-transparent hover:bg-transparent"
