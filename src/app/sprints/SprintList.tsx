@@ -23,13 +23,13 @@ const SprintList: React.FC = () => {
     <div className="flex flex-col space-y-4 my-4">
       {sortedSprints.map((sprint) => (
         <div key={sprint.id}>
-          <SprintCard sprint={sprint} />
+          
           <Button
-            variant="secondary"
+            // variant="secondary"
             onClick={() => handleSprintClick(sprint)}
-            className=""
+            className="bg-transparent w-full h-full hover:bg-transparent p-0"
           >
-            Show Backlog
+            <SprintCard sprint={sprint} />
           </Button>
         </div>
       ))}
