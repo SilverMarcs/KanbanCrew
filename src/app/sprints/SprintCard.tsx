@@ -6,6 +6,12 @@ import {
   DialogTrigger,
   DialogHeader,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { SprintForm } from "./SprintForm"; // Import the reusable form
 import { StatusBadge } from "@/components/StatusBadge";
 import { Sprint } from "@/models/sprints/Sprint";
@@ -14,9 +20,9 @@ import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { Status } from "@/models/Status";
-import { Trash2 } from "lucide-react";
+import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
+import ConfirmationDialog from "@/components/ConfirmationDialog"; // Import the confirmation dialog
 import { Button } from "@/components/ui/button";
-import ConfirmationDialog from "@/components/ConfirmationDialog"; // Import the new confirmation dialog
 
 interface SprintCardProps {
   sprint: Sprint;
@@ -81,7 +87,8 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
   };
 
   return (
-    <div>
+    <div className="w-full">
+      {/* Confirmation Dialog for Deletion */}
       <ConfirmationDialog
         isOpen={isDeleteConfirmOpen}
         onClose={() => setIsDeleteConfirmOpen(false)}
@@ -92,17 +99,40 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
         cancelButtonLabel="Cancel"
       />
 
+      {/* Dialog for Editing Sprint */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <Card
           key={sprint.id}
           className="flex items-center w-full bg-yellow-200 outline-none border-0 rounded-xl"
         >
-          <Button
-            className="ml-4 bg-transparent hover:bg-transparent z-50"
-            onClick={() => setIsDeleteConfirmOpen(true)} // Open the confirmation dialog
-          >
-            <Trash2 className="text-red-500" />
-          </Button>
+          {/* DropdownMenu for Ellipsis Icon */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+              variant="ghost" 
+              className="ml-4 hover:bg-transparent focus:ring-0 focus:outline-none"
+              >
+                <EllipsisVertical 
+                className="bg-transparent hover:bg-transparent"
+                size={20} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem onSelect={() => setIsOpen(true)}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit Sprint
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => setIsDeleteConfirmOpen(true)}
+                className="text-red-500"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete Sprint
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Sprint Details */}
           <DialogTrigger className="w-full cursor-pointer">
             <div className="px-6 py-4 flex space-x-16 items-center">
               <div className="text-xl font-extrabold">{sprint.name}</div>
@@ -117,6 +147,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
           </DialogTrigger>
         </Card>
 
+        {/* Dialog Content for Sprint Form */}
         <DialogContent className="bg-yellow-200 max-w-lg border-0 shadow-lg">
           <DialogHeader>
             <SprintForm
