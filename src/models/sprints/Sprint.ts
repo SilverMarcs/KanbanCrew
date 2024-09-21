@@ -8,5 +8,5 @@ export interface Sprint {
   status: Status;
   startDate: Timestamp;
   endDate: Timestamp;
-  tasks?: DocumentReference<Task>[];
+  taskIds?: string[];
 }

@@ -1,4 +1,4 @@
-import { DocumentReference, Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { Priority } from "./Priority";
 import { ProjectStage } from "./ProjectStage";
 import { Status } from "./Status";
@@ -6,7 +6,6 @@ import { Tag } from "./Tag";
 import { Type } from "./Type";
 import { HistoryLog } from "./HistoryLog";
 import { Member } from "./Member";
-import { Sprint } from "./sprints/Sprint";
 
 export interface Task {
   id: string;
@@ -23,5 +22,5 @@ export interface Task {
   type: Type;
   creationDate: Timestamp;
   historyLogs: HistoryLog[];
-  sprint?: DocumentReference<Sprint> | null;
+  sprintId?: string | null; // Changed from DocumentReference<Sprint> | null to string | null
 }

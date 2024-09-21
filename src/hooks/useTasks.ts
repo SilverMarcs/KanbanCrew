@@ -12,7 +12,6 @@ import { Type } from "@/models/Type";
 import { Status } from "@/models/Status";
 import { ProjectStage } from "@/models/ProjectStage";
 import { Tag } from "@/models/Tag";
-import { Sprint } from "@/models//sprints/Sprint";
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -27,17 +26,12 @@ export const useTasks = () => {
           const data = docSnapshot.data();
 
           let assignee: Member | null = null;
-          let sprint: DocumentReference<Sprint> | null = null;
 
           if (data.assignee instanceof DocumentReference) {
             const assigneeDoc = await getDoc(data.assignee);
             if (assigneeDoc.exists()) {
               assignee = assigneeDoc.data() as Member;
             }
-          }
-
-          if (data.sprint instanceof DocumentReference) {
-            sprint = data.sprint;
           }
 
           tasksData.push({
@@ -61,7 +55,7 @@ export const useTasks = () => {
             type: data.type as Type,
             creationDate: data.creationDate,
             historyLogs: data.historyLogs,
-            sprint: sprint, // Include sprint reference
+            sprintId: data.sprintId || null, // Use sprintId instead of sprint reference
           });
         }
 
