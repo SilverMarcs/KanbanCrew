@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { TaskCard } from "@/components/TaskCard";
+import { TaskCardCompact } from "@/components/TaskCardCompact";
 import { Task } from "@/models/Task";
 import { Status } from "@/models/Status";
 import { useMembers } from "@/hooks/useMembers";
@@ -69,14 +69,19 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
       <div className="flex space-x-4">
         {Object.entries(columns).map(([status, tasks]) => (
           <div key={status} className="flex-1 min-w-[26rem] max-w-[26rem]">
-            <h2 className="text-xl font-semibold mb-4">{status}</h2>
             <Droppable droppableId={status}>
               {(provided) => (
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
-                  className="bg-gray-800 p-4 rounded-lg min-h-[500px]"
+                  className="p-4 rounded-lg min-h-[500px] kanban-board"
                 >
+                  <h2
+                    className="text-xl font-semibold mb-4 drop-shadow"
+                    style={{ color: "#FCE79C" }}
+                  >
+                    {status}
+                  </h2>
                   {tasks.map((task, index) => (
                     <Draggable
                       key={task.id}
@@ -90,7 +95,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                           {...provided.dragHandleProps}
                           className="mb-4"
                         >
-                          <TaskCard
+                          <TaskCardCompact
                             task={task}
                             members={members}
                             topTrailingChild={<Grip size={20} color="black" />}
