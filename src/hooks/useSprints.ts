@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  DocumentReference,
+  Timestamp,
+} from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Sprint } from "@/models/sprints/Sprint";
 import { Status } from "@/models/Status";
+import { Task } from "@/models/Task";
 
 export const useSprints = () => {
   const [sprints, setSprints] = useState<Sprint[]>([]);
@@ -20,6 +26,7 @@ export const useSprints = () => {
           status: data.sprintStatus as Status,
           startDate: data.startDate as Timestamp,
           endDate: data.endDate as Timestamp,
+          tasks: data.tasks as DocumentReference<Task>[], // Include tasks references
         });
       }
 

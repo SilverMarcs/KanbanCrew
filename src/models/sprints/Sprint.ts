@@ -1,5 +1,6 @@
 import { Status } from "../Status";
-import { Timestamp } from "firebase/firestore";
+import { DocumentReference, Timestamp } from "firebase/firestore";
+import { Task } from "../Task";
 
 export interface Sprint {
   id: string;
@@ -7,4 +8,5 @@ export interface Sprint {
   status: Status;
   startDate: Timestamp;
   endDate: Timestamp;
+  tasks?: DocumentReference<Task>[];
 }

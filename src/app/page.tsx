@@ -59,7 +59,7 @@ export default function Home() {
         {filteredAndSortedTasks.map((task: Task) => (
           <TaskCard
             key={task.id}
-            {...task}
+            task={task}
             members={members}
             topTrailingChild={<EllipsisIcon />}
           />
