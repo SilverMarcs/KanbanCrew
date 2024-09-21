@@ -32,10 +32,9 @@ export const SprintForm: React.FC<SprintFormProps> = ({
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [forceActionType, setForceActionType] = useState<"start" | "end">();
 
-  const isDone = status === SprintStatus.Done; // Check if the sprint is done using the correct enum
+  const isDone = status === SprintStatus.Done; // Check if the sprint is done
 
   const handleStatusChange = (newStatus: TaskOrSprintStatus) => {
-    
     if (status === SprintStatus.NotStarted && newStatus === SprintStatus.Active) {
       // Handle force-start logic
       setTempStatus(newStatus);
@@ -76,27 +75,37 @@ export const SprintForm: React.FC<SprintFormProps> = ({
         <p className="mt-6">{isSprint ? "Sprint Start Date" : "Task Start Date"}</p>
         <Popover>
           <PopoverTrigger asChild>
-            <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
+            <Button
+              className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1"
+              onClick={isDone ? undefined : () => {}} // Prevent opening if done
+            >
               <span>{from ? format(from, "P") : "Select date"}</span>
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar mode="single" selected={from} onSelect={setFrom} />
-          </PopoverContent>
+          {!isDone && (
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar mode="single" selected={from} onSelect={setFrom} />
+            </PopoverContent>
+          )}
         </Popover>
 
         <p className="mt-4">{isSprint ? "Sprint End Date" : "Task Due Date"}</p>
         <Popover>
           <PopoverTrigger asChild>
-            <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
+            <Button
+              className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1"
+              onClick={isDone ? undefined : () => {}} // Prevent opening if done
+            >
               <span>{to ? format(to, "P") : "Select date"}</span>
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar mode="single" selected={to} onSelect={setTo} />
-          </PopoverContent>
+          {!isDone && (
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar mode="single" selected={to} onSelect={setTo} />
+            </PopoverContent>
+          )}
         </Popover>
       </div>
 
