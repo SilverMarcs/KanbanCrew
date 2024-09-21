@@ -10,10 +10,8 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { Status } from "@/models/Status";
-import { SprintStatus } from "@/models/sprints/SprintStatus";
-import { SprintFormProps } from "@/models/sprints/SprintFormProps";
 import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown";
+import { SprintFormProps } from "@/models/sprints/SprintFormProps";
 
 export const SprintForm: React.FC<SprintFormProps> = ({
   initialTitle,
@@ -30,14 +28,36 @@ export const SprintForm: React.FC<SprintFormProps> = ({
   const [from, setFrom] = useState<Date | undefined>(initialStartDate);
   const [to, setTo] = useState<Date | undefined>(initialEndDate);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [forceActionType, setForceActionType] = useState<"start" | "end">();
 
   const handleStatusChange = (newStatus: TaskOrSprintStatus) => {
     if (status === "Not Started" && newStatus === "Active") {
-      setShowConfirmDialog(true);
+      // Force-start logic
       setTempStatus(newStatus);
+      setForceActionType("start");
+      setShowConfirmDialog(true);
+    } else if (newStatus === "Done" && status !== "Done") {
+      // Force-end logic
+      setTempStatus(newStatus);
+      setForceActionType("end");
+      setShowConfirmDialog(true);
     } else {
       setStatus(newStatus);
     }
+  };
+
+  const confirmForceAction = () => {
+    const today = new Date();
+
+    if (forceActionType === "start") {
+      setFrom(today); // Set Start Date to today
+      setStatus(tempStatus); // Change status to "Active"
+    } else if (forceActionType === "end") {
+      setTo(today); // Set End Date to today
+      setStatus(tempStatus); // Change status to "Done"
+    }
+
+    setShowConfirmDialog(false);
   };
 
   return (
@@ -92,21 +112,21 @@ export const SprintForm: React.FC<SprintFormProps> = ({
       {showConfirmDialog && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <p className="mb-4">This will forcefully start the sprint ahead of the calendar, proceed?</p>
+            <p className="mb-4">
+              {forceActionType === "start"
+                ? "This will forcefully START the sprint ahead of the calendar, proceed?"
+                : "This will forcefully END the sprint ahead of the calendar, proceed?"}
+            </p>
             <div className="flex justify-center space-x-4">
-              <Button 
-                className="bg-green-500 hover:bg-green-600 text-white rounded-lg" 
-                onClick={() => {
-                  setStatus(tempStatus);  // Set new status
-                  setFrom(new Date());    // Set Start Date to today
-                  setShowConfirmDialog(false);  // Close the dialog
-                }}
+              <Button
+                className="bg-green-500 hover:bg-green-600 text-white rounded-lg"
+                onClick={confirmForceAction}
               >
-                Start!
+                {forceActionType === "start" ? "Start!" : "End!"}
               </Button>
-              <Button 
-                className="bg-red-500 hover:bg-red-600 text-white rounded-lg" 
-                onClick={() => setShowConfirmDialog(false)}  // Close without change
+              <Button
+                className="bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                onClick={() => setShowConfirmDialog(false)}  // Close without changes
               >
                 Cancel
               </Button>
@@ -117,4 +137,3 @@ export const SprintForm: React.FC<SprintFormProps> = ({
     </div>
   );
 };
-
