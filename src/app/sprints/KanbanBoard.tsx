@@ -69,14 +69,15 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
       <div className="flex space-x-4">
         {Object.entries(columns).map(([status, tasks]) => (
           <div key={status} className="flex-1 min-w-[26rem] max-w-[26rem]">
-            <h2 className="text-xl font-semibold mb-4">{status}</h2>
             <Droppable droppableId={status}>
               {(provided) => (
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   className="bg-gray-800 p-4 rounded-lg min-h-[500px]"
+                  style={{ backgroundColor: "#591515" }}
                 >
+                  <h2 className="text-xl font-semibold mb-4">{status}</h2>
                   {tasks.map((task, index) => (
                     <Draggable
                       key={task.id}
