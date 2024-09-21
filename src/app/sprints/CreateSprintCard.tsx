@@ -14,13 +14,14 @@ import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown"; 
 
 export const CreateSprintCard = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (
     name: String,
-    status: Status,
+    status: TaskOrSprintStatus,
     from: Date,
     to: Date
   ) => {
@@ -69,6 +70,7 @@ export const CreateSprintCard = () => {
             initialStatus={Status.NotStarted}
             onSubmit={onSubmit}
             submitButtonLabel="CREATE"
+            isSprint={true}
           />
         </DialogHeader>
       </DialogContent>
