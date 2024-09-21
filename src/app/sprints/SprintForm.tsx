@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown";
+import { Status } from "@/models/Status";
+import { SprintStatus } from "@/models/sprints/SprintStatus";
 import { SprintFormProps } from "@/models/sprints/SprintFormProps";
+import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown";
 
 export const SprintForm: React.FC<SprintFormProps> = ({
   initialTitle,
@@ -30,14 +32,17 @@ export const SprintForm: React.FC<SprintFormProps> = ({
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [forceActionType, setForceActionType] = useState<"start" | "end">();
 
+  const isDone = status === SprintStatus.Done; // Check if the sprint is done using the correct enum
+
   const handleStatusChange = (newStatus: TaskOrSprintStatus) => {
-    if (status === "Not Started" && newStatus === "Active") {
-      // Force-start logic
+    
+    if (status === SprintStatus.NotStarted && newStatus === SprintStatus.Active) {
+      // Handle force-start logic
       setTempStatus(newStatus);
       setForceActionType("start");
       setShowConfirmDialog(true);
-    } else if (newStatus === "Done" && status !== "Done") {
-      // Force-end logic
+    } else if (newStatus === SprintStatus.Done && status !== SprintStatus.Done) {
+      // Handle force-end logic
       setTempStatus(newStatus);
       setForceActionType("end");
       setShowConfirmDialog(true);
@@ -115,7 +120,7 @@ export const SprintForm: React.FC<SprintFormProps> = ({
             <p className="mb-4">
               {forceActionType === "start"
                 ? "This will forcefully START the sprint ahead of the calendar, proceed?"
-                : "This will forcefully END the sprint ahead of the calendar, proceed?"}
+                : "This will forcefully END the sprint ahead of the calendar, and sprint status can no longer be changed. Proceed?"}
             </p>
             <div className="flex justify-center space-x-4">
               <Button
