@@ -22,5 +22,5 @@ export interface Task {
   type: Type;
   creationDate: Timestamp;
   historyLogs: HistoryLog[];
-  sprintId?: string | null; // Changed from DocumentReference<Sprint> | null to string | null
+  sprintId?: string | null;
 }
