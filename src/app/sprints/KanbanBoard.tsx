@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { TaskCard } from "@/components/TaskCard";
+import { TaskCardCompact } from "@/components/TaskCardCompact";
 import { Task } from "@/models/Task";
 import { Status } from "@/models/Status";
 import { useMembers } from "@/hooks/useMembers";
@@ -91,7 +91,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                           {...provided.dragHandleProps}
                           className="mb-4"
                         >
-                          <TaskCard
+                          <TaskCardCompact
                             task={task}
                             members={members}
                             topTrailingChild={<Grip size={20} color="black" />}
