@@ -66,12 +66,12 @@ export const TaskCardCompact: React.FC<TaskCardProps> = ({
             <div className="w-full flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <p
-                  className={`${priorityBgColor} ${priorityTextColor} py-1 px-3 rounded-md w-fit text-sm font-bold`}
+                  className={`${priorityBgColor} ${priorityTextColor} py-1 px-3 rounded-md w-fit text-xs font-bold`}
                 >
                   {priority}
                 </p>
                 <TypeIcon className={`${typeIconColor}`} size={16} />
-                <Avatar>
+                <Avatar className="w-8 h-8">
                   <AvatarImage src={avatarUrl} />
                   <AvatarFallback>
                     {assignee.firstName[0]}
@@ -81,9 +81,11 @@ export const TaskCardCompact: React.FC<TaskCardProps> = ({
               </div>
               {topTrailingChild}
             </div>
-            <div className="text-xl font-bold mt-2">{truncateText(title)}</div>
+            <div className="text-xl font-bold">{truncateText(title)}</div>
             <div className="flex justify-between">
-              <div className="text-gray-500">Story point - {storyPoints}</div>
+              <div className="text-gray-500 text-xs">
+                Story point - {storyPoints}
+              </div>
               <div className="flex space-x-1">
                 {tags.map((tag) => (
                   <TagDot key={tag} tag={tag} />

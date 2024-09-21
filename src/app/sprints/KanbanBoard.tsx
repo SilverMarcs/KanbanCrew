@@ -74,8 +74,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
-                  className="bg-gray-800 p-4 rounded-lg min-h-[500px]"
-                  style={{ backgroundColor: "#591515" }}
+                  className="p-4 rounded-lg min-h-[500px] kanban-board"
                 >
                   <h2 className="text-xl font-semibold mb-4">{status}</h2>
                   {tasks.map((task, index) => (
