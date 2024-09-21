@@ -11,7 +11,9 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Status } from "@/models/Status";
+import { SprintStatus } from "@/models/sprints/SprintStatus";
 import { SprintFormProps } from "@/models/sprints/SprintFormProps";
+import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown";
 
 export const SprintForm: React.FC<SprintFormProps> = ({
   initialTitle,
@@ -20,9 +22,10 @@ export const SprintForm: React.FC<SprintFormProps> = ({
   initialEndDate,
   onSubmit,
   submitButtonLabel,
+  isSprint,
 }) => {
   const [title, setTitle] = useState(initialTitle);
-  const [status, setStatus] = useState<Status>(initialStatus);
+  const [status, setStatus] = useState<TaskOrSprintStatus>(initialStatus);
   const [from, setFrom] = useState<Date | undefined>(initialStartDate);
   const [to, setTo] = useState<Date | undefined>(initialEndDate);
 
@@ -30,11 +33,11 @@ export const SprintForm: React.FC<SprintFormProps> = ({
     <div>
       <TitleEditable title={title} setTitle={setTitle} />
       <div className="-ml-2 mt-1">
-        <TaskStatusDropdown status={status} setStatus={setStatus} />
+        <TaskStatusDropdown status={status} setStatus={setStatus} isSprint={isSprint} />
       </div>
 
       <div>
-        <p className="mt-6">From</p>
+        <p className="mt-6">{isSprint ? "Sprint Start Date" : "Task Start Date"}</p> {/* Conditional label */}
         <Popover>
           <PopoverTrigger asChild>
             <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
@@ -47,7 +50,7 @@ export const SprintForm: React.FC<SprintFormProps> = ({
           </PopoverContent>
         </Popover>
 
-        <p className="mt-4">To</p>
+        <p className="mt-4">{isSprint ? "Sprint End Date" : "Task Due Date"}</p> {/* Conditional label */}
         <Popover>
           <PopoverTrigger asChild>
             <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
@@ -77,3 +80,4 @@ export const SprintForm: React.FC<SprintFormProps> = ({
     </div>
   );
 };
+

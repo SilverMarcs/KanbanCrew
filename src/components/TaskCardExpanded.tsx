@@ -20,6 +20,7 @@ import { Status } from "@/models/Status";
 import { Member } from "@/models/Member";
 import { AssigneeDropdown } from "@/components/AssigneeDropdown";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown";
 
 interface TaskCardExpandedProps extends Task {
   closeDialog?: () => void;
@@ -48,7 +49,7 @@ export const TaskCardExpanded = ({
   const [taskType, setTaskType] = useState<Type>(type);
   const [projectStage, setProjectStage] =
     useState<ProjectStage>(initialProjectStage);
-  const [status, setStatus] = useState<Status>(initialStatus);
+  const [status, setStatus] = useState<TaskOrSprintStatus>(initialStatus);
   const [description, setDescription] = useState(initialDescription);
   const [assignee, setAssignee] = useState<Member | null>(initialAssignee);
 

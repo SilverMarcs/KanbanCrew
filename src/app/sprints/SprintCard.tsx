@@ -22,6 +22,7 @@ import { Status } from "@/models/Status";
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
 import ConfirmationDialog from "@/components/ConfirmationDialog"; // Import the confirmation dialog
 import { Button } from "@/components/ui/button";
+import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown";
 
 interface SprintCardProps {
   sprint: Sprint;
@@ -33,7 +34,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
 
   const onSubmit = async (
     name: string,
-    status: Status,
+    status: TaskOrSprintStatus, 
     from: Date,
     to: Date
   ) => {
@@ -156,6 +157,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
               initialEndDate={sprint.endDate.toDate()}
               onSubmit={onSubmit}
               submitButtonLabel="UPDATE"
+              isSprint={true}
             />
           </DialogHeader>
         </DialogContent>
