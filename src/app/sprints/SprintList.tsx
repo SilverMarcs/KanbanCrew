@@ -1,44 +1,29 @@
-import { useState } from "react";
+"use client";
+import Link from "next/link";
 import { useSprints } from "@/hooks/useSprints";
-import { useTasks } from "@/hooks/useTasks";
 import { CreateSprintCard } from "./CreateSprintCard";
 import SprintCard from "./SprintCard";
-import SprintBacklog from "./SprintBacklog";
-import KanbanBoard from "./KanbanBoard";
-import CompletedSprint from "./CompletedSprint";
+import { Button } from "@/components/ui/button";
 import { Sprint } from "@/models/sprints/Sprint";
 import { SprintStatus } from "@/models/sprints/SprintStatus";
-import { Button } from "@/components/ui/button";
 
 const SprintList: React.FC = () => {
   const sprints = useSprints();
-  const allTasks = useTasks();
-  const [selectedSprint, setSelectedSprint] = useState<Sprint | null>(null);
 
-  // Sort sprints by startDate
   const sortedSprints = sprints.sort(
     (a, b) => a.startDate.toMillis() - b.startDate.toMillis()
   );
 
-  const handleSprintClick = (sprint: Sprint) => {
-    setSelectedSprint(sprint);
-  };
-
-  const renderSprintView = () => {
-    if (!selectedSprint) return null;
-
-    switch (selectedSprint.status) {
+  const getSprintRoute = (sprint: Sprint) => {
+    switch (sprint.status) {
       case SprintStatus.NotStarted:
-        return <SprintBacklog sprint={selectedSprint} />;
+        return `/sprints/${sprint.id}/backlog`;
       case SprintStatus.Active:
-        const sprintTasks = allTasks.filter((task) =>
-          selectedSprint.taskIds?.includes(task.id)
-        );
-        return <KanbanBoard tasks={sprintTasks} />;
+        return `/sprints/${sprint.id}/kanban`;
       case SprintStatus.Done:
-        return <CompletedSprint sprint={selectedSprint} />;
+        return `/sprints/${sprint.id}/completed`;
       default:
-        return null;
+        return "";
     }
   };
 
@@ -46,16 +31,14 @@ const SprintList: React.FC = () => {
     <div className="flex flex-col space-y-4 my-4">
       {sortedSprints.map((sprint) => (
         <div key={sprint.id}>
-          <Button
-            onClick={() => handleSprintClick(sprint)}
-            className="bg-transparent w-full h-full hover:bg-transparent p-0"
-          >
-            <SprintCard sprint={sprint} />
-          </Button>
+          <Link href={getSprintRoute(sprint)}>
+            <Button className="bg-transparent w-full h-full hover:bg-transparent p-0">
+              <SprintCard sprint={sprint} />
+            </Button>
+          </Link>
         </div>
       ))}
       <CreateSprintCard />
-      {renderSprintView()}
     </div>
   );
 };
