@@ -10,7 +10,7 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { SprintStatus } from "@/models/sprints/SprintStatus";
-import { SprintStatusDropdown } from "./SprintStatusDropdown";
+import { SprintStatusBadge } from "./SprintStatusBadge";
 
 interface CreateSprintFormProps {
   onSubmit: (title: string, status: SprintStatus, from: Date, to: Date) => void;
@@ -27,8 +27,8 @@ export const CreateSprintForm: React.FC<CreateSprintFormProps> = ({
   return (
     <div>
       <TitleEditable title={title} setTitle={setTitle} />
-      <div className="-ml-2 mt-1">
-        <SprintStatusDropdown status={status} setStatus={setStatus} />
+      <div className="mt-2">
+        <SprintStatusBadge status={status} />
       </div>
 
       <div>

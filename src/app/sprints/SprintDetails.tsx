@@ -153,7 +153,7 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
   };
 
   const isEditable = status !== SprintStatus.Done;
-  const canEditStartDate = status === SprintStatus.NotStarted;
+  const canEditDates = status === SprintStatus.NotStarted;
 
   return (
     <div>
@@ -172,17 +172,17 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
           <PopoverTrigger asChild>
             <Button
               className={`flex space-x-4 w-40 justify-between ${
-                canEditStartDate
+                canEditDates
                   ? "bg-white text-black hover:bg-gray-100"
                   : "bg-gray-200 text-gray-500 cursor-not-allowed"
               } rounded-xl mt-1`}
-              disabled={!canEditStartDate}
+              disabled={!canEditDates}
             >
               <span>{format(from, "P")}</span>
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
           </PopoverTrigger>
-          {canEditStartDate && (
+          {canEditDates && (
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
@@ -197,17 +197,17 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
           <PopoverTrigger asChild>
             <Button
               className={`flex space-x-4 w-40 justify-between ${
-                isEditable
+                canEditDates
                   ? "bg-white text-black hover:bg-gray-100"
                   : "bg-gray-200 text-gray-500 cursor-not-allowed"
               } rounded-xl mt-1`}
-              disabled={!isEditable}
+              disabled={!canEditDates}
             >
               <span>{format(to, "P")}</span>
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
           </PopoverTrigger>
-          {isEditable && (
+          {canEditDates && (
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"

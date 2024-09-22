@@ -16,6 +16,7 @@ import { toast } from "@/hooks/use-toast";
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
+import { SprintStatusBadge } from "./SprintStatusBadge";
 
 interface SprintCardProps {
   sprint: Sprint;
@@ -92,7 +93,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
             <div className="px-6 py-4 flex space-x-16 items-center">
               <div className="text-xl font-extrabold">{sprint.name}</div>
               <div className="font-bold">
-                <StatusBadge status={sprint.status} />
+                <SprintStatusBadge status={sprint.status} />
               </div>
               <p className="text-sm text-gray-600">
                 {sprint.startDate.toDate().toLocaleDateString()} -{" "}
