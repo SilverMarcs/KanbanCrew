@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { TitleEditable } from "@/components/TitleEditable";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -46,13 +46,20 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
   }, [sprint]);
 
   const handleUpdate = async () => {
+    if (status === SprintStatus.Done) return;
+
     try {
       const sprintRef = doc(db, "sprints", sprint.id);
-      await updateDoc(sprintRef, {
-        name: title,
-        startDate: Timestamp.fromDate(from),
+      const updateData: any = {
         endDate: Timestamp.fromDate(to),
-      });
+      };
+
+      if (status === SprintStatus.NotStarted) {
+        updateData.name = title;
+        updateData.startDate = Timestamp.fromDate(from);
+      }
+
+      await updateDoc(sprintRef, updateData);
 
       toast({
         title: `${title} updated`,
@@ -75,6 +82,8 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
   };
 
   const handleForceStart = async () => {
+    if (status !== SprintStatus.NotStarted) return;
+
     try {
       // Find the currently active sprint
       const sprintsRef = collection(db, "sprints");
@@ -101,11 +110,13 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
         startDate: Timestamp.now(),
       });
 
+      setStatus(SprintStatus.Active);
+      setFrom(new Date());
+
       toast({
         title: `${sprint.name} force started`,
         description: "The sprint has been force started and is now active.",
       });
-      onClose();
     } catch (error) {
       console.error("Error force starting sprint: ", error);
       toast({
@@ -116,6 +127,8 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
   };
 
   const handleForceEnd = async () => {
+    if (status !== SprintStatus.Active) return;
+
     try {
       const sprintRef = doc(db, "sprints", sprint.id);
       await updateDoc(sprintRef, {
@@ -123,11 +136,13 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
         endDate: Timestamp.now(),
       });
 
+      setStatus(SprintStatus.Done);
+      setTo(new Date());
+
       toast({
         title: `${sprint.name} force ended`,
         description: "The sprint has been force ended and is now complete.",
       });
-      onClose();
     } catch (error) {
       console.error("Error force ending sprint: ", error);
       toast({
@@ -137,10 +152,17 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
     }
   };
 
+  const isEditable = status !== SprintStatus.Done;
+  const canEditStartDate = status === SprintStatus.NotStarted;
+
   return (
     <div>
-      <TitleEditable title={title} setTitle={setTitle} />
-      <div className="mt-2">
+      {isEditable ? (
+        <TitleEditable title={title} setTitle={setTitle} />
+      ) : (
+        <h2 className="text-3xl font-bold">{title}</h2>
+      )}
+      <div className="mt-2 font-bold">
         <SprintStatusBadge status={status} />
       </div>
 
@@ -148,58 +170,82 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
         <p className="mt-6">Sprint Start Date</p>
         <Popover>
           <PopoverTrigger asChild>
-            <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
+            <Button
+              className={`flex space-x-4 w-40 justify-between ${
+                canEditStartDate
+                  ? "bg-white text-black hover:bg-gray-100"
+                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+              } rounded-xl mt-1`}
+              disabled={!canEditStartDate}
+            >
               <span>{format(from, "P")}</span>
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={from}
-              onSelect={(date) => date && setFrom(date)}
-            />
-          </PopoverContent>
+          {canEditStartDate && (
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={from}
+                onSelect={(date) => date && setFrom(date)}
+              />
+            </PopoverContent>
+          )}
         </Popover>
         <p className="mt-4">Sprint End Date</p>
         <Popover>
           <PopoverTrigger asChild>
-            <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
+            <Button
+              className={`flex space-x-4 w-40 justify-between ${
+                isEditable
+                  ? "bg-white text-black hover:bg-gray-100"
+                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+              } rounded-xl mt-1`}
+              disabled={!isEditable}
+            >
               <span>{format(to, "P")}</span>
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={to}
-              onSelect={(date) => date && setTo(date)}
-            />
-          </PopoverContent>
+          {isEditable && (
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={to}
+                onSelect={(date) => date && setTo(date)}
+              />
+            </PopoverContent>
+          )}
         </Popover>
       </div>
 
       <div className="w-full flex justify-between items-center mt-10">
         <div className="flex space-x-2">
-          <Button
-            className="w-fit rounded-2xl bg-orange-500 hover:bg-orange-600 shadow-lg"
-            onClick={handleForceStart}
-          >
-            Force Start
-          </Button>
-          <Button
-            className="w-fit rounded-2xl bg-red-500 hover:bg-red-600 shadow-lg"
-            onClick={handleForceEnd}
-          >
-            Force End
-          </Button>
+          {status === SprintStatus.NotStarted && (
+            <Button
+              className="w-fit rounded-2xl bg-orange-500 hover:bg-orange-600 shadow-lg"
+              onClick={handleForceStart}
+            >
+              Force Start
+            </Button>
+          )}
+          {status === SprintStatus.Active && (
+            <Button
+              className="w-fit rounded-2xl bg-red-500 hover:bg-red-600 shadow-lg"
+              onClick={handleForceEnd}
+            >
+              Force End
+            </Button>
+          )}
         </div>
-        <Button
-          className="w-fit rounded-2xl bg-blue-500 hover:bg-blue-600 shadow-lg"
-          onClick={handleUpdate}
-        >
-          UPDATE
-        </Button>
+        {isEditable && (
+          <Button
+            className="w-fit rounded-2xl bg-blue-500 hover:bg-blue-600 shadow-lg"
+            onClick={handleUpdate}
+          >
+            UPDATE
+          </Button>
+        )}
       </div>
     </div>
   );
