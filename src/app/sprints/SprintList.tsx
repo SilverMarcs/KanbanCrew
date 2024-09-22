@@ -8,6 +8,7 @@ import { Sprint } from "@/models/sprints/Sprint";
 import { SprintStatus } from "@/models/sprints/SprintStatus";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
+import { AnimatePresence, motion } from "framer-motion";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 
 const SprintList: React.FC = () => {
@@ -24,19 +25,23 @@ const SprintList: React.FC = () => {
       return a.startDate.toMillis() - b.startDate.toMillis();
     });
     setSortedSprints(sorted);
+
+    // Activate any Not Started sprints that are due if no active sprints exist
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of the day
+    const activeSprintExists = sorted.some(sprint => sprint.status === SprintStatus.Active);
+
+    if (!activeSprintExists) {
+      sorted.forEach(async (sprint) => {
+        if (sprint.status === SprintStatus.NotStarted && sprint.startDate.toMillis() <= today.getTime()) {
+          await updateDoc(doc(db, "sprints", sprint.id), { status: SprintStatus.Active });
+        }
+      });
+    }
   }, [sprints]);
 
-  const handleSetActive = (sprint: Sprint) => {
-    const currentlyActive = sortedSprints.find(s => s.status === SprintStatus.Active);
-    if (currentlyActive) {
-      setActiveSprint(sprint);
-      setIsConfirmOpen(true);
-    } else {
-      updateSprintStatus(sprint);
-    }
-  };
-
   const updateSprintStatus = async (sprint: Sprint) => {
+    // Update the sprint statuses
     const updatedSprints = sortedSprints.map(s => {
       if (s.id === sprint.id) {
         return { ...s, status: SprintStatus.Active };
@@ -72,15 +77,24 @@ const SprintList: React.FC = () => {
 
   return (
     <div className="flex flex-col space-y-4 my-4">
-      {sortedSprints.map((sprint) => (
-        <div key={sprint.id}>
-          <SprintCard
-            sprint={sprint}
-            sortedSprints={sortedSprints}
-            setSortedSprints={setSortedSprints}
-          />
-        </div>
-      ))}
+      <AnimatePresence>
+        {sortedSprints.map((sprint) => (
+          <motion.div
+            key={sprint.id}
+            layout
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.3 }}
+          >
+            <SprintCard
+              sprint={sprint}
+              sortedSprints={sortedSprints} // Pass sortedSprints
+              setSortedSprints={setSortedSprints} // Pass setSortedSprints
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
       <CreateSprintCard />
 
       <ConfirmationDialog
