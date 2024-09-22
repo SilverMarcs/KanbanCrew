@@ -7,5 +7,4 @@ export interface SprintFormProps {
   initialEndDate?: Date;
   onSubmit: (title: string, status: SprintStatus, from: Date, to: Date) => void; // Updated type
   submitButtonLabel: string;
-  isSprint: boolean;
 }
