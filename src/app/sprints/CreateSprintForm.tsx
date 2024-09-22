@@ -9,33 +9,30 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { SprintFormProps } from "@/models/sprints/SprintFormProps";
 import { SprintStatus } from "@/models/sprints/SprintStatus";
-import { SprintStatusDropdown } from "./SprintStatusDropdown";
+import { SprintStatusBadge } from "./SprintStatusBadge";
 
-export const SprintForm: React.FC<SprintFormProps> = ({
-  initialTitle,
-  initialStatus,
-  initialStartDate,
-  initialEndDate,
+interface CreateSprintFormProps {
+  onSubmit: (title: string, status: SprintStatus, from: Date, to: Date) => void;
+}
+
+export const CreateSprintForm: React.FC<CreateSprintFormProps> = ({
   onSubmit,
-  submitButtonLabel,
 }) => {
-  const [title, setTitle] = useState(initialTitle);
-  const [status, setStatus] = useState<SprintStatus>(initialStatus);
-  const [from, setFrom] = useState<Date | undefined>(initialStartDate);
-  const [to, setTo] = useState<Date | undefined>(initialEndDate);
+  const [title, setTitle] = useState("New Sprint");
+  const [status, setStatus] = useState<SprintStatus>(SprintStatus.NotStarted);
+  const [from, setFrom] = useState<Date | undefined>(undefined);
+  const [to, setTo] = useState<Date | undefined>(undefined);
 
   return (
     <div>
       <TitleEditable title={title} setTitle={setTitle} />
-      <div className="-ml-2 mt-1">
-        <SprintStatusDropdown status={status} setStatus={setStatus} />
+      <div className="mt-2">
+        <SprintStatusBadge status={status} />
       </div>
 
       <div>
-        <p className="mt-6">"Sprint Start Date"</p>
-        {/* Conditional label */}
+        <p className="mt-6">Sprint Start Date</p>
         <Popover>
           <PopoverTrigger asChild>
             <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
@@ -48,7 +45,6 @@ export const SprintForm: React.FC<SprintFormProps> = ({
           </PopoverContent>
         </Popover>
         <p className="mt-4">Sprint End Date</p>
-        {/* Conditional label */}
         <Popover>
           <PopoverTrigger asChild>
             <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
@@ -72,7 +68,7 @@ export const SprintForm: React.FC<SprintFormProps> = ({
             }
           }}
         >
-          {submitButtonLabel}
+          CREATE
         </Button>
       </div>
     </div>

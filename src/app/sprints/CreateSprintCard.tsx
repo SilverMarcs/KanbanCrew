@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircleIcon } from "lucide-react";
-import { SprintForm } from "./SprintForm";
+import { CreateSprintForm } from "./CreateSprintForm";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/hooks/use-toast";
@@ -19,7 +19,7 @@ export const CreateSprintCard = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (
-    name: String,
+    name: string,
     status: SprintStatus,
     from: Date,
     to: Date
@@ -64,12 +64,7 @@ export const CreateSprintCard = () => {
       </DialogTrigger>
       <DialogContent className="bg-yellow-200 max-w-lg border-0 shadow-lg">
         <DialogHeader>
-          <SprintForm
-            initialTitle="New Sprint"
-            initialStatus={SprintStatus.NotStarted}
-            onSubmit={onSubmit}
-            submitButtonLabel="CREATE"
-          />
+          <CreateSprintForm onSubmit={onSubmit} />
         </DialogHeader>
       </DialogContent>
     </Dialog>
