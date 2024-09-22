@@ -8,7 +8,6 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { SprintDetails } from "./SprintDetails";
-import { StatusBadge } from "@/components/StatusBadge";
 import { Sprint } from "@/models/sprints/Sprint";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
@@ -17,6 +16,7 @@ import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
 import { SprintStatusBadge } from "./SprintStatusBadge";
+import Link from "next/link";
 
 interface SprintCardProps {
   sprint: Sprint;
@@ -45,6 +45,19 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
     }
   };
 
+  const getSprintRoute = () => {
+    switch (sprint.status) {
+      case "Not Started":
+        return `/sprints/${sprint.id}/backlog`;
+      case "Active":
+        return `/sprints/${sprint.id}/kanban`;
+      case "Done":
+        return `/sprints/${sprint.id}/completed`;
+      default:
+        return `/sprints/${sprint.id}`;
+    }
+  };
+
   return (
     <div className="w-full">
       <ConfirmationDialog
@@ -62,6 +75,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
           key={sprint.id}
           className="flex items-center w-full bg-yellow-200 outline-none border-0 rounded-xl"
         >
+          {/* Dropdown Menu for Edit and Delete */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -89,17 +103,20 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <div className="w-full cursor-pointer">
-            <div className="px-6 py-4 flex space-x-16 items-center">
-              <div className="text-xl font-extrabold">{sprint.name}</div>
-              <div className="font-bold">
-                <SprintStatusBadge status={sprint.status} />
+          {/* Clickable area for navigation */}
+          <div className="w-full">
+            <Link href={getSprintRoute()}>
+              <div className="px-6 py-4 flex space-x-16 items-center cursor-pointer">
+                <div className="text-xl font-extrabold">{sprint.name}</div>
+                <div className="font-bold">
+                  <SprintStatusBadge status={sprint.status} />
+                </div>
+                <p className="text-sm text-gray-600">
+                  {sprint.startDate.toDate().toLocaleDateString()} -{" "}
+                  {sprint.endDate.toDate().toLocaleDateString()}
+                </p>
               </div>
-              <p className="text-sm text-gray-600">
-                {sprint.startDate.toDate().toLocaleDateString()} -{" "}
-                {sprint.endDate.toDate().toLocaleDateString()}
-              </p>
-            </div>
+            </Link>
           </div>
         </Card>
 
