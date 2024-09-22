@@ -1,4 +1,3 @@
-// SprintCard.tsx
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";

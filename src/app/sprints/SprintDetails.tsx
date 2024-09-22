@@ -1,4 +1,3 @@
-// SprintDetailsView.tsx
 import { useState, useEffect } from "react";
 import { TitleEditable } from "@/components/TitleEditable";
 import { Button } from "@/components/ui/button";
@@ -11,11 +10,19 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { SprintStatus } from "@/models/sprints/SprintStatus";
-import { SprintStatusDropdown } from "./SprintStatusDropdown";
 import { Sprint } from "@/models/sprints/Sprint";
-import { doc, updateDoc, Timestamp } from "firebase/firestore";
+import {
+  doc,
+  updateDoc,
+  Timestamp,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/hooks/use-toast";
+import { SprintStatusBadge } from "./SprintStatusBadge";
 
 interface SprintDetailsProps {
   sprint: Sprint;
@@ -43,7 +50,6 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
       const sprintRef = doc(db, "sprints", sprint.id);
       await updateDoc(sprintRef, {
         name: title,
-        sprintStatus: status,
         startDate: Timestamp.fromDate(from),
         endDate: Timestamp.fromDate(to),
       });
@@ -68,11 +74,74 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
     }
   };
 
+  const handleForceStart = async () => {
+    try {
+      // Find the currently active sprint
+      const sprintsRef = collection(db, "sprints");
+      const activeSprintQuery = query(
+        sprintsRef,
+        where("sprintStatus", "==", SprintStatus.Active)
+      );
+      const activeSprintSnapshot = await getDocs(activeSprintQuery);
+
+      // If there's an active sprint, end it
+      if (!activeSprintSnapshot.empty) {
+        const activeSprintDoc = activeSprintSnapshot.docs[0];
+        const activeSprintRef = doc(db, "sprints", activeSprintDoc.id);
+        await updateDoc(activeSprintRef, {
+          sprintStatus: SprintStatus.Done,
+          endDate: Timestamp.now(),
+        });
+      }
+
+      // Start the current sprint
+      const currentSprintRef = doc(db, "sprints", sprint.id);
+      await updateDoc(currentSprintRef, {
+        sprintStatus: SprintStatus.Active,
+        startDate: Timestamp.now(),
+      });
+
+      toast({
+        title: `${sprint.name} force started`,
+        description: "The sprint has been force started and is now active.",
+      });
+      onClose();
+    } catch (error) {
+      console.error("Error force starting sprint: ", error);
+      toast({
+        title: "Error",
+        description: "Failed to force start the sprint.",
+      });
+    }
+  };
+
+  const handleForceEnd = async () => {
+    try {
+      const sprintRef = doc(db, "sprints", sprint.id);
+      await updateDoc(sprintRef, {
+        sprintStatus: SprintStatus.Done,
+        endDate: Timestamp.now(),
+      });
+
+      toast({
+        title: `${sprint.name} force ended`,
+        description: "The sprint has been force ended and is now complete.",
+      });
+      onClose();
+    } catch (error) {
+      console.error("Error force ending sprint: ", error);
+      toast({
+        title: "Error",
+        description: "Failed to force end the sprint.",
+      });
+    }
+  };
+
   return (
     <div>
       <TitleEditable title={title} setTitle={setTitle} />
-      <div className="-ml-2 mt-1">
-        <SprintStatusDropdown status={status} setStatus={setStatus} />
+      <div className="mt-2">
+        <SprintStatusBadge status={status} />
       </div>
 
       <div>
@@ -110,9 +179,23 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
         </Popover>
       </div>
 
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-between items-center mt-10">
+        <div className="flex space-x-2">
+          <Button
+            className="w-fit rounded-2xl bg-orange-500 hover:bg-orange-600 shadow-lg"
+            onClick={handleForceStart}
+          >
+            Force Start
+          </Button>
+          <Button
+            className="w-fit rounded-2xl bg-red-500 hover:bg-red-600 shadow-lg"
+            onClick={handleForceEnd}
+          >
+            Force End
+          </Button>
+        </div>
         <Button
-          className="w-fit rounded-2xl bg-red-500 hover:bg-red-600 shadow-lg mt-3"
+          className="w-fit rounded-2xl bg-blue-500 hover:bg-blue-600 shadow-lg"
           onClick={handleUpdate}
         >
           UPDATE
