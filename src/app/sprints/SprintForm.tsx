@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
 import { TitleEditable } from "@/components/TitleEditable";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";

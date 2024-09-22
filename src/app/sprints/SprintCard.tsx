@@ -154,7 +154,6 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
               initialEndDate={sprint.endDate.toDate()}
               onSubmit={onSubmit}
               submitButtonLabel="UPDATE"
-              isSprint={true}
             />
           </DialogHeader>
         </DialogContent>

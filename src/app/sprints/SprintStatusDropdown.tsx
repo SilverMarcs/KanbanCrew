@@ -18,23 +18,26 @@ import { SprintStatusBadge } from "./SprintStatusBadge";
 export function SprintStatusDropdown({
   status,
   setStatus,
-  taskId,
+  sprintId,
 }: {
   status: SprintStatus;
   setStatus: (status: SprintStatus) => void;
-  taskId?: string;
+  sprintId?: string;
 }) {
   const handleStatusChange = async (value: string) => {
     const newStatus = value as SprintStatus;
     setStatus(newStatus);
-    if (taskId) {
-      await updateSprintStatus(taskId, newStatus);
+    // TODO: this block will never run since we we never call this component with a sprintId
+    // the onSubmit prop of sprint form already updates on firestore
+    if (sprintId) {
+      await updateSprintStatus(sprintId, newStatus);
     }
   };
-  const updateSprintStatus = async (taskId: string, status: SprintStatus) => {
-    const taskRef = doc(db, "tasks", taskId);
+  const updateSprintStatus = async (sprintId: string, status: SprintStatus) => {
+    const taskRef = doc(db, "sprints", sprintId);
     await updateDoc(taskRef, { status });
   };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -45,7 +48,7 @@ export function SprintStatusDropdown({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+        <DropdownMenuLabel>Change Sprint Status</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
           value={status}

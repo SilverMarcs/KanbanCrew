@@ -69,7 +69,6 @@ export const CreateSprintCard = () => {
             initialStatus={SprintStatus.NotStarted}
             onSubmit={onSubmit}
             submitButtonLabel="CREATE"
-            isSprint={true}
           />
         </DialogHeader>
       </DialogContent>
