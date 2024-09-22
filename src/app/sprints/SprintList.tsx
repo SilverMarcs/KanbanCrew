@@ -7,7 +7,7 @@ import SprintBacklog from "./SprintBacklog";
 import KanbanBoard from "./KanbanBoard";
 import CompletedSprint from "./CompletedSprint";
 import { Sprint } from "@/models/sprints/Sprint";
-import { Status } from "@/models/Status";
+import { SprintStatus } from "@/models/sprints/SprintStatus";
 import { Button } from "@/components/ui/button";
 
 const SprintList: React.FC = () => {
@@ -28,14 +28,14 @@ const SprintList: React.FC = () => {
     if (!selectedSprint) return null;
 
     switch (selectedSprint.status) {
-      case Status.NotStarted:
+      case SprintStatus.NotStarted:
         return <SprintBacklog sprint={selectedSprint} />;
-      case Status.InProgress:
+      case SprintStatus.Active:
         const sprintTasks = allTasks.filter((task) =>
           selectedSprint.taskIds?.includes(task.id)
         );
         return <KanbanBoard tasks={sprintTasks} />;
-      case Status.Completed:
+      case SprintStatus.Done:
         return <CompletedSprint sprint={selectedSprint} />;
       default:
         return null;

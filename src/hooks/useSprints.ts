@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { collection, onSnapshot, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Sprint } from "@/models/sprints/Sprint";
-import { Status } from "@/models/Status";
+import { SprintStatus } from "@/models/sprints/SprintStatus";
 
 export const useSprints = () => {
   const [sprints, setSprints] = useState<Sprint[]>([]);
@@ -17,7 +17,7 @@ export const useSprints = () => {
         sprintsData.push({
           id: docSnapshot.id,
           name: data.name,
-          status: data.sprintStatus as Status,
+          status: data.sprintStatus as SprintStatus,
           startDate: data.startDate as Timestamp,
           endDate: data.endDate as Timestamp,
           taskIds: data.taskIds || [],
