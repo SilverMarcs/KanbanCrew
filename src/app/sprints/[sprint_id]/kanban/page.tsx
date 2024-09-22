@@ -1,4 +1,5 @@
 "use client";
+
 import KanbanBoard from "../../KanbanBoard";
 import { useSprints } from "@/hooks/useSprints";
 import { useTasks } from "@/hooks/useTasks";
@@ -16,7 +17,12 @@ const KanbanBoardPage = ({ params }: { params: { sprint_id: string } }) => {
 
   if (!selectedSprint) return <div>Loading...</div>;
 
-  return <KanbanBoard tasks={sprintTasks} />;
+  return (
+    <div className="flex flex-col items-center space-y-12 w-full mt-12">
+      <h1 className="uppercase text-5xl">Kanban Board</h1>
+      <KanbanBoard tasks={sprintTasks} />
+    </div>
+  );
 };
 
 export default KanbanBoardPage;
