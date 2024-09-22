@@ -12,51 +12,56 @@ import {
 import { ChevronDown } from "lucide-react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { Status } from "@/models/Status";
-import { StatusBadge } from "@/components/StatusBadge";
-export function TaskStatusDropdown({
+import { SprintStatus } from "@/models/sprints/SprintStatus";
+import { SprintStatusBadge } from "./SprintStatusBadge";
+
+export function SprintStatusDropdown({
   status,
   setStatus,
-  taskId,
+  sprintId,
 }: {
-  status: Status;
-  setStatus: (status: Status) => void;
-  taskId?: string;
+  status: SprintStatus;
+  setStatus: (status: SprintStatus) => void;
+  sprintId?: string;
 }) {
   const handleStatusChange = async (value: string) => {
-    const newStatus = value as Status;
+    const newStatus = value as SprintStatus;
     setStatus(newStatus);
-    if (taskId) {
-      await updateTaskStatus(taskId, newStatus);
+    // TODO: this block will never run since we we never call this component with a sprintId
+    // the onSubmit prop of sprint form already updates on firestore
+    if (sprintId) {
+      await updateSprintStatus(sprintId, newStatus);
     }
   };
-  const updateTaskStatus = async (taskId: string, status: Status) => {
-    const taskRef = doc(db, "tasks", taskId);
+  const updateSprintStatus = async (sprintId: string, status: SprintStatus) => {
+    const taskRef = doc(db, "sprints", sprintId);
     await updateDoc(taskRef, { status });
   };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button className="bg-transparent font-bold hover:bg-transparent text-black flex items-center">
-          <StatusBadge status={status} />
+          {/* <StatusBadge status={status} /> */}
+          <SprintStatusBadge status={status} />
           <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+        <DropdownMenuLabel>Change Sprint Status</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
           value={status}
           onValueChange={handleStatusChange}
         >
-          <DropdownMenuRadioItem value={Status.NotStarted}>
-            {Status.NotStarted}
+          <DropdownMenuRadioItem value={SprintStatus.NotStarted}>
+            {SprintStatus.NotStarted}
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value={Status.InProgress}>
-            {Status.InProgress}
+          <DropdownMenuRadioItem value={SprintStatus.Active}>
+            {SprintStatus.Active}
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value={Status.Completed}>
-            {Status.Completed}
+          <DropdownMenuRadioItem value={SprintStatus.Done}>
+            {SprintStatus.Done}
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

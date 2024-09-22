@@ -1,3 +1,4 @@
+// CreateSprintCard.tsx
 import { useState } from "react";
 import {
   Dialog,
@@ -8,20 +9,19 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircleIcon } from "lucide-react";
-import { SprintForm } from "./SprintForm"; // Import the reusable form
-import { Status } from "@/models/Status";
+import { CreateSprintForm } from "./CreateSprintForm";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown"; 
+import { SprintStatus } from "@/models/sprints/SprintStatus";
 
 export const CreateSprintCard = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (
-    name: String,
-    status: TaskOrSprintStatus,
+    name: string,
+    status: SprintStatus,
     from: Date,
     to: Date
   ) => {
@@ -65,13 +65,7 @@ export const CreateSprintCard = () => {
       </DialogTrigger>
       <DialogContent className="bg-yellow-200 max-w-lg border-0 shadow-lg">
         <DialogHeader>
-          <SprintForm
-            initialTitle="New Sprint"
-            initialStatus={Status.NotStarted}
-            onSubmit={onSubmit}
-            submitButtonLabel="CREATE"
-            isSprint={true}
-          />
+          <CreateSprintForm onSubmit={onSubmit} />
         </DialogHeader>
       </DialogContent>
     </Dialog>

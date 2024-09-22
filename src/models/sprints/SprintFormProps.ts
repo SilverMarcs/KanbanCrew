@@ -1,11 +1,11 @@
-import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown";
+import { SprintStatus } from "./SprintStatus";
 
 export interface SprintFormProps {
   initialTitle: string;
-  initialStatus: TaskOrSprintStatus; // Updated type
+  initialStatus: SprintStatus;
   initialStartDate?: Date;
   initialEndDate?: Date;
-  onSubmit: (title: string, status: TaskOrSprintStatus, from: Date, to: Date) => void; // Updated type
+  onSubmit: (title: string, status: SprintStatus, from: Date, to: Date) => void;
   submitButtonLabel: string;
-  isSprint: boolean;
+  sprintId?: string;
 }

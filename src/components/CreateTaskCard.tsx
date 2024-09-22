@@ -33,7 +33,6 @@ import { StoryPointsField } from "./StoryPointsField";
 import { AssigneeDropdown } from "./AssigneeDropdown";
 import { Member } from "@/models/Member";
 import { TaskStatusDropdown } from "./TaskStatusDropdown";
-import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown";
 
 export const CreateTaskCard = () => {
   const defaultTitle = "New Task";
@@ -43,7 +42,7 @@ export const CreateTaskCard = () => {
   const defaultTags: Tag[] = [];
   const defaultDescription = "Task description...";
   const defaultProjectStage = ProjectStage.Planning;
-  const defaultStatus: TaskOrSprintStatus = Status.NotStarted;
+  const defaultStatus = Status.NotStarted;
   const defaultType = Type.UserStory;
 
   const [title, setTitle] = useState(defaultTitle);
@@ -54,7 +53,7 @@ export const CreateTaskCard = () => {
   const [description, setDescription] = useState(defaultDescription);
   const [projectStage, setProjectStage] =
     useState<ProjectStage>(defaultProjectStage);
-  const [status, setStatus] = useState<TaskOrSprintStatus>(defaultStatus);
+  const [status, setStatus] = useState<Status>(defaultStatus);
   const [type, setType] = useState<Type>(defaultType);
 
   const [assignee, setAssignee] = useState<Member | null>(null);
@@ -209,4 +208,3 @@ export const CreateTaskCard = () => {
     </Dialog>
   );
 };
-

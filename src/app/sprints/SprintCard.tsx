@@ -1,28 +1,22 @@
+// SprintCard.tsx
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { SprintForm } from "./SprintForm"; // Import the reusable form
+import { SprintDetails } from "./SprintDetails";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Sprint } from "@/models/sprints/Sprint";
-import { doc, updateDoc, Timestamp, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/hooks/use-toast";
-import { format } from "date-fns";
-import { Status } from "@/models/Status";
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
-import ConfirmationDialog from "@/components/ConfirmationDialog"; // Import the confirmation dialog
+import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
-import { TaskOrSprintStatus } from "@/components/TaskStatusDropdown";
 
 interface SprintCardProps {
   sprint: Sprint;
@@ -31,41 +25,6 @@ interface SprintCardProps {
 const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-
-  const onSubmit = async (
-    name: string,
-    status: TaskOrSprintStatus, 
-    from: Date,
-    to: Date
-  ) => {
-    try {
-      const sprintRef = doc(db, "sprints", sprint.id);
-      await updateDoc(sprintRef, {
-        name: name,
-        sprintStatus: status,
-        startDate: Timestamp.fromDate(from),
-        endDate: Timestamp.fromDate(to),
-      });
-
-      toast({
-        title: `${name} updated`,
-        description: (
-          <div>
-            <p>Status: {status}</p>
-            <p>From: {format(from, "P")}</p>
-            <p>To: {format(to, "P")}</p>
-          </div>
-        ),
-      });
-      setIsOpen(false);
-    } catch (error) {
-      console.error("Error updating sprint: ", error);
-      toast({
-        title: "Error",
-        description: "Failed to update the sprint.",
-      });
-    }
-  };
 
   const confirmDelete = async () => {
     try {
@@ -88,7 +47,6 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
 
   return (
     <div className="w-full">
-      {/* Confirmation Dialog for Deletion */}
       <ConfirmationDialog
         isOpen={isDeleteConfirmOpen}
         onClose={() => setIsDeleteConfirmOpen(false)}
@@ -99,22 +57,21 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
         cancelButtonLabel="Cancel"
       />
 
-      {/* Dialog for Editing Sprint */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <Card
           key={sprint.id}
           className="flex items-center w-full bg-yellow-200 outline-none border-0 rounded-xl"
         >
-          {/* DropdownMenu for Ellipsis Icon */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-              variant="ghost" 
-              className="ml-1 hover:bg-transparent focus:ring-0 focus:outline-none"
+              <Button
+                variant="ghost"
+                className="ml-1 hover:bg-transparent focus:ring-0 focus:outline-none"
               >
-                <EllipsisVertical 
-                className="bg-transparent hover:bg-transparent"
-                size={20} />
+                <EllipsisVertical
+                  className="bg-transparent hover:bg-transparent"
+                  size={20}
+                />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
@@ -132,7 +89,6 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Sprint Details */}
           <div className="w-full cursor-pointer">
             <div className="px-6 py-4 flex space-x-16 items-center">
               <div className="text-xl font-extrabold">{sprint.name}</div>
@@ -147,18 +103,9 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
           </div>
         </Card>
 
-        {/* Dialog Content for Sprint Form */}
         <DialogContent className="bg-yellow-200 max-w-lg border-0 shadow-lg">
           <DialogHeader>
-            <SprintForm
-              initialTitle={sprint.name}
-              initialStatus={sprint.status}
-              initialStartDate={sprint.startDate.toDate()}
-              initialEndDate={sprint.endDate.toDate()}
-              onSubmit={onSubmit}
-              submitButtonLabel="UPDATE"
-              isSprint={true}
-            />
+            <SprintDetails sprint={sprint} onClose={() => setIsOpen(false)} />
           </DialogHeader>
         </DialogContent>
       </Dialog>
