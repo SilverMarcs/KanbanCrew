@@ -20,9 +20,11 @@ import Link from "next/link";
 
 interface SprintCardProps {
   sprint: Sprint;
+  sortedSprints: Sprint[]; // Add sortedSprints prop
+  setSortedSprints: React.Dispatch<React.SetStateAction<Sprint[]>>; // Add setSortedSprints prop
 }
 
-const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
+const SprintCard: React.FC<SprintCardProps> = ({ sprint, sortedSprints, setSortedSprints }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
@@ -36,6 +38,9 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
         description: "The sprint has been deleted from Firebase.",
       });
       setIsDeleteConfirmOpen(false);
+
+      // Optionally remove sprint from local sortedSprints
+      setSortedSprints(sortedSprints.filter(s => s.id !== sprint.id));
     } catch (error) {
       console.error("Error deleting sprint: ", error);
       toast({
