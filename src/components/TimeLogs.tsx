@@ -15,9 +15,13 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon, Plus } from "lucide-react";
 import { format, isSameDay } from "date-fns";
 
-const TimeLogs: React.FC<
-  { timeLogs: TimeLog[] } & { members: Member[] } & { taskId: string }
-> = ({ timeLogs, members, taskId }) => {
+interface TimeLogsProps {
+  timeLogs: TimeLog[];
+  members: Member[];
+  taskId: string;
+}
+
+const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
   const [filteredLogs, setFilteredLogs] = useState<TimeLog[]>([]);
   const [timeSpent, setTimeSpent] = useState<number>(0);
   const [date, setDate] = useState<Date | undefined>(new Date());
