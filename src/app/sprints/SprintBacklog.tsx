@@ -91,7 +91,7 @@ const SprintBacklog: React.FC<SprintBacklogProps> = ({ sprint }) => {
         });
       }
     } catch (error) {
-      console.error("Error updating task or sprint:", error);
+      console.error("Error updating task or sprint: ", error);
     }
   };
 
