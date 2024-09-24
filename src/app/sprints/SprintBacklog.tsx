@@ -97,7 +97,7 @@ const SprintBacklog: React.FC<SprintBacklogProps> = ({ sprint }) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex space-x-4">
+      <div className="flex justify-center items-start min-h-screen space-x-2">
         <SprintBacklogTaskColumn
           title="Product Backlog"
           tasks={productBacklogTasks}
