@@ -12,7 +12,14 @@ const SprintBacklogPage = ({ params }: { params: { sprint_id: string } }) => {
 
   if (!selectedSprint) return <div>Loading...</div>;
 
-  return <SprintBacklog sprint={selectedSprint} />;
+  return (
+    <div className="p-16">
+      <h1 className="text-5xl font-bold mb-8">
+        {selectedSprint.name} Backlog
+      </h1>
+      <SprintBacklog sprint={selectedSprint} />
+    </div>
+  );
 };
 
 export default SprintBacklogPage;
