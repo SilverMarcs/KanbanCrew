@@ -20,8 +20,6 @@ import Link from "next/link";
 
 interface SprintCardProps {
   sprint: Sprint;
-  sortedSprints: Sprint[]; // Add sortedSprints prop
-  setSortedSprints: React.Dispatch<React.SetStateAction<Sprint[]>>; // Add setSortedSprints prop
 }
 const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,9 +51,6 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
           "The sprint has been deleted and associated tasks have been updated.",
       });
       setIsDeleteConfirmOpen(false);
-
-      // Optionally remove sprint from local sortedSprints
-      setSortedSprints(sortedSprints.filter(s => s.id !== sprint.id));
     } catch (error) {
       console.error("Error deleting sprint: ", error);
       toast({

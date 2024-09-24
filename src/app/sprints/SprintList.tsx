@@ -1,111 +1,32 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
 import { useSprints } from "@/hooks/useSprints";
 import { CreateSprintCard } from "./CreateSprintCard";
 import SprintCard from "./SprintCard";
-import { Sprint } from "@/models/sprints/Sprint";
-import { SprintStatus } from "@/models/sprints/SprintStatus";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebaseConfig";
 import { AnimatePresence, motion } from "framer-motion";
-import ConfirmationDialog from "@/components/ConfirmationDialog";
 
 const SprintList: React.FC = () => {
-  const sprints = useSprints(); // Fetches all sprints
-  const [sortedSprints, setSortedSprints] = useState<Sprint[]>([]);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
+  const sprints = useSprints();
 
-  useEffect(() => {
-    // Sorting logic: Active sprints on top, then by start date
-    const sorted = [...sprints].sort((a, b) => {
-      if (a.status === SprintStatus.Active) return -1;
-      if (b.status === SprintStatus.Active) return 1;
-      return a.startDate.toMillis() - b.startDate.toMillis();
-    });
-    setSortedSprints(sorted);
-
-    // Activate any Not Started sprints that are due if no active sprints exist
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to start of the day
-    const activeSprintExists = sorted.some(sprint => sprint.status === SprintStatus.Active);
-
-    if (!activeSprintExists) {
-      sorted.forEach(async (sprint) => {
-        if (sprint.status === SprintStatus.NotStarted && sprint.startDate.toMillis() <= today.getTime()) {
-          await updateDoc(doc(db, "sprints", sprint.id), { status: SprintStatus.Active });
-        }
-      });
-    }
-  }, [sprints]);
-
-  const updateSprintStatus = async (sprint: Sprint) => {
-    // Update the sprint statuses
-    const updatedSprints = sortedSprints.map(s => {
-      if (s.id === sprint.id) {
-        return { ...s, status: SprintStatus.Active };
-      } else if (s.status === SprintStatus.Active) {
-        return { ...s, status: SprintStatus.Done };
-      }
-      return s;
-    });
-
-    // Set sorted sprints based on the new status
-    const sorted = updatedSprints.sort((a, b) => {
-      if (a.status === SprintStatus.Active) return -1;
-      if (b.status === SprintStatus.Active) return 1;
-      return a.startDate.toMillis() - b.startDate.toMillis();
-    });
-
-    setSortedSprints(sorted);
-
-    // Update Firestore
-    for (const updatedSprint of updatedSprints) {
-      const sprintRef = doc(db, "sprints", updatedSprint.id);
-      await updateDoc(sprintRef, { status: updatedSprint.status });
-    }
-  };
-
-  const confirmActivation = () => {
-    if (activeSprint) {
-      updateSprintStatus(activeSprint);
-      setActiveSprint(null);
-      setIsConfirmOpen(false);
-    }
-  };
+  // Sort sprints by startDate
+  const sortedSprints = sprints.sort(
+    (a, b) => a.startDate.toMillis() - b.startDate.toMillis()
+  );
 
   return (
     <div className="flex flex-col space-y-4 my-4">
-      <AnimatePresence>
-        {sortedSprints.map((sprint) => (
-          <motion.div
-            key={sprint.id}
-            layout
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.3 }}
-          >
-            <SprintCard
-              sprint={sprint}
-              sortedSprints={sortedSprints} // Pass sortedSprints
-              setSortedSprints={setSortedSprints} // Pass setSortedSprints
-            />
-          </motion.div>
-        ))}
-      </AnimatePresence>
+      {/* <AnimatePresence> */}
+      {sortedSprints.map((sprint) => (
+        <motion.div
+          key={sprint.id}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
+          whileHover={{ scale: 1.01 }}
+        >
+          <SprintCard sprint={sprint} />
+        </motion.div>
+      ))}
+      {/* </AnimatePresence> */}
       <CreateSprintCard />
-
-      <ConfirmationDialog
-        isOpen={isConfirmOpen}
-        onClose={() => setIsConfirmOpen(false)}
-        onConfirm={confirmActivation}
-        title="Confirm Activation"
-        description="Activating this sprint will force-end a currently active sprint. Proceed?"
-        confirmButtonLabel="Proceed"
-        cancelButtonLabel="Cancel"
-      />
     </div>
   );
 };

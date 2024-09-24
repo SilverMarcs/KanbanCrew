@@ -44,6 +44,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     type,
     creationDate,
     historyLogs,
+    timeLogs,
   } = task;
 
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
@@ -66,8 +67,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.3 }}
-          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.4 }}
+          whileHover={{ scale: 1.025 }}
           whileTap={{ scale: 0.95 }}
           className="task-card-container"
         >
@@ -124,6 +125,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             type={type}
             creationDate={creationDate}
             closeDialog={closeDialog}
+            timeLogs={timeLogs}
             historyLogs={historyLogs}
             members={members}
           />
