@@ -8,6 +8,11 @@ import { HistoryLog } from "./HistoryLog";
 import { TimeLog } from "./TimeLog";
 import { Member } from "./Member";
 
+export interface TimeLog {
+  date: Date;
+  hours: number;
+}
+
 export interface Task {
   id: string;
   index: number;
