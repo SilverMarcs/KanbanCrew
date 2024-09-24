@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SprintDetails } from "./SprintDetails";
 import { Sprint } from "@/models/sprints/Sprint";
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/hooks/use-toast";
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
@@ -21,26 +21,41 @@ import Link from "next/link";
 interface SprintCardProps {
   sprint: Sprint;
 }
-
 const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   const confirmDelete = async () => {
     try {
+      // Update all tasks associated with this sprint
+      const taskUpdatePromises = (sprint.taskIds || []).map(async (taskId) => {
+        const taskRef = doc(db, "tasks", taskId);
+        const taskSnap = await getDoc(taskRef);
+
+        if (taskSnap.exists()) {
+          // Remove sprintId from the task
+          return updateDoc(taskRef, { sprintId: null });
+        }
+      });
+
+      // Wait for all task updates to complete
+      await Promise.all(taskUpdatePromises);
+
+      // Delete the sprint
       const sprintRef = doc(db, "sprints", sprint.id);
       await deleteDoc(sprintRef);
 
       toast({
         title: `${sprint.name} deleted`,
-        description: "The sprint has been deleted from Firebase.",
+        description:
+          "The sprint has been deleted and associated tasks have been updated.",
       });
       setIsDeleteConfirmOpen(false);
     } catch (error) {
       console.error("Error deleting sprint: ", error);
       toast({
         title: "Error",
-        description: "Failed to delete the sprint.",
+        description: "Failed to delete the sprint or update associated tasks.",
       });
     }
   };
