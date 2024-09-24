@@ -1,6 +1,7 @@
 import { useSprints } from "@/hooks/useSprints";
 import { CreateSprintCard } from "./CreateSprintCard";
 import SprintCard from "./SprintCard";
+import { AnimatePresence, motion } from "framer-motion";
 
 const SprintList: React.FC = () => {
   const sprints = useSprints();
@@ -12,11 +13,19 @@ const SprintList: React.FC = () => {
 
   return (
     <div className="flex flex-col space-y-4 my-4">
+      {/* <AnimatePresence> */}
       {sortedSprints.map((sprint) => (
-        <div key={sprint.id}>
+        <motion.div
+          key={sprint.id}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
+          whileHover={{ scale: 1.01 }}
+        >
           <SprintCard sprint={sprint} />
-        </div>
+        </motion.div>
       ))}
+      {/* </AnimatePresence> */}
       <CreateSprintCard />
     </div>
   );
