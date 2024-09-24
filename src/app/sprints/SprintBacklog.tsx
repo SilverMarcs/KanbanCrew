@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { DragDropContext } from "@hello-pangea/dnd";
 import { useTasks } from "@/hooks/useTasks";
-import { TaskCard } from "@/components/TaskCard";
 import { Task } from "@/models/Task";
 import { Sprint } from "@/models/sprints/Sprint";
+import { Status } from "@/models/Status";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { Grip } from "lucide-react";
-import { TaskCardCompact } from "@/components/TaskCardCompact";
+import SprintBacklogTaskColumn from "./SprintBacklogTaskColumn";
 
 interface SprintBacklogProps {
   sprint: Sprint;
@@ -19,7 +18,12 @@ const SprintBacklog: React.FC<SprintBacklogProps> = ({ sprint }) => {
   const [sprintBacklogTasks, setSprintBacklogTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    setProductBacklogTasks(allTasks.filter((task) => !task.sprintId));
+    // Dont show completed tasks or tasks already in a sprint in the product backlog
+    setProductBacklogTasks(
+      allTasks.filter(
+        (task) => !task.sprintId && task.status !== Status.Completed
+      )
+    );
     setSprintBacklogTasks(
       allTasks.filter((task) => task.sprintId === sprint.id)
     );
@@ -94,12 +98,12 @@ const SprintBacklog: React.FC<SprintBacklogProps> = ({ sprint }) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex space-x-4">
-        <TaskColumn
+        <SprintBacklogTaskColumn
           title="Product Backlog"
           tasks={productBacklogTasks}
           droppableId="ProductBacklog"
         />
-        <TaskColumn
+        <SprintBacklogTaskColumn
           title="Sprint Backlog"
           tasks={sprintBacklogTasks}
           droppableId="SprintBacklog"
@@ -108,50 +112,5 @@ const SprintBacklog: React.FC<SprintBacklogProps> = ({ sprint }) => {
     </DragDropContext>
   );
 };
-
-interface TaskColumnProps {
-  title: string;
-  tasks: Task[];
-  droppableId: string;
-}
-
-const TaskColumn: React.FC<TaskColumnProps> = ({
-  title,
-  tasks,
-  droppableId,
-}) => (
-  <div className="flex-1 min-w-[26rem] max-w-[26rem]">
-    <h2 className="text-xl font-semibold mb-4">{title}</h2>
-    <Droppable droppableId={droppableId}>
-      {(provided) => (
-        <div
-          {...provided.droppableProps}
-          ref={provided.innerRef}
-          className="bg-gray-800 p-4 rounded-lg min-h-[500px]"
-        >
-          {tasks.map((task, index) => (
-            <Draggable key={task.id} draggableId={task.id} index={index}>
-              {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.draggableProps}
-                  {...provided.dragHandleProps}
-                  className="mb-4"
-                >
-                  <TaskCardCompact
-                    task={task}
-                    members={[]}
-                    topTrailingChild={<Grip size={20} color="black" />}
-                  />
-                </div>
-              )}
-            </Draggable>
-          ))}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
-  </div>
-);
 
 export default SprintBacklog;

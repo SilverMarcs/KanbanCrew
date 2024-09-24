@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Karla as FontSans } from "next/font/google";
 import "../styles/globals.css";
 import Sidebar from "@/components/Sidebar";
-
 import { cn } from "@/lib/utils";
+import { ToastProvider } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -28,11 +29,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        {/* Sidebar */}
-        <Sidebar />
-
-        {/* Main content area */}
-        <div className="flex-1 p-4 px-8">{children}</div>
+        <ToastProvider>
+          {" "}
+          {/* Sidebar */}
+          <Sidebar />
+          {/* Main content area */}
+          <div className="flex-1 p-4 px-8">{children}</div>
+          <Toaster /> {/* Toasts */}
+        </ToastProvider>
       </body>
     </html>
   );
