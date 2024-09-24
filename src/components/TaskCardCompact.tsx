@@ -18,15 +18,17 @@ import { truncateText } from "@/lib/utils";
 import { Type } from "@/models/Type";
 
 interface TaskCardProps {
-  task: Task; // Changed to pass full Task object
+  task: Task;
   members: Member[];
   topTrailingChild?: React.ReactNode;
+  isKanbanBoard?: boolean; // Add this prop to determine if the parent is KanbanBoard
 }
 
 export const TaskCardCompact: React.FC<TaskCardProps> = ({
   task,
   members,
   topTrailingChild,
+  isKanbanBoard = false, // Default to false if not provided
 }) => {
   const {
     id,
@@ -43,6 +45,7 @@ export const TaskCardCompact: React.FC<TaskCardProps> = ({
     type,
     creationDate,
     historyLogs,
+    timeLogs,
   } = task;
 
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
@@ -114,7 +117,9 @@ export const TaskCardCompact: React.FC<TaskCardProps> = ({
             creationDate={creationDate}
             closeDialog={closeDialog}
             historyLogs={historyLogs}
+            timeLogs={timeLogs}
             members={members}
+            isKanbanBoard={isKanbanBoard}
           />
         </DialogDescription>
       </DialogContent>

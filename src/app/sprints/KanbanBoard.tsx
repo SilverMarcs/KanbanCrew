@@ -99,6 +99,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                             task={task}
                             members={members}
                             topTrailingChild={<Grip size={20} color="black" />}
+                            isKanbanBoard={true}
                           />
                         </div>
                       )}

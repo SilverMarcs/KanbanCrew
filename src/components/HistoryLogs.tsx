@@ -4,19 +4,12 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { HistoryLog } from "@/models/HistoryLog";
 import { Member } from "@/models/Member";
-import { convertToDate, getRelativeTime } from "@/lib/utils";
+import { convertToDate, getRelativeTime, getMemberName } from "@/lib/utils";
 
 const HistoryLogs: React.FC<
   { historyLogs: HistoryLog[] } & { members: Member[] }
 > = ({ historyLogs, members }) => {
   const [sortedLogs, setSortedLogs] = useState<HistoryLog[]>([]);
-
-  const getMemberName = (memberId: string) => {
-    const member = members.find((m) => m.id === memberId);
-    return member
-      ? { firstName: member.firstName, lastName: member.lastName }
-      : { firstName: "Unknown", lastName: "Member" };
-  };
 
   useEffect(() => {
     if (!historyLogs) {
@@ -43,8 +36,8 @@ const HistoryLogs: React.FC<
               <Avatar>
                 <AvatarImage src={""} />
                 <AvatarFallback>
-                  {getMemberName(log.member.id).firstName[0]}
-                  {getMemberName(log.member.id).lastName[0]}
+                  {getMemberName(members, log.member.id).firstName[0]}
+                  {getMemberName(members, log.member.id).lastName[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col min-w-28">
@@ -52,8 +45,8 @@ const HistoryLogs: React.FC<
                   {getRelativeTime(convertToDate(log.time))}
                 </div>
                 <div className="text-black font-bold">
-                  {getMemberName(log.member.id).firstName}{" "}
-                  {getMemberName(log.member.id).lastName}
+                  {getMemberName(members, log.member.id).firstName}{" "}
+                  {getMemberName(members, log.member.id).lastName}
                 </div>
               </div>
             </div>

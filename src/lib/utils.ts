@@ -1,3 +1,4 @@
+import { Member } from "@/models/Member";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -43,4 +44,20 @@ export const truncateText = (text: string, n: number = 30) => {
     return text.slice(0, n) + "...";
   }
   return text;
+};
+
+export const getMemberName = (members: Member[], memberId: string) => {
+  const member = members.find((m) => m.id === memberId);
+  return member
+    ? { firstName: member.firstName, lastName: member.lastName }
+    : { firstName: "Unknown", lastName: "Member" };
+};
+
+export const formatTime = (seconds: number) => {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${hrs.toString().padStart(2, "0")}:${mins
+    .toString()
+    .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 };
