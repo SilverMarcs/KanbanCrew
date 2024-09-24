@@ -45,6 +45,7 @@ export const TaskCardCompact: React.FC<TaskCardProps> = ({
     type,
     creationDate,
     historyLogs,
+    timeLogs,
   } = task;
 
   const { bgColor: priorityBgColor, textColor: priorityTextColor } =
@@ -116,8 +117,9 @@ export const TaskCardCompact: React.FC<TaskCardProps> = ({
             creationDate={creationDate}
             closeDialog={closeDialog}
             historyLogs={historyLogs}
+            timeLogs={timeLogs}
             members={members}
-            isKanbanBoard={isKanbanBoard} // Pass this prop to TaskCardExpanded
+            isKanbanBoard={isKanbanBoard}
           />
         </DialogDescription>
       </DialogContent>

@@ -55,6 +55,7 @@ export const useTasks = () => {
             type: data.type as Type,
             creationDate: data.creationDate,
             historyLogs: data.historyLogs,
+            timeLogs: data.timeLogs,
             sprintId: data.sprintId || null, // Use sprintId instead of sprint reference
           });
         }

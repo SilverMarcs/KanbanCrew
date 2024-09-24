@@ -4,7 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TimeLog } from "@/models/TimeLog";
 import { Member } from "@/models/Member";
-import { convertToDate, getRelativeTime } from "@/lib/utils";
+import { getRelativeTime } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -104,12 +104,14 @@ const TimeLogs: React.FC<{ timeLogs: TimeLog[] } & { members: Member[] }> = ({
                 <div className="text-xs">
                   {getRelativeTime(log.time.toDate())}
                 </div>
-                <div className="text-black font-bold">
-                  {getMemberName(log.member.id).firstName}{" "}
-                  {getMemberName(log.member.id).lastName}
-                </div>
-                <div className="text-gray-500">
-                  Time logged: {formatTime(log.timeLogged)}
+                <div className="flex items-center space-x-1">
+                  <div className="text-black font-bold">
+                    {getMemberName(log.member.id).firstName}{" "}
+                    {getMemberName(log.member.id).lastName}
+                  </div>
+                  <div className="text-gray-500">
+                    - {formatTime(log.timeLogged)}
+                  </div>
                 </div>
               </div>
             </div>
@@ -134,7 +136,7 @@ const TimeLogs: React.FC<{ timeLogs: TimeLog[] } & { members: Member[] }> = ({
           <Calendar selected={date} onSelect={setDate} />
         </PopoverContent>
       </Popover>
-      <div className="flex ml-12 mt-2 items-center justify-center">
+      <div className="flex ml-14 mt-2 items-center">
         <input
           type="number"
           placeholder="HH"

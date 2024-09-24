@@ -41,6 +41,7 @@ export const TaskCardExpanded = ({
   assignee: initialAssignee,
   closeDialog,
   historyLogs,
+  timeLogs,
   members,
   isKanbanBoard = false, // Default to false if not provided
 }: TaskCardExpandedProps) => {
@@ -100,7 +101,7 @@ export const TaskCardExpanded = ({
         <div className="mt-14 ml-6">
           {/* Conditionally render TimeLogs or HistoryLogs */}
           {isKanbanBoard ? (
-            <TimeLogs taskId={id} members={members} />
+            <TimeLogs timeLogs={timeLogs} members={members} />
           ) : (
             <HistoryLogs historyLogs={historyLogs} members={members} />
           )}
