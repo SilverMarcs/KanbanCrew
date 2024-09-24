@@ -3,6 +3,7 @@ import { DragDropContext } from "@hello-pangea/dnd";
 import { useTasks } from "@/hooks/useTasks";
 import { Task } from "@/models/Task";
 import { Sprint } from "@/models/sprints/Sprint";
+import { Status } from "@/models/Status";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import SprintBacklogTaskColumn from "./SprintBacklogTaskColumn";
@@ -17,7 +18,12 @@ const SprintBacklog: React.FC<SprintBacklogProps> = ({ sprint }) => {
   const [sprintBacklogTasks, setSprintBacklogTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    setProductBacklogTasks(allTasks.filter((task) => !task.sprintId));
+    // Dont show completed tasks or tasks already in a sprint in the product backlog
+    setProductBacklogTasks(
+      allTasks.filter(
+        (task) => !task.sprintId && task.status !== Status.Completed
+      )
+    );
     setSprintBacklogTasks(
       allTasks.filter((task) => task.sprintId === sprint.id)
     );
