@@ -7,6 +7,11 @@ import { Type } from "./Type";
 import { HistoryLog } from "./HistoryLog";
 import { Member } from "./Member";
 
+export interface TimeLog {
+  date: Date;
+  hours: number;
+}
+
 export interface Task {
   id: string;
   index: number;
