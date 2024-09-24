@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TitleEditable } from "@/components/TitleEditable";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -14,6 +14,8 @@ import { SprintStatusBadge } from "./SprintStatusBadge";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/hooks/use-toast";
+import { useSprints } from "@/hooks/useSprints";
+import validateSprintDates from "@/lib/validateSprintDates";
 
 interface CreateSprintFormProps {
   onSuccess: () => void;
@@ -27,8 +29,23 @@ export const CreateSprintForm: React.FC<CreateSprintFormProps> = ({
   const [from, setFrom] = useState<Date | undefined>(undefined);
   const [to, setTo] = useState<Date | undefined>(undefined);
 
+  const existingSprints = useSprints(); // Fetch existing sprints
+
   const onSubmit = async () => {
     if (!from || !to) return;
+
+    const validationErrors = validateSprintDates(from, to, existingSprints);
+
+    if (validationErrors.length > 0) {
+      validationErrors.forEach((error) => {
+        toast({
+          title: "Validation Error",
+          description: error,
+          variant: "destructive",
+        });
+      });
+      return;
+    }
 
     try {
       await addDoc(collection(db, "sprints"), {
@@ -54,6 +71,7 @@ export const CreateSprintForm: React.FC<CreateSprintFormProps> = ({
       toast({
         title: "Error",
         description: "Failed to create the sprint.",
+        variant: "destructive",
       });
     }
   };
