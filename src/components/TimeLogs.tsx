@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon, Plus } from "lucide-react";
 import { format, isSameDay } from "date-fns";
 import { getMemberName, formatTime } from "@/lib/utils";
+import { db } from "@/lib/firebaseConfig";
+import { updateDoc, Timestamp, doc } from "firebase/firestore";
 
 interface TimeLogsProps {
   timeLogs: TimeLog[];
@@ -49,6 +51,21 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
     setTimeSpent(totalTime);
   }, [timeLogs, date]);
 
+  const updateTimeLogs = async (memberId: string, taskId: string, timeLogged: number) => {
+    const taskRef = doc(db, "tasks", taskId);
+
+    try {
+      await updateDoc(taskRef, {
+        memberId: memberId,        // member ID (logged in user)
+        taskId: taskId,            // The task for which time is being logged
+        timeLogged: timeLogged,    // Time logged in seconds
+        time: Timestamp.now()      // The timestamp of when the time was logged
+      });
+    } catch (error) {
+      console.error("Error adding time log: ", error);
+    }
+  };
+
   const handleLogTime = () => {
     // Default values are used if the user leaves any input empty
     const hrs = parseInt(hours, 10) || 0;
@@ -62,6 +79,10 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
     setHours("00");
     setMinutes("00");
     setSeconds("00");
+
+    if (taskId) {
+      updateTimeLogs(members[0].id, taskId, totalSeconds);
+    }
   };
 
   const handleInputChange = (
