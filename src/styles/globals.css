@@ -138,6 +138,14 @@ textarea {
   overflow: hidden; /* Ensure the height remains consistent */
 }
 
+.sprint-backlog {
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.50),
+    rgba(89, 21, 21, 0.65)
+  );
+}
+
 .kanban-board {
   background: linear-gradient(
     to bottom,
