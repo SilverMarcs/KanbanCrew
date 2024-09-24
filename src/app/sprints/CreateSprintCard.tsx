@@ -9,47 +9,12 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircleIcon } from "lucide-react";
 import { CreateSprintForm } from "./CreateSprintForm";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
-import { db } from "@/lib/firebaseConfig";
-import { toast } from "@/hooks/use-toast";
-import { format } from "date-fns";
-import { SprintStatus } from "@/models/sprints/SprintStatus";
 
 export const CreateSprintCard = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onSubmit = async (
-    name: string,
-    status: SprintStatus,
-    from: Date,
-    to: Date
-  ) => {
-    try {
-      await addDoc(collection(db, "sprints"), {
-        name: name,
-        sprintStatus: status,
-        startDate: Timestamp.fromDate(from),
-        endDate: Timestamp.fromDate(to),
-      });
-
-      toast({
-        title: "Sprint created",
-        description: (
-          <div>
-            <p>Status: {status}</p>
-            <p>From: {format(from, "P")}</p>
-            <p>To: {format(to, "P")}</p>
-          </div>
-        ),
-      });
-      setIsOpen(false);
-    } catch (error) {
-      console.error("Error adding sprint: ", error);
-      toast({
-        title: "Error",
-        description: "Failed to create the sprint.",
-      });
-    }
+  const handleSuccess = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -64,7 +29,7 @@ export const CreateSprintCard = () => {
       </DialogTrigger>
       <DialogContent className="bg-yellow-200 max-w-lg border-0 shadow-lg">
         <DialogHeader>
-          <CreateSprintForm onSubmit={onSubmit} />
+          <CreateSprintForm onSuccess={handleSuccess} />
         </DialogHeader>
       </DialogContent>
     </Dialog>
