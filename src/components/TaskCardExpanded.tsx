@@ -20,10 +20,12 @@ import { Status } from "@/models/Status";
 import { Member } from "@/models/Member";
 import { AssigneeDropdown } from "@/components/AssigneeDropdown";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import TimeLogs from "@/components/TimeLogs";
 
 interface TaskCardExpandedProps extends Task {
   closeDialog?: () => void;
   members: Member[];
+  isKanbanBoard?: boolean; // Add this prop to conditionally render TimeLogs
 }
 
 export const TaskCardExpanded = ({
@@ -39,7 +41,9 @@ export const TaskCardExpanded = ({
   assignee: initialAssignee,
   closeDialog,
   historyLogs,
+  timeLogs,
   members,
+  isKanbanBoard = false, // Default to false if not provided
 }: TaskCardExpandedProps) => {
   const [title, setTitle] = useState(initialTitle);
   const [storyPoints, setStoryPoints] = useState(initialStoryPoints);
@@ -95,7 +99,12 @@ export const TaskCardExpanded = ({
           />
         </div>
         <div className="mt-14 ml-6">
-          <HistoryLogs historyLogs={historyLogs} members={members} />
+          {/* Conditionally render TimeLogs or HistoryLogs */}
+          {isKanbanBoard ? (
+            <TimeLogs timeLogs={timeLogs} members={members} />
+          ) : (
+            <HistoryLogs historyLogs={historyLogs} members={members} />
+          )}
         </div>
       </div>
       <div>

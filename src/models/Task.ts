@@ -5,6 +5,7 @@ import { Status } from "./Status";
 import { Tag } from "./Tag";
 import { Type } from "./Type";
 import { HistoryLog } from "./HistoryLog";
+import { TimeLog } from "./TimeLog";
 import { Member } from "./Member";
 
 export interface Task {
@@ -22,5 +23,6 @@ export interface Task {
   type: Type;
   creationDate: Timestamp;
   historyLogs: HistoryLog[];
+  timeLogs: TimeLog[];
   sprintId?: string | null;
 }
