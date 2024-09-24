@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, Plus } from "lucide-react";
 import { format, isSameDay } from "date-fns";
+import { getMemberName, formatTime } from "@/lib/utils";
 
 interface TimeLogsProps {
   timeLogs: TimeLog[];
@@ -28,22 +29,6 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
   const [hours, setHours] = useState<string>("00");
   const [minutes, setMinutes] = useState<string>("00");
   const [seconds, setSeconds] = useState<string>("00");
-
-  const formatTime = (seconds: number) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${hrs.toString().padStart(2, "0")}:${mins
-      .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const getMemberName = (memberId: string) => {
-    const member = members.find((m) => m.id === memberId);
-    return member
-      ? { firstName: member.firstName, lastName: member.lastName }
-      : { firstName: "Unknown", lastName: "Member" };
-  };
 
   useEffect(() => {
     if (!timeLogs || !date) {
@@ -104,8 +89,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
               <Avatar>
                 <AvatarImage src={""} />
                 <AvatarFallback>
-                  {getMemberName(log.member.id).firstName[0]}
-                  {getMemberName(log.member.id).lastName[0]}
+                  {getMemberName(members, log.member.id).firstName[0]}
+                  {getMemberName(members, log.member.id).lastName[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col min-w-28">
@@ -114,8 +99,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="text-black font-bold">
-                    {getMemberName(log.member.id).firstName}{" "}
-                    {getMemberName(log.member.id).lastName}
+                    {getMemberName(members, log.member.id).firstName}{" "}
+                    {getMemberName(members, log.member.id).lastName}
                   </div>
                   <div className="text-gray-500 text-xs">
                     - {formatTime(log.timeLogged)}
