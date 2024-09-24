@@ -13,12 +13,12 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, Plus } from "lucide-react";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 
 const TimeLogs: React.FC<
   { timeLogs: TimeLog[] } & { members: Member[] } & { taskId: string }
 > = ({ timeLogs, members, taskId }) => {
-  const [sortedLogs, setSortedLogs] = useState<TimeLog[]>([]);
+  const [filteredLogs, setFilteredLogs] = useState<TimeLog[]>([]);
   const [timeSpent, setTimeSpent] = useState<number>(0);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [hours, setHours] = useState<string>("00");
@@ -42,18 +42,23 @@ const TimeLogs: React.FC<
   };
 
   useEffect(() => {
-    if (!timeLogs) {
+    if (!timeLogs || !date) {
       return;
     }
-    const sorted = [...timeLogs].sort((a, b) => {
-      return a.time.toDate().getTime() - b.time.toDate().getTime();
-    });
-    setSortedLogs(sorted);
 
-    // Calculate the total time spent from the time logs
-    const totalTime = sorted.reduce((total, log) => total + log.timeLogged, 0);
+    // Filter logs based on the selected date
+    const filtered = timeLogs.filter((log) =>
+      isSameDay(log.time.toDate(), date)
+    );
+    setFilteredLogs(filtered);
+
+    // Calculate the total time spent from the filtered logs
+    const totalTime = filtered.reduce(
+      (total, log) => total + log.timeLogged,
+      0
+    );
     setTimeSpent(totalTime);
-  }, [timeLogs]);
+  }, [timeLogs, date]);
 
   const handleLogTime = () => {
     // Default values are used if the user leaves any input empty
@@ -88,8 +93,8 @@ const TimeLogs: React.FC<
       </div>
 
       <ScrollArea className="mt-2 ml-16 mb-5 flex flex-col max-h-40 min-w-full">
-        {sortedLogs.length > 0 ? (
-          sortedLogs.map((log: TimeLog, index) => (
+        {filteredLogs.length > 0 ? (
+          filteredLogs.map((log: TimeLog, index) => (
             <div key={index} className="flex space-x-2">
               <div className="h-12 w-0.5 mr-0.5 bg-gray-400 opacity-80"></div>
               <Avatar>
@@ -108,7 +113,7 @@ const TimeLogs: React.FC<
                     {getMemberName(log.member.id).firstName}{" "}
                     {getMemberName(log.member.id).lastName}
                   </div>
-                  <div className="text-gray-500">
+                  <div className="text-gray-500 text-xs">
                     - {formatTime(log.timeLogged)}
                   </div>
                 </div>
@@ -126,13 +131,13 @@ const TimeLogs: React.FC<
       </ScrollArea>
       <Popover>
         <PopoverTrigger asChild className="space-x-2 ml-12 border">
-          <Button className="flex space-x-4 w-52 h-10 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
+          <Button className="flex space-x-4 w-52 h-10 justify-between bg-white text-gray-500 rounded-xl hover:bg-gray-100 mt-1">
             <span>{date ? format(date, "P") : "Select date"}</span>
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <Calendar selected={date} onSelect={setDate} />
+          <Calendar mode="single" selected={date} onSelect={setDate} />
         </PopoverContent>
       </Popover>
       <div className="flex ml-14 mt-2 items-center">
