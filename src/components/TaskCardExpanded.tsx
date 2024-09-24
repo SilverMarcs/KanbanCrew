@@ -101,7 +101,7 @@ export const TaskCardExpanded = ({
         <div className="mt-14 ml-6">
           {/* Conditionally render TimeLogs or HistoryLogs */}
           {isKanbanBoard ? (
-            <TimeLogs timeLogs={timeLogs} members={members} />
+            <TimeLogs timeLogs={timeLogs} members={members} taskId={id} />
           ) : (
             <HistoryLogs historyLogs={historyLogs} members={members} />
           )}
