@@ -58,8 +58,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
       await updateDoc(taskRef, {
         memberId: memberId,        // member ID (logged in user)
         taskId: taskId,            // The task for which time is being logged
+        time: Timestamp.now(),      // The timestamp of when the time was logged
         timeLogged: timeLogged,    // Time logged in seconds
-        time: Timestamp.now()      // The timestamp of when the time was logged
       });
     } catch (error) {
       console.error("Error adding time log: ", error);
@@ -80,7 +80,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
     setMinutes("00");
     setSeconds("00");
 
-    if (taskId) {
+    if (taskId && members.length > 0) {
       updateTimeLogs(members[0].id, taskId, totalSeconds);
     }
   };
