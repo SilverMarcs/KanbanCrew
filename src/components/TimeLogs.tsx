@@ -22,9 +22,10 @@ interface TimeLogsProps {
   timeLogs: TimeLog[];
   members: Member[];
   taskId: string;
+  assignee: Member;
 }
 
-const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
+const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee }) => {
   const [filteredLogs, setFilteredLogs] = useState<TimeLog[]>([]);
   const [timeSpent, setTimeSpent] = useState<number>(0);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -51,15 +52,21 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
     setTimeSpent(totalTime);
   }, [timeLogs, date]);
 
-  const updateTimeLogs = async (memberId: string, taskId: string, timeLogged: number) => {
+  const updateTimeLogs = async (assignee: Member, taskId: string, timeLogged: number) => {
     const taskRef = doc(db, "tasks", taskId);
+
+    const newLog = {
+      assignee: assignee,        // members (logged in user)
+      taskId: taskId,            // The task for which time is being logged
+      time: Timestamp.now(),     // The timestamp of when the time was logged
+      timeLogged: timeLogged,    // Time logged in seconds
+    };
+
+    const updatedTimeLogs = [...timeLogs, newLog];
 
     try {
       await updateDoc(taskRef, {
-        memberId: memberId,        // member ID (logged in user)
-        taskId: taskId,            // The task for which time is being logged
-        time: Timestamp.now(),      // The timestamp of when the time was logged
-        timeLogged: timeLogged,    // Time logged in seconds
+        timeLogs: updatedTimeLogs
       });
     } catch (error) {
       console.error("Error adding time log: ", error);
@@ -80,8 +87,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
     setMinutes("00");
     setSeconds("00");
 
-    if (taskId && members.length > 0) {
-      updateTimeLogs(members[0].id, taskId, totalSeconds);
+    if (taskId) {
+      updateTimeLogs(assignee, taskId, totalSeconds);
     }
   };
 
@@ -110,8 +117,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
               <Avatar>
                 <AvatarImage src={""} />
                 <AvatarFallback>
-                  {getMemberName(members, log.member.id).firstName[0]}
-                  {getMemberName(members, log.member.id).lastName[0]}
+                  {log.member && getMemberName(members, log.member.id).firstName[0]}
+                  {log.member && getMemberName(members, log.member.id).lastName[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col min-w-28">
@@ -120,8 +127,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="text-black font-bold">
-                    {getMemberName(members, log.member.id).firstName}{" "}
-                    {getMemberName(members, log.member.id).lastName}
+                    {log.member && getMemberName(members, log.member.id).firstName}
+                    {log.member && getMemberName(members, log.member.id).lastName}
                   </div>
                   <div className="text-gray-500 text-xs">
                     - {formatTime(log.timeLogged)}
