@@ -52,13 +52,17 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
     setTimeSpent(totalTime);
   }, [timeLogs, date]);
 
-  const updateTimeLogs = async (assignee: Member, taskId: string, timeLogged: number) => {
+  const updateTimeLogs = async (assignee: Member, taskId: string, timeLogged: number, daysAgo: number) => {
     const taskRef = doc(db, "tasks", taskId);
 
+      // Create a new Date object and set it to the desired day
+      const date = new Date();
+      date.setDate(date.getDate() - daysAgo); // Set to the previous day or any other day by changing daysAgo
+      
     const newLog = {
       assignee: assignee,        // members (logged in user)
       taskId: taskId,            // The task for which time is being logged
-      time: Timestamp.now(),     // The timestamp of when the time was logged
+      time: date,                 // The timestamp of when the time was logged
       timeLogged: timeLogged,    // Time logged in seconds
     };
 
@@ -88,7 +92,10 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
     setSeconds("00");
 
     if (taskId) {
-      updateTimeLogs(assignee, taskId, totalSeconds);
+      if (date) {
+        const daysAgo = Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+        updateTimeLogs(assignee, taskId, totalSeconds, daysAgo);
+      }
     }
   };
 
@@ -117,18 +124,16 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
               <Avatar>
                 <AvatarImage src={""} />
                 <AvatarFallback>
-                  {log.member && getMemberName(members, log.member.id).firstName[0]}
-                  {log.member && getMemberName(members, log.member.id).lastName[0]}
+                  {`${assignee.firstName[0]}${assignee.lastName[0]}`}
                 </AvatarFallback>
-              </Avatar>
+              </Avatar> 
               <div className="flex flex-col min-w-28">
                 <div className="text-xs">
                   {getRelativeTime(log.time.toDate())}
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="text-black font-bold">
-                    {log.member && getMemberName(members, log.member.id).firstName}
-                    {log.member && getMemberName(members, log.member.id).lastName}
+                    {`${assignee.firstName} ${assignee.lastName}`}
                   </div>
                   <div className="text-gray-500 text-xs">
                     - {formatTime(log.timeLogged)}
