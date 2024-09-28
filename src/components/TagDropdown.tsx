@@ -76,16 +76,19 @@ export const TagDropdown: FC<TagDropdownProps> = ({
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <Button
-            className="bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors"
+            // className="bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors"
+            variant="secondary"
             onClick={() => setIsOpen(true)}
           >
             {selectedTags.length === 0 ? (
               <>
-                <span className="text-sm text-gray-500 mr-2">Select a tag</span>
-                <CirclePlus className="h-4 w-4" />
+                <span className="text-sm text-secondary-foreground text- mr-2">
+                  Select a tag
+                </span>
+                <CirclePlus size={20} />
               </>
             ) : (
-              <CirclePlus className="h-4 w-4" />
+              <CirclePlus size={20} />
             )}
           </Button>
         </DropdownMenuTrigger>

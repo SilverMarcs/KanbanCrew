@@ -40,10 +40,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         transition={{ duration: 0.4 }}
         whileHover={{ scale: 1.025 }}
         whileTap={{ scale: 0.95 }}
-        className="task-card-container"
+        className="task-card-container w-96" // Added fixed width here
         onClick={() => setIsDialogOpen(true)}
       >
-        <Card className="relative rounded-xl task-card">
+        <Card className="relative rounded-xl task-card h-full">
           <CardContent className="text-start mt-6">
             <div className="w-full flex justify-between items-center">
               <div className="flex items-center gap-3">
