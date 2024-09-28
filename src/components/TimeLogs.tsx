@@ -15,14 +15,17 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon, Plus } from "lucide-react";
 import { format, isSameDay } from "date-fns";
 import { getMemberName, formatTime } from "@/lib/utils";
+import { db } from "@/lib/firebaseConfig";
+import { updateDoc, Timestamp, doc } from "firebase/firestore";
 
 interface TimeLogsProps {
   timeLogs: TimeLog[];
   members: Member[];
   taskId: string;
+  assignee: Member;
 }
 
-const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
+const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee }) => {
   const [filteredLogs, setFilteredLogs] = useState<TimeLog[]>([]);
   const [timeSpent, setTimeSpent] = useState<number>(0);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -37,7 +40,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
 
     // Filter logs based on the selected date
     const filtered = timeLogs.filter((log) =>
-      isSameDay(log.time.toDate(), date)
+        isSameDay(log.time.toDate(), date) && log.member.id === assignee.id
     );
     setFilteredLogs(filtered);
 
@@ -47,9 +50,34 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
       0
     );
     setTimeSpent(totalTime);
-  }, [timeLogs, date]);
+  }, [timeLogs, date, assignee.id]);
 
-  const handleLogTime = () => {
+  const updateTimeLogs = async (assignee: Member, taskId: string, timeLogged: number, daysAgo: number) => {
+    const taskRef = doc(db, "tasks", taskId);
+
+      // Create a new Date object and set it to the desired day
+      const date = new Date();
+      date.setDate(date.getDate() - daysAgo); // Set to the previous day or any other day by changing daysAgo
+      
+    const newLog = {
+      assignee: assignee,        // members (logged in user)
+      taskId: taskId,            // The task for which time is being logged
+      time: date,                 // The timestamp of when the time was logged
+      timeLogged: timeLogged,    // Time logged in seconds
+    };
+
+    const updatedTimeLogs = [...timeLogs, newLog];
+
+    try {
+      await updateDoc(taskRef, {
+        timeLogs: updatedTimeLogs
+      });
+    } catch (error) {
+      console.error("Error adding time log: ", error);
+    }
+  };
+
+  const handleLogTime = async () => {
     // Default values are used if the user leaves any input empty
     const hrs = parseInt(hours, 10) || 0;
     const mins = parseInt(minutes, 10) || 0;
@@ -58,10 +86,40 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
 
     setTimeSpent((prevTimeSpent) => prevTimeSpent + totalSeconds);
 
-    // Reset the input fields to default values after logging time
-    setHours("00");
-    setMinutes("00");
-    setSeconds("00");
+    const taskRef = doc(db, "tasks", taskId);
+
+    // Convert date to Firebase Timestamp
+    const firebaseTimestamp = Timestamp.fromDate(date || new Date());
+
+    // Convert assignee to a DocumentReference
+    const assigneeRef = doc(db, "members", assignee.id); // Replace with actual assignee object
+
+    const newLog = {
+      member: assigneeRef,
+      time: firebaseTimestamp,
+      timeLogged: totalSeconds,
+    };
+
+    try {
+      // Push to Firebase
+      await updateDoc(taskRef, {
+        timeLogs: [
+          ...timeLogs, // Existing logs
+          newLog,
+        ],
+      });
+
+      // Update filtered logs
+      setFilteredLogs([...filteredLogs, newLog]);
+
+      // Reset the input fields to default values after logging time
+      setHours("00");
+      setMinutes("00");
+      setSeconds("00");
+
+    } catch (error) {
+      console.error("Error updating time logs:", error);
+    }
   };
 
   const handleInputChange = (
@@ -89,18 +147,18 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId }) => {
               <Avatar>
                 <AvatarImage src={""} />
                 <AvatarFallback>
-                  {getMemberName(members, log.member.id).firstName[0]}
-                  {getMemberName(members, log.member.id).lastName[0]}
+                  {getMemberName(members, assignee.id).firstName[0]}
+                  {getMemberName(members, assignee.id).lastName[0]}
                 </AvatarFallback>
-              </Avatar>
+              </Avatar> 
               <div className="flex flex-col min-w-28">
                 <div className="text-xs">
                   {getRelativeTime(log.time.toDate())}
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="text-black font-bold">
-                    {getMemberName(members, log.member.id).firstName}{" "}
-                    {getMemberName(members, log.member.id).lastName}
+                    {getMemberName(members, assignee.id).firstName}{" "}
+                    {getMemberName(members, assignee.id).lastName}
                   </div>
                   <div className="text-gray-500 text-xs">
                     - {formatTime(log.timeLogged)}
