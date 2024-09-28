@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import { cn } from "@/lib/utils";
 import { ToastProvider } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/themes/ThemeProvider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -29,14 +30,18 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <ToastProvider>
-          {" "}
-          {/* Sidebar */}
-          <Sidebar />
-          {/* Main content area */}
-          <div className="flex-1 p-4 px-8">{children}</div>
-          <Toaster /> {/* Toasts */}
-        </ToastProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          // disableTransitionOnChange
+        >
+          <ToastProvider>
+            <Sidebar />
+            <div className="flex-1 p-4 px-8">{children}</div>
+            <Toaster />
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
