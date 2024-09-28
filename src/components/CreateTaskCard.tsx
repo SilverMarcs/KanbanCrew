@@ -148,7 +148,7 @@ export const CreateTaskCard = () => {
           </CardContent>
         </Card>
       </DialogTrigger>
-      <DialogContent className="bg-card max-w-3xl">
+      <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between pr-7">
             <span>Create a new task</span>

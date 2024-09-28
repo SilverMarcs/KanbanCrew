@@ -41,7 +41,7 @@ export function SprintStatusDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="bg-transparent font-bold hover:bg-transparent text-black flex items-center">
+        <Button className="bg-transparent font-bold hover:bg-transparent flex items-center">
           {/* <StatusBadge status={status} /> */}
           <SprintStatusBadge status={status} />
           <ChevronDown className="ml-1 h-4 w-4" />

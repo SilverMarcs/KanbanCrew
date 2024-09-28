@@ -173,8 +173,8 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
             <Button
               className={`flex space-x-4 w-40 justify-between ${
                 canEditDates
-                  ? "bg-white text-black hover:bg-gray-100"
-                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  ? ""
+                  : "bg-secondary text-muted-foreground cursor-not-allowed"
               } rounded-xl mt-1`}
               disabled={!canEditDates}
             >
@@ -198,8 +198,8 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
             <Button
               className={`flex space-x-4 w-40 justify-between ${
                 canEditDates
-                  ? "bg-white text-black hover:bg-gray-100"
-                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  ? ""
+                  : "bg-secondary text-muted-foreground cursor-not-allowed"
               } rounded-xl mt-1`}
               disabled={!canEditDates}
             >

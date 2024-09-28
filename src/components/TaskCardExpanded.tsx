@@ -48,7 +48,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-card max-w-3xl">
+      <DialogContent className="max-w-3xl">
         <DialogTitle className="hidden" />
         <DialogDescription>
           <div className="px-3">

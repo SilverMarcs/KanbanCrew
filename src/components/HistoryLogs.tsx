@@ -44,7 +44,7 @@ const HistoryLogs: React.FC<
                 <div className="text-xs">
                   {getRelativeTime(convertToDate(log.time))}
                 </div>
-                <div className="text-black font-bold">
+                <div className="text-muted-foreground font-bold">
                   {getMemberName(members, log.member.id).firstName}{" "}
                   {getMemberName(members, log.member.id).lastName}
                 </div>

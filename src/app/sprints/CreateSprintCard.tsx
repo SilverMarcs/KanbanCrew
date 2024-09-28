@@ -27,7 +27,7 @@ export const CreateSprintCard = () => {
           </CardContent>
         </Card>
       </DialogTrigger>
-      <DialogContent className="bg-white max-w-lg border-0 shadow-lg">
+      <DialogContent className="max-w-lg border-0 shadow-lg">
         <DialogHeader>
           <CreateSprintForm onSuccess={handleSuccess} />
         </DialogHeader>
