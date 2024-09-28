@@ -40,7 +40,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
 
     // Filter logs based on the selected date
     const filtered = timeLogs.filter((log) =>
-      isSameDay(log.time.toDate(), date)
+        isSameDay(log.time.toDate(), date) && log.member.id === assignee.id
     );
     setFilteredLogs(filtered);
 
@@ -50,7 +50,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
       0
     );
     setTimeSpent(totalTime);
-  }, [timeLogs, date]);
+  }, [timeLogs, date, assignee.id]);
 
   const updateTimeLogs = async (assignee: Member, taskId: string, timeLogged: number, daysAgo: number) => {
     const taskRef = doc(db, "tasks", taskId);
@@ -77,7 +77,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
     }
   };
 
-  const handleLogTime = () => {
+  const handleLogTime = async () => {
     // Default values are used if the user leaves any input empty
     const hrs = parseInt(hours, 10) || 0;
     const mins = parseInt(minutes, 10) || 0;
@@ -86,16 +86,39 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
 
     setTimeSpent((prevTimeSpent) => prevTimeSpent + totalSeconds);
 
-    // Reset the input fields to default values after logging time
-    setHours("00");
-    setMinutes("00");
-    setSeconds("00");
+    const taskRef = doc(db, "tasks", taskId);
 
-    if (taskId) {
-      if (date) {
-        const daysAgo = Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-        updateTimeLogs(assignee, taskId, totalSeconds, daysAgo);
-      }
+    // Convert date to Firebase Timestamp
+    const firebaseTimestamp = Timestamp.fromDate(date || new Date());
+
+    // Convert assignee to a DocumentReference
+    const assigneeRef = doc(db, "members", assignee.id); // Replace with actual assignee object
+
+    const newLog = {
+      member: assigneeRef,
+      time: firebaseTimestamp,
+      timeLogged: totalSeconds,
+    };
+
+    try {
+      // Push to Firebase
+      await updateDoc(taskRef, {
+        timeLogs: [
+          ...timeLogs, // Existing logs
+          newLog,
+        ],
+      });
+
+      // Update filtered logs
+      setFilteredLogs([...filteredLogs, newLog]);
+
+      // Reset the input fields to default values after logging time
+      setHours("00");
+      setMinutes("00");
+      setSeconds("00");
+
+    } catch (error) {
+      console.error("Error updating time logs:", error);
     }
   };
 
@@ -124,7 +147,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
               <Avatar>
                 <AvatarImage src={""} />
                 <AvatarFallback>
-                  {`${assignee.firstName[0]}${assignee.lastName[0]}`}
+                  {getMemberName(members, assignee.id).firstName[0]}
+                  {getMemberName(members, assignee.id).lastName[0]}
                 </AvatarFallback>
               </Avatar> 
               <div className="flex flex-col min-w-28">
@@ -133,7 +157,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="text-black font-bold">
-                    {`${assignee.firstName} ${assignee.lastName}`}
+                    {getMemberName(members, assignee.id).firstName}{" "}
+                    {getMemberName(members, assignee.id).lastName}
                   </div>
                   <div className="text-gray-500 text-xs">
                     - {formatTime(log.timeLogged)}
