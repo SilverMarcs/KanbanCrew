@@ -37,8 +37,8 @@ const DeleteButton: FC<DeleteButtonProps> = ({ taskId, closeDialog }) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button variant="destructive">
-          <Trash2 size={20} />
+        <Button variant="ghost">
+          <Trash2 size={20} color="red" />
         </Button>
       </DialogTrigger>
       <DialogContent>

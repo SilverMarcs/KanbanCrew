@@ -123,7 +123,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
                 <div className="font-bold">
                   <SprintStatusBadge status={sprint.status} />
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   {sprint.startDate.toDate().toLocaleDateString()} -{" "}
                   {sprint.endDate.toDate().toLocaleDateString()}
                 </p>

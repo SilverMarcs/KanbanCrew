@@ -64,7 +64,7 @@ export const StoryPointsField: React.FC<StoryPointsFieldProps> = ({
       ) : (
         <div
           onClick={handleClick}
-          className="w-full h-full flex items-center justify-center cursor-pointer text-gray-500 font-bold text-sm"
+          className="w-full h-full flex items-center justify-center cursor-pointer text-muted-foreground font-bold text-sm"
         >
           {storyPoints} SP
         </div>

@@ -25,7 +25,12 @@ interface TimeLogsProps {
   assignee: Member;
 }
 
-const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee }) => {
+const TimeLogs: React.FC<TimeLogsProps> = ({
+  timeLogs,
+  members,
+  taskId,
+  assignee,
+}) => {
   const [filteredLogs, setFilteredLogs] = useState<TimeLog[]>([]);
   const [timeSpent, setTimeSpent] = useState<number>(0);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -39,7 +44,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
     }
 
     // Filter logs based on the selected date
-    const filtered = timeLogs.filter((log) =>
+    const filtered = timeLogs.filter(
+      (log) =>
         isSameDay(log.time.toDate(), date) && log.member.id === assignee.id
     );
     setFilteredLogs(filtered);
@@ -52,25 +58,30 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
     setTimeSpent(totalTime);
   }, [timeLogs, date, assignee.id]);
 
-  const updateTimeLogs = async (assignee: Member, taskId: string, timeLogged: number, daysAgo: number) => {
+  const updateTimeLogs = async (
+    assignee: Member,
+    taskId: string,
+    timeLogged: number,
+    daysAgo: number
+  ) => {
     const taskRef = doc(db, "tasks", taskId);
 
-      // Create a new Date object and set it to the desired day
-      const date = new Date();
-      date.setDate(date.getDate() - daysAgo); // Set to the previous day or any other day by changing daysAgo
-      
+    // Create a new Date object and set it to the desired day
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo); // Set to the previous day or any other day by changing daysAgo
+
     const newLog = {
-      assignee: assignee,        // members (logged in user)
-      taskId: taskId,            // The task for which time is being logged
-      time: date,                 // The timestamp of when the time was logged
-      timeLogged: timeLogged,    // Time logged in seconds
+      assignee: assignee, // members (logged in user)
+      taskId: taskId, // The task for which time is being logged
+      time: date, // The timestamp of when the time was logged
+      timeLogged: timeLogged, // Time logged in seconds
     };
 
     const updatedTimeLogs = [...timeLogs, newLog];
 
     try {
       await updateDoc(taskRef, {
-        timeLogs: updatedTimeLogs
+        timeLogs: updatedTimeLogs,
       });
     } catch (error) {
       console.error("Error adding time log: ", error);
@@ -116,7 +127,6 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
       setHours("00");
       setMinutes("00");
       setSeconds("00");
-
     } catch (error) {
       console.error("Error updating time logs:", error);
     }
@@ -150,7 +160,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
                   {getMemberName(members, assignee.id).firstName[0]}
                   {getMemberName(members, assignee.id).lastName[0]}
                 </AvatarFallback>
-              </Avatar> 
+              </Avatar>
               <div className="flex flex-col min-w-28">
                 <div className="text-xs">
                   {getRelativeTime(log.time.toDate())}
@@ -160,7 +170,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
                     {getMemberName(members, assignee.id).firstName}{" "}
                     {getMemberName(members, assignee.id).lastName}
                   </div>
-                  <div className="text-gray-500 text-xs">
+                  <div className="text-muted-foreground text-xs">
                     - {formatTime(log.timeLogged)}
                   </div>
                 </div>
@@ -170,7 +180,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
         ) : (
           <div className="flex space-x-2">
             <div className="h-12 w-0.5 mr-0.5 bg-gray-400 opacity-80"></div>
-            <div className="text-center text-gray-500 mt-4">
+            <div className="text-center text-muted-foreground mt-4">
               No logs available
             </div>
           </div>
@@ -178,7 +188,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({ timeLogs, members, taskId, assignee
       </ScrollArea>
       <Popover>
         <PopoverTrigger asChild className="space-x-2 ml-12 border">
-          <Button className="flex space-x-4 w-52 h-10 justify-between bg-white text-gray-500 rounded-xl hover:bg-gray-100 mt-1">
+          <Button className="flex space-x-4 w-52 h-10 justify-between bg-white text-muted-foreground rounded-xl hover:bg-gray-100 mt-1">
             <span>{date ? format(date, "P") : "Select date"}</span>
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>

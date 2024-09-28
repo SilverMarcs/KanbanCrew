@@ -23,7 +23,7 @@ export const CreateSprintCard = () => {
       <DialogTrigger className="w-full" onClick={() => setIsOpen(true)}>
         <Card className="rounded-xl border-dashed border-2 border-gray-300 bg-transparent h-full">
           <CardContent className="flex justify-center h-full items-center py-2">
-            <PlusCircleIcon size={40} className="text-gray-300" />
+            <PlusCircleIcon size={40} className="text-gray-400" />
           </CardContent>
         </Card>
       </DialogTrigger>

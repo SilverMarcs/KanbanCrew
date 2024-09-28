@@ -54,7 +54,7 @@ const HistoryLogs: React.FC<
         ) : (
           <div className="flex space-x-2">
             <div className="h-12 w-0.5 mr-0.5 bg-gray-400 opacity-80"></div>
-            <div className="text-center text-gray-500 mt-4">
+            <div className="text-center text-muted-foreground mt-4">
               No logs available
             </div>
           </div>

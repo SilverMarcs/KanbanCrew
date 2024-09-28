@@ -59,7 +59,7 @@ export const TaskCardCompact: React.FC<TaskCardCompactProps> = ({
           </div>
           <div className="text-xl font-bold">{truncateText(task.title)}</div>
           <div className="flex justify-between">
-            <div className="text-gray-500 text-xs">
+            <div className="text-muted-foreground text-xs">
               Story point - {task.storyPoints}
             </div>
             <div className="flex space-x-1">
