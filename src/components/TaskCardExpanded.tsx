@@ -120,14 +120,6 @@ export const TaskCardExpanded = ({
             taskId={id}
           />
           <div className="flex items-center space-x-2 justify-end">
-            <ScrollArea className="w-96 whitespace-nowrap rounded-md">
-              <div className="flex w-full space-x-2 p-4 justify-end">
-                {selectedTags.map((tag, i) => (
-                  <TagBadge key={i} tag={tag} />
-                ))}
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
             <TagDropdown
               selectedTags={selectedTags}
               onTagChange={setSelectedTags}

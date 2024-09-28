@@ -190,15 +190,12 @@ export const CreateTaskCard = () => {
           </div>
           <div>
             {/* dunno why margin top needed here but not expanded card */}
-            <div className="mt-14 flex justify-between items-center">
-              <ProjectStagesDropdown
-                projectStage={projectStage}
-                setProjectStage={setProjectStage}
-              />
-              <div className="flex items-center space-x-2">
-                {tags.map((tag, i) => (
-                  <TagBadge key={i} tag={tag} />
-                ))}
+            <div>
+              <div className="mt-14 flex justify-between items-center">
+                <ProjectStagesDropdown
+                  projectStage={projectStage}
+                  setProjectStage={setProjectStage}
+                />
                 <TagDropdown selectedTags={tags} onTagChange={setTags} />
               </div>
             </div>
