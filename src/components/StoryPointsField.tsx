@@ -57,7 +57,7 @@ export const StoryPointsField: React.FC<StoryPointsFieldProps> = ({
           onBlur={handleBlur}
           min={1}
           max={10}
-          className="w-full h-full text-center p-0 text-sm text-black"
+          className="w-full h-full text-center p-0 text-sm"
           style={{ height: "29px", minHeight: "24px", boxShadow: "none" }}
           autoFocus
         />

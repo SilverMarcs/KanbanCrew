@@ -34,7 +34,7 @@ export const TaskTypePicker = ({
       onValueChange={(value) => handleTypeChange(value as Type)}
       className="w-44"
     >
-      <TabsList className="flex h-8 p-1 bg-muted w-fit justify-center">
+      <TabsList className="flex h-8 p-1 w-fit justify-center">
         <TabsTrigger
           value={Type.UserStory}
           className={`

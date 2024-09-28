@@ -107,7 +107,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           </Card>
         </motion.div>
       </DialogTrigger>
-      <DialogContent className="bg-white max-w-3xl">
+      <DialogContent className="bg-card max-w-3xl">
         <DialogTitle className="hidden" />
         <DialogDescription>
           <TaskCardExpanded

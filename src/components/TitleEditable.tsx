@@ -59,12 +59,12 @@ export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
           onChange={(e) => setLocalTitle(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className="text-3xl text-black font-bold p-0 border-0"
+          className="text-3xl font-bold p-0 border-0"
           style={{ boxShadow: "none" }}
         />
       ) : (
         <h2
-          className="text-3xl text-black font-bold cursor-pointer truncate"
+          className="text-3xl font-bold cursor-pointer truncate"
           onClick={() => setIsEditing(true)}
           style={{ width: "350px", height: "35px", whiteSpace: "nowrap" }}
         >
