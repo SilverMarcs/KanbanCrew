@@ -87,7 +87,8 @@
 }
 
 .sidebar {
-  background-color: hsl(var(--background));
+  background-color: hsla(var(--background), 0.8); /* Slight transparency */
+  backdrop-filter: blur(10px); /* Add blur effect */
 }
 
 .sidebar-icon {
@@ -141,7 +142,7 @@ textarea {
 .sprint-backlog {
   background: linear-gradient(
     to bottom,
-    rgba(0,0,0,0.50),
+    rgba(0, 0, 0, 0.5),
     rgba(89, 21, 21, 0.65)
   );
 }
