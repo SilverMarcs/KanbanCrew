@@ -18,6 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useBackgroundImage } from "@/hooks/useBackgroundImage";
 
 const themes = [
   {
@@ -34,16 +35,10 @@ const themes = [
   },
 ];
 
-interface ThemeCommandProps {
-  bgImageName: string;
-  setBgImageName: (bgImageName: string) => void;
-}
-
-export function ThemeCommandBox({
-  bgImageName,
-  setBgImageName,
-}: ThemeCommandProps) {
+export function ThemeCommandBox() {
   const [open, setOpen] = React.useState(false);
+  const bgImageName = useBackgroundImage((state) => state.bgImageName);
+  const setBgImageName = useBackgroundImage((state) => state.setBgImageName);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

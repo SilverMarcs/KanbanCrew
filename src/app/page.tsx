@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useTasks } from "@/hooks/useTasks";
 import { useMembers } from "@/hooks/useMembers";
@@ -8,7 +9,6 @@ import { TaskCard } from "@/components/TaskCard";
 import { TagFilter } from "@/components/TagFilter";
 import { Tag } from "@/models/Tag";
 import { SortButton, SortField, SortOrder } from "@/components/SortButton";
-import Image from "next/image";
 import { Task } from "@/models/Task";
 import { EllipsisIcon } from "lucide-react";
 import { ThemeToggle } from "@/components/themes/ThemeToggle";
@@ -21,7 +21,6 @@ export default function Home() {
   const [sortFields, setSortFields] = useState<
     { field: SortField; order: SortOrder }[]
   >([]);
-  const [bgImageName, setBgImageName] = useState("");
 
   const filteredAndSortedTasks = useFilteredAndSortedTasks(
     tasks,
@@ -36,19 +35,7 @@ export default function Home() {
   };
 
   return (
-    <div className="p-16">
-      {bgImageName && (
-        <Image
-          src={`/images/${bgImageName}.jpg`}
-          fill={true}
-          quality={50}
-          alt="Background"
-          className="inset-0 -z-10 saturate-200 bg-black"
-          style={{
-            opacity: 0.75,
-          }}
-        />
-      )}
+    <div className="min-h-screen p-16">
       <div className="flex justify-between items-center">
         <h1 className="text-5xl font-bold">Product Backlog</h1>
         <div className="flex space-x-4">
@@ -57,10 +44,7 @@ export default function Home() {
             onTagChange={setSelectedTags}
           />
           <SortButton onSortChange={handleSortChange} />
-          <ThemeCommandBox
-            bgImageName={bgImageName}
-            setBgImageName={setBgImageName}
-          />
+          <ThemeCommandBox />
           <ThemeToggle />
         </div>
       </div>
