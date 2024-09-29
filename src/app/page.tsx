@@ -21,6 +21,7 @@ export default function Home() {
   const [sortFields, setSortFields] = useState<
     { field: SortField; order: SortOrder }[]
   >([]);
+  const [bgImageName, setBgImageName] = useState("");
 
   const filteredAndSortedTasks = useFilteredAndSortedTasks(
     tasks,
@@ -54,8 +55,11 @@ export default function Home() {
             onTagChange={setSelectedTags}
           />
           <SortButton onSortChange={handleSortChange} />
+          <ThemeCommandBox
+            bgImageName={bgImageName}
+            setBgImageName={setBgImageName}
+          />
           <ThemeToggle />
-          <ThemeCommandBox />
         </div>
       </div>
 

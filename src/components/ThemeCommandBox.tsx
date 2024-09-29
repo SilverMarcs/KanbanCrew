@@ -19,32 +19,27 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const frameworks = [
+const themes = [
   {
-    value: "next.js",
-    label: "Next.js",
+    bgImageName: "ocean",
+    label: "Ocean",
   },
   {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
+    bgImageName: "forest",
+    label: "Forest",
   },
 ];
 
-export function ThemeCommandBox() {
+interface ThemeCommandProps {
+  bgImageName: string;
+  setBgImageName: (bgImageName: string) => void;
+}
+
+export function ThemeCommandBox({
+  bgImageName,
+  setBgImageName,
+}: ThemeCommandProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -53,36 +48,38 @@ export function ThemeCommandBox() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-[120px] justify-between"
         >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+          {bgImageName
+            ? themes.find((theme) => theme.bgImageName === bgImageName)?.label
+            : "Theme"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[120px] p-0">
         <Command>
           <CommandInput placeholder="Theme" />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No theme found.</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {themes.map((theme) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                  key={theme.bgImageName}
+                  value={theme.bgImageName}
+                  onSelect={(newTheme) => {
+                    setBgImageName(newTheme);
                     setOpen(false);
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      bgImageName === theme.bgImageName
+                        ? "opacity-100"
+                        : "opacity-0"
                     )}
                   />
-                  {framework.label}
+                  {theme.label}
                 </CommandItem>
               ))}
             </CommandGroup>
