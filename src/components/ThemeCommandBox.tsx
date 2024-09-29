@@ -66,7 +66,7 @@ export function ThemeCommandBox() {
                   key={theme.bgImageName}
                   value={theme.bgImageName}
                   onSelect={(newTheme) => {
-                    setBgImageName(newTheme);
+                    setBgImageName(newTheme === "clear" ? "" : newTheme); // TODO: maybe theres a better way to do this?
                     setOpen(false);
                   }}
                 >
