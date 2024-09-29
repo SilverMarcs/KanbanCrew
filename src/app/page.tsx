@@ -12,6 +12,7 @@ import Image from "next/image";
 import { Task } from "@/models/Task";
 import { EllipsisIcon } from "lucide-react";
 import { ThemeToggle } from "@/components/themes/ThemeToggle";
+import { ThemeCommandBox } from "@/components/ThemeCommandBox";
 
 export default function Home() {
   const tasks = useTasks();
@@ -54,6 +55,7 @@ export default function Home() {
           />
           <SortButton onSortChange={handleSortChange} />
           <ThemeToggle />
+          <ThemeCommandBox />
         </div>
       </div>
 
