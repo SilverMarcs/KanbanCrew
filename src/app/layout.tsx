@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { ToastProvider } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/themes/ThemeProvider";
+import { BackgroundImage } from "@/components/BackgroundImage";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -30,15 +31,11 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          // disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ToastProvider>
+            <BackgroundImage />
             <Sidebar />
-            <div className="flex-1 p-4 px-8">{children}</div>
+            <div className="flex-1 p-4 px-8 relative z-10">{children}</div>
             <Toaster />
           </ToastProvider>
         </ThemeProvider>
