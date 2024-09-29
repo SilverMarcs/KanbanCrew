@@ -37,16 +37,18 @@ export default function Home() {
 
   return (
     <div className="p-16">
-      {/* <Image
-        src="/bg-image.png"
-        fill={true}
-        quality={50}
-        alt="Background"
-        className="inset-0 -z-10 saturate-200 bg-black"
-        style={{
-          opacity: 0.15,
-        }}
-      /> */}
+      {bgImageName && (
+        <Image
+          src={`/images/${bgImageName}.jpg`}
+          fill={true}
+          quality={50}
+          alt="Background"
+          className="inset-0 -z-10 saturate-200 bg-black"
+          style={{
+            opacity: 0.75,
+          }}
+        />
+      )}
       <div className="flex justify-between items-center">
         <h1 className="text-5xl font-bold">Product Backlog</h1>
         <div className="flex space-x-4">
@@ -62,7 +64,6 @@ export default function Home() {
           <ThemeToggle />
         </div>
       </div>
-
       <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
         {filteredAndSortedTasks.map((task: Task) => (
           <TaskCard

@@ -28,6 +28,10 @@ const themes = [
     bgImageName: "forest",
     label: "Forest",
   },
+  {
+    bgImageName: "clear",
+    label: "Clear",
+  },
 ];
 
 interface ThemeCommandProps {
