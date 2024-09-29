@@ -86,10 +86,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
       />
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <Card
-          key={sprint.id}
-          className="flex items-center w-full outline-none border-0 rounded-xl"
-        >
+        <Card key={sprint.id} className="flex items-center w-full  rounded-xl">
           {/* Dropdown Menu for Edit and Delete */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -126,7 +123,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
                 <div className="font-bold">
                   <SprintStatusBadge status={sprint.status} />
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   {sprint.startDate.toDate().toLocaleDateString()} -{" "}
                   {sprint.endDate.toDate().toLocaleDateString()}
                 </p>
@@ -135,7 +132,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
           </div>
         </Card>
 
-        <DialogContent className="bg-white max-w-lg border-0 shadow-lg">
+        <DialogContent className="max-w-lg border-0 shadow-lg">
           <DialogHeader>
             <SprintDetails sprint={sprint} onClose={() => setIsOpen(false)} />
           </DialogHeader>

@@ -57,14 +57,14 @@ export const StoryPointsField: React.FC<StoryPointsFieldProps> = ({
           onBlur={handleBlur}
           min={1}
           max={10}
-          className="w-full h-full text-center p-0 text-sm text-black"
+          className="w-full h-full text-center p-0 text-sm"
           style={{ height: "29px", minHeight: "24px", boxShadow: "none" }}
           autoFocus
         />
       ) : (
         <div
           onClick={handleClick}
-          className="w-full h-full flex items-center justify-center cursor-pointer text-gray-500 font-bold text-sm"
+          className="w-full h-full flex items-center justify-center cursor-pointer text-muted-foreground font-bold text-sm"
         >
           {storyPoints} SP
         </div>

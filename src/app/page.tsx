@@ -11,6 +11,7 @@ import { SortButton, SortField, SortOrder } from "@/components/SortButton";
 import Image from "next/image";
 import { Task } from "@/models/Task";
 import { EllipsisIcon } from "lucide-react";
+import { ThemeToggle } from "@/components/themes/ThemeToggle";
 
 export default function Home() {
   const tasks = useTasks();
@@ -34,7 +35,7 @@ export default function Home() {
 
   return (
     <div className="p-16">
-      <Image
+      {/* <Image
         src="/bg-image.png"
         fill={true}
         quality={50}
@@ -43,7 +44,7 @@ export default function Home() {
         style={{
           opacity: 0.15,
         }}
-      />
+      /> */}
       <div className="flex justify-between items-center">
         <h1 className="text-5xl font-bold">Product Backlog</h1>
         <div className="flex space-x-4">
@@ -52,6 +53,7 @@ export default function Home() {
             onTagChange={setSelectedTags}
           />
           <SortButton onSortChange={handleSortChange} />
+          <ThemeToggle />
         </div>
       </div>
 

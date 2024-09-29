@@ -87,7 +87,7 @@ export const CreateSprintForm: React.FC<CreateSprintFormProps> = ({
         <p className="mt-6">Sprint Start Date</p>
         <Popover>
           <PopoverTrigger asChild>
-            <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
+            <Button className="flex space-x-4 w-40 justify-between rounded-xl hover:bg-gray-100 mt-1">
               <span>{from ? format(from, "P") : "Select date"}</span>
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
@@ -99,7 +99,7 @@ export const CreateSprintForm: React.FC<CreateSprintFormProps> = ({
         <p className="mt-4">Sprint End Date</p>
         <Popover>
           <PopoverTrigger asChild>
-            <Button className="flex space-x-4 w-40 justify-between bg-white text-black rounded-xl hover:bg-gray-100 mt-1">
+            <Button className="flex space-x-4 w-40 justify-between rounded-xl hover:bg-gray-100 mt-1">
               <span>{to ? format(to, "P") : "Select date"}</span>
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>

@@ -144,11 +144,11 @@ export const CreateTaskCard = () => {
       <DialogTrigger className="w-96 h-48" onClick={() => setIsOpen(true)}>
         <Card className="rounded-xl border-dashed border-2 border-gray-300 bg-transparent h-full">
           <CardContent className="flex justify-center h-full items-center p-0">
-            <PlusCircleIcon size={50} className="text-gray-300" />
+            <PlusCircleIcon size={50} className="text-gray-400" />
           </CardContent>
         </Card>
       </DialogTrigger>
-      <DialogContent className="bg-white max-w-3xl">
+      <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between pr-7">
             <span>Create a new task</span>
@@ -190,15 +190,12 @@ export const CreateTaskCard = () => {
           </div>
           <div>
             {/* dunno why margin top needed here but not expanded card */}
-            <div className="mt-14 flex justify-between items-center">
-              <ProjectStagesDropdown
-                projectStage={projectStage}
-                setProjectStage={setProjectStage}
-              />
-              <div className="flex items-center space-x-2">
-                {tags.map((tag, i) => (
-                  <TagBadge key={i} tag={tag} />
-                ))}
+            <div>
+              <div className="mt-14 flex justify-between items-center">
+                <ProjectStagesDropdown
+                  projectStage={projectStage}
+                  setProjectStage={setProjectStage}
+                />
                 <TagDropdown selectedTags={tags} onTagChange={setTags} />
               </div>
             </div>

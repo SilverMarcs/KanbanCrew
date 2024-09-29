@@ -37,11 +37,11 @@ const DeleteButton: FC<DeleteButtonProps> = ({ taskId, closeDialog }) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button className="rounded-full hover:bg-white bg-white">
+        <Button variant="ghost">
           <Trash2 size={20} color="red" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-white">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>

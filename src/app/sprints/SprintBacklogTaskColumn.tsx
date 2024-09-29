@@ -18,7 +18,10 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
 }) => (
   <div className="flex-1 min-w-[29rem] max-w-[29rem] rounded-lg p-4 sprint-backlog">
     {/* Column heading outside of ScrollArea */}
-    <h3 className="text-xl font-semibold mb-4 drop-shadow" style={{ color: "#FCE79C" }}>
+    <h3
+      className="text-xl font-semibold mb-4 drop-shadow"
+      style={{ color: "#FCE79C" }}
+    >
       {title}
     </h3>
 
@@ -26,9 +29,13 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
       {(provided) => (
         <div className="flex flex-col">
           {/* Make this area scrollable with fixed height */}
-          <ScrollArea className="h-[500px]" {...provided.droppableProps} ref={provided.innerRef}>
+          <ScrollArea
+            className="h-[500px]"
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
             {tasks.length === 0 ? (
-              <div className="text-gray-200">No tasks available</div>
+              <div className="text-muted-foreground">No tasks available</div>
             ) : (
               tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>

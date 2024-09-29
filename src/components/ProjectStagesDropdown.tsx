@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Ghost } from "lucide-react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { ProjectStage } from "@/models/ProjectStage";
@@ -38,12 +38,15 @@ export function ProjectStagesDropdown({
 
   return (
     <div className="flex space-x-3 items-center">
-      <p className="font-semibold text-gray-600 text-sm min-w-fit">
+      <p className="font-semibold text-secondary-foreground text-sm min-w-fit">
         Project stage
       </p>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="flex items-center bg-transparent font-bold hover:bg-transparent text-black">
+          <Button
+            variant="ghost"
+            className="bg-transparent font-bold hover:bg-transparent flex items-center"
+          >
             {projectStage} <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>

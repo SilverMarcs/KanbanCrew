@@ -60,7 +60,7 @@ export function DescriptionEditable({
         ) : (
           <p
             ref={descriptionRef}
-            className="text-gray-600 mt-2 cursor-pointer text-sm overflow-hidden"
+            className="text-muted-foreground mt-2 cursor-pointer text-sm overflow-hidden"
             onClick={() => setIsEditing(true)}
             style={{
               height: "80px", // Ensure this matches the Textarea height
