@@ -40,7 +40,7 @@ export const SortButton: React.FC<SortButtonProps> = ({ onSortChange }) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center border-[#FDC90F] text-[#FDC90F] px-4 py-2 rounded-md bg-transparent hover:bg-[#D8B22F] hover:text-black transition-colors text-base"
+          className="flex items-center px-4 py-2 rounded-md bg-background transition-colors text-base"
         >
           <ArrowDownUpIcon className="mr-1" />
           <span className="font-medium">Sort By</span>
