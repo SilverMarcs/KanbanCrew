@@ -34,7 +34,7 @@ const CompletedSprint: React.FC<CompletedSprintProps> = ({ sprint, tasks }) => {
             <div className="p-4 rounded-lg min-h-[500px] kanban-board">
               <h2
                 className="text-xl font-semibold mb-4 drop-shadow"
-                style={{ color: "#FCE79C" }}
+                // style={{ color: "#FCE79C" }}
               >
                 {status}
               </h2>
