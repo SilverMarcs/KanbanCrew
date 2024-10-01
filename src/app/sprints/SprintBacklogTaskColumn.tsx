@@ -49,7 +49,7 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
                       <TaskCardCompact
                         task={task}
                         members={[]}
-                        topTrailingChild={<Grip size={20} color="black" />}
+                        topTrailingChild={<Grip size={20} />}
                       />
                     </div>
                   )}
