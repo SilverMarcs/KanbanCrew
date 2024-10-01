@@ -20,7 +20,7 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
     {/* Column heading outside of ScrollArea */}
     <h3
       className="text-xl font-semibold mb-4 drop-shadow"
-      style={{ color: "#FCE79C" }}
+      // style={{ color: "#FCE79C" }}
     >
       {title}
     </h3>
@@ -49,7 +49,7 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
                       <TaskCardCompact
                         task={task}
                         members={[]}
-                        topTrailingChild={<Grip size={20} color="black" />}
+                        topTrailingChild={<Grip size={20} />}
                       />
                     </div>
                   )}

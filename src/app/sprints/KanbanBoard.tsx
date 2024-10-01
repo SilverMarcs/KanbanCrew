@@ -78,7 +78,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                 >
                   <h2
                     className="text-xl font-semibold mb-4 drop-shadow"
-                    style={{ color: "#FCE79C" }}
+                    // style={{ color: "#FCE79C" }}
                   >
                     {status}
                   </h2>
