@@ -48,7 +48,9 @@ const CompletedSprint: React.FC<CompletedSprintProps> = ({ sprint, tasks }) => {
                 </div>
               ))}
               {columnTasks.length === 0 && (
-                <p className="text-gray-500 italic">No tasks in this status</p>
+                <p className="text-muted-foreground italic">
+                  No tasks in this status
+                </p>
               )}
             </div>
           </div>
