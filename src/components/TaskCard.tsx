@@ -13,13 +13,11 @@ import { Type } from "@/models/Type";
 
 interface TaskCardProps {
   task: Task;
-  members: Member[];
   topTrailingChild?: React.ReactNode;
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({
   task,
-  members,
   topTrailingChild,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -81,7 +79,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       </motion.div>
       <TaskCardExpanded
         task={task}
-        members={members}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       />

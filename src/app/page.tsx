@@ -16,7 +16,6 @@ import { ThemeCommandBox } from "@/components/themes/ThemeCommandBox";
 
 export default function Home() {
   const tasks = useTasks();
-  const members = useMembers();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [sortFields, setSortFields] = useState<
     { field: SortField; order: SortOrder }[]
@@ -53,7 +52,6 @@ export default function Home() {
           <TaskCard
             key={task.id}
             task={task}
-            members={members}
             topTrailingChild={<EllipsisIcon />}
           />
         ))}

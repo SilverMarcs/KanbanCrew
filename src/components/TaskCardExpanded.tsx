@@ -20,10 +20,10 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useMembers } from "@/hooks/useMembers";
 
 interface TaskCardExpandedProps {
   task: Task;
-  members: Member[];
   isOpen: boolean;
   onClose: () => void;
   isKanbanBoard?: boolean;
@@ -31,11 +31,12 @@ interface TaskCardExpandedProps {
 
 export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
   task,
-  members,
   isOpen,
   onClose,
   isKanbanBoard = false,
 }) => {
+  const members = useMembers();
+
   const [title, setTitle] = useState(task.title);
   const [storyPoints, setStoryPoints] = useState(task.storyPoints);
   const [priority, setPriority] = useState(task.priority);
