@@ -30,6 +30,10 @@ const themes = [
     label: "Forest",
   },
   {
+    bgImageName: "d&w",
+    label: "Deadpool",
+  },
+  {
     bgImageName: "clear",
     label: "Clear",
   },

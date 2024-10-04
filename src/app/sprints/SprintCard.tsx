@@ -21,6 +21,7 @@ import Link from "next/link";
 interface SprintCardProps {
   sprint: Sprint;
 }
+
 const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -86,8 +87,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
       />
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <Card key={sprint.id} className="flex items-center w-full  rounded-xl">
-          {/* Dropdown Menu for Edit and Delete */}
+        <Card key={sprint.id} className="flex items-center w-full rounded-xl">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -115,15 +115,16 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Clickable area for navigation */}
           <div className="w-full">
             <Link href={getSprintRoute()}>
-              <div className="px-6 py-4 flex space-x-16 items-center cursor-pointer">
-                <div className="text-xl font-extrabold">{sprint.name}</div>
-                <div className="font-bold">
+              <div className="px-6 py-4 flex items-center cursor-pointer w-full">
+                <div className="flex-1 text-xl font-extrabold">
+                  {sprint.name}
+                </div>
+                <div className="flex-1 text-center font-bold">
                   <SprintStatusBadge status={sprint.status} />
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="flex-1 text-sm text-muted-foreground text-right">
                   {sprint.startDate.toDate().toLocaleDateString()} -{" "}
                   {sprint.endDate.toDate().toLocaleDateString()}
                 </p>
