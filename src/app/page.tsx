@@ -12,7 +12,7 @@ import { SortButton, SortField, SortOrder } from "@/components/SortButton";
 import { Task } from "@/models/Task";
 import { EllipsisIcon } from "lucide-react";
 import { ThemeToggle } from "@/components/themes/ThemeToggle";
-import { ThemeCommandBox } from "@/components/ThemeCommandBox";
+import { ThemeCommandBox } from "@/components/themes/ThemeCommandBox";
 
 export default function Home() {
   const tasks = useTasks();

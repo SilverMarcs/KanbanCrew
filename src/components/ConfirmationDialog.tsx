@@ -1,10 +1,12 @@
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -27,19 +29,21 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-yellow-200 max-w-lg border-0 shadow-lg">
+      <DialogContent className="shadow-lg">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <p>{description}</p>
-          <div className="flex justify-end space-x-2 mt-4">
-            <Button className="bg-gray-300 hover:bg-gray-400" onClick={onClose}>
-              {cancelButtonLabel}
-            </Button>
-            <Button className="bg-red-500 hover:bg-red-600" onClick={onConfirm}>
-              {confirmButtonLabel}
-            </Button>
-          </div>
         </DialogHeader>
+        <DialogDescription>
+          <p>{description}</p>
+        </DialogDescription>
+        <DialogFooter>
+          <Button variant="secondary" onClick={onClose}>
+            {cancelButtonLabel}
+          </Button>
+          <Button variant="destructive" onClick={onConfirm}>
+            {confirmButtonLabel}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -38,12 +38,9 @@ export const SortButton: React.FC<SortButtonProps> = ({ onSortChange }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          className="flex items-center px-4 py-2 rounded-md bg-background transition-colors text-base"
-        >
-          <ArrowDownUpIcon className="mr-1" />
-          <span className="font-medium">Sort By</span>
+        <Button variant="outline">
+          <ArrowDownUpIcon className="mr-1" size={20} />
+          <span> Sort By</span>
           <ChevronDown className="ml-1" />
         </Button>
       </DropdownMenuTrigger>
@@ -66,7 +63,7 @@ export const SortButton: React.FC<SortButtonProps> = ({ onSortChange }) => {
         >
           Priority
         </DropdownMenuCheckboxItem>
-        <DropdownMenuSeparator className="bg-gray-300" />
+        <DropdownMenuSeparator className="bg-secondary" />
         <DropdownMenuCheckboxItem
           checked={sortOrder === SortOrder.Ascending}
           onCheckedChange={() => setSortOrder(SortOrder.Ascending)}

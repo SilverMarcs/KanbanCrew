@@ -2,6 +2,7 @@
 
 import { Component, Zap, ContactRound } from "lucide-react";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils"; // Assuming you have this utility function from shadcn
 
 const Sidebar = () => {
   const [currentPath, setCurrentPath] = useState("");
@@ -18,14 +19,17 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="sidebar fixed h-full w-16 flex flex-col items-center justify-center py-4 space-y-6 z-50">
+    <div className="sidebar fixed h-full w-16 flex flex-col items-center justify-center py-4 space-y-6 z-50 bg-background">
       {menuItems.map((item, index) => (
         <a
           key={index}
           href={item.link}
-          className={`sidebar-icon ${
-            currentPath === item.link ? "sidebar-icon-highlighted" : ""
-          } hover:text-gray-200`}
+          className={cn(
+            "p-2 rounded-md",
+            currentPath === item.link
+              ? "bg-primary/95 text-primary-foreground"
+              : "text-secondary-foreground"
+          )}
         >
           {item.icon}
         </a>

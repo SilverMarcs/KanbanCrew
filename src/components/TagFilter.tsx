@@ -45,12 +45,9 @@ export const TagFilter: React.FC<TagFilterProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          className="flex items-center px-4 py-2 rounded-md bg-background transition-colors text-base"
-        >
-          <Filter className="mr-1" />
-          <span className="font-medium">{buttonLabel}</span>
+        <Button variant="outline">
+          <Filter className="mr-1" size={20} />
+          <span> {buttonLabel}</span>
           <ChevronDown className="ml-1" />
         </Button>
       </DropdownMenuTrigger>

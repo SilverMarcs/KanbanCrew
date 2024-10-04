@@ -30,12 +30,14 @@ const CompletedSprint: React.FC<CompletedSprintProps> = ({ sprint, tasks }) => {
       </h2>
       <div className="flex space-x-4">
         {Object.entries(columns).map(([status, columnTasks]) => (
-          <div key={status} className="flex-1 min-w-[26rem] max-w-[26rem]">
+          <div
+            key={status}
+            className={`flex-1 min-w-[26rem] max-w-[26rem] ${
+              status !== Status.Completed ? "grayed-out" : ""
+            }`}
+          >
             <div className="p-4 rounded-lg min-h-[500px] kanban-board">
-              <h2
-                className="text-xl font-semibold mb-4 drop-shadow"
-                // style={{ color: "#FCE79C" }}
-              >
+              <h2 className="text-xl font-semibold mb-4 drop-shadow">
                 {status}
               </h2>
               {columnTasks.map((task) => (
