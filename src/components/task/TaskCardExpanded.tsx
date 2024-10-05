@@ -45,7 +45,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
   const [projectStage, setProjectStage] = useState(task.projectStage);
   const [status, setStatus] = useState(task.status);
   const [description, setDescription] = useState(task.description);
-  const [assignee, setAssignee] = useState<Member | null>(task.assignee);
+  const [assignee, setAssignee] = useState(task.assignee);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

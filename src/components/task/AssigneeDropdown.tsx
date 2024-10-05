@@ -5,15 +5,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState, useEffect } from "react";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { useState } from "react";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Member } from "@/models/Member";
 import { useMembers } from "@/hooks/useMembers";
+import { UserAvatar } from "../UserAvatar";
 
-// TODO: assignee shoudltn be null
 interface AssigneeDropdownProps {
-  assignee: Member | null;
+  assignee: Member;
   setAssignee: (newAssignee: Member) => void;
   taskId?: string;
 }
@@ -55,19 +55,12 @@ export const AssigneeDropdown = ({
         <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <div
-              className="cursor-pointer flex space-x-2 items-center rounded-lg hover:bg-accent hover:text-accent-foreground transition-all py-2 pr-2"
+              className="cursor-pointer flex space-x-2 items-center rounded-lg hover:bg-accent/50 hover:text-accent-foreground transition-all py-2 px-2"
               onClick={() => setIsDropdownOpen(true)}
             >
-              <Avatar>
-                <AvatarFallback>
-                  {assignee &&
-                    getInitials(assignee.firstName, assignee.lastName)}
-                </AvatarFallback>
-              </Avatar>
+              <UserAvatar member={assignee} />
               <p className="font-semibold">
-                {assignee
-                  ? `${assignee.firstName} ${assignee.lastName}`
-                  : "No Assignee"}
+                {`${assignee.firstName} ${assignee.lastName}`}
               </p>
             </div>
           </DropdownMenuTrigger>

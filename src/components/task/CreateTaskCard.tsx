@@ -24,7 +24,6 @@ import { Tag } from "@/models/Tag";
 import { ProjectStage } from "@/models/ProjectStage";
 import { Status } from "@/models/Status";
 import { Type } from "@/models/Type";
-import { TagBadge } from "@/components/task/TagBadge";
 import { TaskTypePicker } from "./TaskTypePicker";
 import { DescriptionEditable } from "./DescriptionEditable";
 import { ProjectStagesDropdown } from "./ProjectStagesDropdown";
@@ -63,21 +62,11 @@ export const CreateTaskCard = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (loggedInMember) {
-      setAssignee(loggedInMember);
-      setAvatarUrl(""); // TODO: set avatar url from member
-    }
+    setAssignee(loggedInMember);
+    setAvatarUrl(""); // TODO: set avatar url from member
   }, [loggedInMember]);
 
   const handleCreateTask = async () => {
-    if (!assignee && !loggedInMember) {
-      console.error("No assignee selected and no logged-in user");
-      return;
-    }
-
-    // TODO: we must guarantee there is always a logged-in user
-    const taskAssignee = assignee || loggedInMember;
-
     if (tags.length === 0) {
       console.error("No tags selected");
       return;
@@ -89,7 +78,7 @@ export const CreateTaskCard = () => {
       priority,
       avatarUrl,
       tags,
-      assignee: doc(db, "members", taskAssignee!.id),
+      assignee: doc(db, "members", assignee!.id), // TODO: shouldnt need such complexity
       description,
       projectStage,
       status,
@@ -138,10 +127,7 @@ export const CreateTaskCard = () => {
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between pr-7">
             <span>Create a new task</span>
-            <Button
-              onClick={handleCreateTask}
-              disabled={tags.length === 0 || (!assignee && !loggedInMember)}
-            >
+            <Button onClick={handleCreateTask} disabled={tags.length === 0}>
               Create Task
             </Button>
           </DialogTitle>
@@ -167,11 +153,11 @@ export const CreateTaskCard = () => {
                 <TaskStatusDropdown status={status} setStatus={setStatus} />
               </div>
               <AssigneeDropdown
-                assignee={loggedInMember}
+                assignee={assignee!}
                 setAssignee={setAssignee}
               />
               <div className="-mb-10">
-                {/* This negative bottom padding shoudltn be necessary */}
+                {/* This negative bottom padding shouldn't be necessary */}
                 <DescriptionEditable
                   description={description}
                   setDescription={setDescription}
