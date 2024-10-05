@@ -3,17 +3,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 
-interface DescriptionEditableProps {
+interface TaskDescriptionFieldProps {
   description: string;
   setDescription: (description: string) => void;
   taskId?: string;
 }
 
-export function DescriptionEditable({
+export function TaskDescriptionField({
   description,
   setDescription,
   taskId,
-}: DescriptionEditableProps) {
+}: TaskDescriptionFieldProps) {
   const [isEditing, setIsEditing] = useState(!taskId);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);

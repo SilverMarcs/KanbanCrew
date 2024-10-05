@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Palette } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -48,15 +48,12 @@ export function ThemeCommandBox() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           role="combobox"
           aria-expanded={open}
-          className="w-[120px] justify-between"
+          size={"icon"}
         >
-          {bgImageName
-            ? themes.find((theme) => theme.bgImageName === bgImageName)?.label
-            : "Theme"}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <Palette />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[120px] p-0">

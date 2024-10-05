@@ -9,6 +9,7 @@ import { getPriorityColor } from "@/models/Priority";
 import { TagDot } from "./TagDot";
 import { truncateText } from "@/lib/utils";
 import { Type } from "@/models/Type";
+import { UserAvatar } from "@/components/UserAvatar";
 
 interface TaskCardCompactProps {
   task: Task;
@@ -19,8 +20,6 @@ interface TaskCardCompactProps {
 
 export const TaskCardCompact: React.FC<TaskCardCompactProps> = ({
   task,
-  members,
-  topTrailingChild,
   isKanbanBoard = false,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -47,15 +46,8 @@ export const TaskCardCompact: React.FC<TaskCardCompactProps> = ({
                 {task.priority}
               </p>
               <TypeIcon className={`${typeIconColor}`} size={16} />
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={task.avatarUrl} />
-                <AvatarFallback>
-                  {task.assignee.firstName[0]}
-                  {task.assignee.lastName[0]}
-                </AvatarFallback>
-              </Avatar>
             </div>
-            {topTrailingChild}
+            <UserAvatar member={task.assignee} />
           </div>
           <div className="text-xl font-bold">{truncateText(task.title)}</div>
           <div className="flex justify-between">
@@ -72,7 +64,6 @@ export const TaskCardCompact: React.FC<TaskCardCompactProps> = ({
       </Card>
       <TaskCardExpanded
         task={task}
-        members={members}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         isKanbanBoard={isKanbanBoard}

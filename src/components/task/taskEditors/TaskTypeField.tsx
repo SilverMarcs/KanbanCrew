@@ -4,17 +4,17 @@ import { Type } from "@/models/Type";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Bug, Scroll } from "lucide-react";
 
-type TaskTypePickerProps = {
+type TaskTypeFieldProps = {
   taskId?: string;
   currentType: Type;
   setTaskType: (type: Type) => void;
 };
 
-export const TaskTypePicker = ({
+export const TaskTypeField = ({
   taskId,
   currentType,
   setTaskType,
-}: TaskTypePickerProps) => {
+}: TaskTypeFieldProps) => {
   const handleTypeChange = async (newType: Type) => {
     setTaskType(newType);
 

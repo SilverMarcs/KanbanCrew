@@ -13,8 +13,8 @@ import { ChevronDown } from "lucide-react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Status } from "@/models/Status";
-import { StatusBadge } from "@/components/StatusBadge";
-export function TaskStatusDropdown({
+import { TaskStatusBadge } from "@/components/task/TaskStatusBadge";
+export function TaskStatusField({
   status,
   setStatus,
   taskId,
@@ -41,7 +41,7 @@ export function TaskStatusDropdown({
           variant="ghost"
           className="bg-transparent font-bold hover:bg-transparent flex items-center"
         >
-          <StatusBadge status={status} />
+          <TaskStatusBadge status={status} />
           <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>

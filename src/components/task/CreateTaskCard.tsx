@@ -8,8 +8,8 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircleIcon } from "lucide-react";
 import { useState, useEffect } from "react";
-import { TagDropdown } from "@/components/TagDropdown";
-import { PriorityDropdown } from "@/components/PriorityDropdown";
+import { TaskTagField } from "@/components/task/taskEditors/TaskTagField";
+import { TaskPriorityField } from "@/components/task/taskEditors/TaskPriorityField";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/firebaseConfig";
 import {
@@ -24,21 +24,20 @@ import { Tag } from "@/models/Tag";
 import { ProjectStage } from "@/models/ProjectStage";
 import { Status } from "@/models/Status";
 import { Type } from "@/models/Type";
-import { TagBadge } from "@/components/TagBadge";
-import { TaskTypePicker } from "./TaskTypePicker";
-import { DescriptionEditable } from "./DescriptionEditable";
-import { ProjectStagesDropdown } from "./ProjectStagesDropdown";
-import { TitleEditable } from "./TitleEditable";
-import { StoryPointsField } from "./StoryPointsField";
-import { AssigneeDropdown } from "./AssigneeDropdown";
+import { TaskTypeField } from "./taskEditors/TaskTypeField";
+import { TaskDescriptionField } from "./taskEditors/TaskDescriptionField";
+import { TaskProjectStageField } from "./taskEditors/ProjectStagesDropdown";
+import { TaskTitleField } from "./taskEditors/TaskTitleField";
+import { StoryPointsField } from "./taskEditors/StoryPointsField";
+import { AssigneeField } from "./taskEditors/AssigneeField";
 import { Member } from "@/models/Member";
-import { TaskStatusDropdown } from "./TaskStatusDropdown";
+import { TaskStatusField } from "./taskEditors/TaskStatusDropdown";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export const CreateTaskCard = () => {
   const defaultTitle = "New Task";
   const defaultStoryPoints = 3;
   const defaultPriority = Priority.Low;
-  const defaultAvatarUrl = "";
   const defaultTags: Tag[] = [];
   const defaultDescription = "Task description...";
   const defaultProjectStage = ProjectStage.Planning;
@@ -48,50 +47,21 @@ export const CreateTaskCard = () => {
   const [title, setTitle] = useState(defaultTitle);
   const [storyPoints, setStoryPoints] = useState(defaultStoryPoints);
   const [priority, setPriority] = useState<Priority>(defaultPriority);
-  const [avatarUrl, setAvatarUrl] = useState(defaultAvatarUrl);
   const [tags, setTags] = useState<Tag[]>([]);
   const [description, setDescription] = useState(defaultDescription);
   const [projectStage, setProjectStage] =
     useState<ProjectStage>(defaultProjectStage);
-  const [status, setStatus] = useState<Status>(defaultStatus);
   const [type, setType] = useState<Type>(defaultType);
-
   const [assignee, setAssignee] = useState<Member | null>(null);
 
-  // Fetch the first member from the members collection
-  useEffect(() => {
-    const fetchFirstMember = async () => {
-      const membersCollection = collection(db, "members");
-      const membersSnapshot = await getDocs(membersCollection);
-
-      if (!membersSnapshot.empty) {
-        const firstMemberDoc = membersSnapshot.docs[0];
-        const memberData = firstMemberDoc.data();
-
-        // Create a Member object
-        const member: Member = {
-          id: firstMemberDoc.id,
-          firstName: memberData.firstName || "No",
-          lastName: memberData.lastName || "Members",
-        };
-
-        setAssignee(member);
-        setAvatarUrl(memberData.avatarUrl || "");
-      }
-    };
-
-    fetchFirstMember();
-  }, []);
-
+  const { member: loggedInMember } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleCreateTask = async () => {
-    if (!assignee) {
-      // TODO: assigne to current user automatically first
-      console.error("No assignee selected");
-      return;
-    }
+  useEffect(() => {
+    setAssignee(loggedInMember);
+  }, [loggedInMember]);
 
+  const handleCreateTask = async () => {
     if (tags.length === 0) {
       console.error("No tags selected");
       return;
@@ -101,12 +71,11 @@ export const CreateTaskCard = () => {
       title,
       storyPoints,
       priority,
-      avatarUrl,
       tags,
-      assignee: doc(db, "members", assignee.id),
+      assignee: doc(db, "members", assignee!.id), // TODO: shouldnt need such complexity
       description,
       projectStage,
-      status,
+      status: defaultStatus,
       type,
       creationDate: Timestamp.now(),
     };
@@ -125,11 +94,9 @@ export const CreateTaskCard = () => {
     setTitle(defaultTitle);
     setStoryPoints(defaultStoryPoints);
     setPriority(defaultPriority);
-    setAvatarUrl(defaultAvatarUrl);
     setTags(defaultTags);
     setDescription(defaultDescription);
     setProjectStage(defaultProjectStage);
-    setStatus(defaultStatus);
     setType(defaultType);
   };
 
@@ -161,27 +128,27 @@ export const CreateTaskCard = () => {
           <div className="flex">
             <div className="text-start">
               <div className="flex space-x-3">
-                <PriorityDropdown
+                <TaskPriorityField
                   priority={priority}
                   setPriority={setPriority}
                 />
-                <TaskTypePicker currentType={type} setTaskType={setType} />
+                <TaskTypeField currentType={type} setTaskType={setType} />
               </div>
               <div className="mt-1">
-                <TitleEditable title={title} setTitle={setTitle} />
+                <TaskTitleField title={title} setTitle={setTitle} />
               </div>
               <div className="flex items-center space-x-1">
                 <StoryPointsField
                   storyPoints={storyPoints}
                   setStoryPoints={setStoryPoints}
                 />
-                <TaskStatusDropdown status={status} setStatus={setStatus} />
+
+                {/* <TaskStatusDropdown status={status} setStatus={setStatus} /> */}
               </div>
-              <AssigneeDropdown assignee={assignee} setAssignee={setAssignee} />
+              <AssigneeField assignee={assignee!} setAssignee={setAssignee} />
               <div className="-mb-10">
-                {" "}
-                {/* This shoudltn be necessary */}
-                <DescriptionEditable
+                {/* This negative bottom padding shouldn't be necessary */}
+                <TaskDescriptionField
                   description={description}
                   setDescription={setDescription}
                 />
@@ -192,11 +159,11 @@ export const CreateTaskCard = () => {
             {/* dunno why margin top needed here but not expanded card */}
             <div>
               <div className="mt-14 flex justify-between items-center">
-                <ProjectStagesDropdown
+                <TaskProjectStageField
                   projectStage={projectStage}
                   setProjectStage={setProjectStage}
                 />
-                <TagDropdown selectedTags={tags} onTagChange={setTags} />
+                <TaskTagField selectedTags={tags} onTagChange={setTags} />
               </div>
             </div>
           </div>

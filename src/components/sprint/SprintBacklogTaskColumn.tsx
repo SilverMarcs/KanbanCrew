@@ -2,7 +2,7 @@ import React from "react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { Task } from "@/models/Task";
 import { Grip } from "lucide-react";
-import { TaskCardCompact } from "@/components/TaskCardCompact";
+import { TaskCardCompact } from "@/components/task/TaskCardCompact";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SprintBacklogTaskColumnProps {

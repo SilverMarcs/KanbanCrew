@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { TaskCardCompact } from "@/components/TaskCardCompact";
+import { TaskCardCompact } from "@/components/task/TaskCardCompact";
 import { Task } from "@/models/Task";
 import { Status } from "@/models/Status";
 import { useMembers } from "@/hooks/useMembers";

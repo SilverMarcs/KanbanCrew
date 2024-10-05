@@ -13,7 +13,7 @@ import { ChevronDown } from "lucide-react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 
-export function PriorityDropdown({
+export function TaskPriorityField({
   priority,
   setPriority,
   taskId,

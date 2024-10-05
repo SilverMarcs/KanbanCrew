@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { TitleEditable } from "@/components/TitleEditable";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -16,6 +15,7 @@ import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/hooks/use-toast";
 import { useSprints } from "@/hooks/useSprints";
 import validateSprintDates from "@/lib/validateSprintDates";
+import { Input } from "@/components/ui/input";
 
 interface CreateSprintFormProps {
   onSuccess: () => void;
@@ -25,7 +25,7 @@ export const CreateSprintForm: React.FC<CreateSprintFormProps> = ({
   onSuccess,
 }) => {
   const [title, setTitle] = useState("New Sprint");
-  const [status, setStatus] = useState<SprintStatus>(SprintStatus.NotStarted);
+  const status = SprintStatus.NotStarted;
   const [from, setFrom] = useState<Date | undefined>(undefined);
   const [to, setTo] = useState<Date | undefined>(undefined);
 
@@ -78,7 +78,14 @@ export const CreateSprintForm: React.FC<CreateSprintFormProps> = ({
 
   return (
     <div>
-      <TitleEditable title={title} setTitle={setTitle} />
+      <Input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Sprint Name"
+        className="text-3xl font-bold p-0 border-0"
+        style={{ boxShadow: "none" }}
+      />
+
       <div className="mt-2">
         <SprintStatusBadge status={status} />
       </div>

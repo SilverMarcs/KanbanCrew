@@ -2,7 +2,7 @@ import React from "react";
 import { Sprint } from "@/models/sprints/Sprint";
 import { Task } from "@/models/Task";
 import { Status } from "@/models/Status";
-import { TaskCardCompact } from "@/components/TaskCardCompact";
+import { TaskCardCompact } from "@/components/task/TaskCardCompact";
 import { useMembers } from "@/hooks/useMembers";
 
 interface CompletedSprintProps {

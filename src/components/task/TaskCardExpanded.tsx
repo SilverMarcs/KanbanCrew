@@ -1,29 +1,28 @@
 import React from "react";
 import { Task } from "@/models/Task";
-import { TagDropdown } from "./TagDropdown";
+import { TaskTagField } from "./taskEditors/TaskTagField";
 import { useState } from "react";
-import { PriorityDropdown } from "./PriorityDropdown";
-import HistoryLogs from "@/components/HistoryLogs";
-import DeleteButton from "@/components/DeleteButton";
-import { DescriptionEditable } from "@/components//DescriptionEditable";
-import { TitleEditable } from "@/components//TitleEditable";
-import { StoryPointsField } from "@/components//StoryPointsField";
-import { TaskTypePicker } from "@/components/TaskTypePicker";
-import { ProjectStagesDropdown } from "@/components/ProjectStagesDropdown";
-import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
-import { Member } from "@/models/Member";
-import { AssigneeDropdown } from "@/components/AssigneeDropdown";
-import TimeLogs from "@/components/TimeLogs";
+import { TaskPriorityField } from "./taskEditors/TaskPriorityField";
+import HistoryLogs from "@/components/task/HistoryLogs";
+import DeleteButton from "@/components/task/DeleteButton";
+import { TaskDescriptionField } from "@/components/task/taskEditors/TaskDescriptionField";
+import { TaskTitleField } from "@/components/task/taskEditors/TaskTitleField";
+import { StoryPointsField } from "@/components/task/taskEditors/StoryPointsField";
+import { TaskTypeField } from "@/components/task/taskEditors/TaskTypeField";
+import { TaskProjectStageField } from "@/components/task/taskEditors/ProjectStagesDropdown";
+import { AssigneeField } from "@/components/task/taskEditors/AssigneeField";
+import TimeLogs from "@/components/task/TimeLogs";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useMembers } from "@/hooks/useMembers";
+import { TaskStatusBadge } from "@/components/task/TaskStatusBadge";
 
 interface TaskCardExpandedProps {
   task: Task;
-  members: Member[];
   isOpen: boolean;
   onClose: () => void;
   isKanbanBoard?: boolean;
@@ -31,20 +30,20 @@ interface TaskCardExpandedProps {
 
 export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
   task,
-  members,
   isOpen,
   onClose,
   isKanbanBoard = false,
 }) => {
+  const members = useMembers();
+
   const [title, setTitle] = useState(task.title);
   const [storyPoints, setStoryPoints] = useState(task.storyPoints);
   const [priority, setPriority] = useState(task.priority);
   const [selectedTags, setSelectedTags] = useState(task.tags);
   const [taskType, setTaskType] = useState(task.type);
   const [projectStage, setProjectStage] = useState(task.projectStage);
-  const [status, setStatus] = useState(task.status);
   const [description, setDescription] = useState(task.description);
-  const [assignee, setAssignee] = useState<Member | null>(task.assignee);
+  const [assignee, setAssignee] = useState(task.assignee);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -55,19 +54,19 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
             <div className="flex">
               <div className="text-start">
                 <div className="flex space-x-3">
-                  <PriorityDropdown
+                  <TaskPriorityField
                     priority={priority}
                     setPriority={setPriority}
                     taskId={task.id}
                   />
-                  <TaskTypePicker
+                  <TaskTypeField
                     taskId={task.id}
                     currentType={taskType}
                     setTaskType={setTaskType}
                   />
                 </div>
                 <div className="mt-1">
-                  <TitleEditable
+                  <TaskTitleField
                     title={title}
                     taskId={task.id}
                     setTitle={setTitle}
@@ -79,18 +78,14 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     taskId={task.id}
                     setStoryPoints={setStoryPoints}
                   />
-                  <TaskStatusDropdown
-                    status={status}
-                    setStatus={setStatus}
-                    taskId={task.id}
-                  />
+                  <TaskStatusBadge status={task.status} />
                 </div>
-                <AssigneeDropdown
+                <AssigneeField
                   assignee={assignee}
                   setAssignee={setAssignee}
                   taskId={task.id}
                 />
-                <DescriptionEditable
+                <TaskDescriptionField
                   description={description}
                   taskId={task.id}
                   setDescription={setDescription}
@@ -115,13 +110,13 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
             </div>
             <div>
               <div className="flex justify-between items-center">
-                <ProjectStagesDropdown
+                <TaskProjectStageField
                   projectStage={projectStage}
                   setProjectStage={setProjectStage}
                   taskId={task.id}
                 />
                 <div className="flex items-center space-x-2 justify-end">
-                  <TagDropdown
+                  <TaskTagField
                     selectedTags={selectedTags}
                     onTagChange={setSelectedTags}
                     taskId={task.id}
