@@ -11,6 +11,7 @@ import { db } from "@/lib/firebaseConfig";
 import { Member } from "@/models/Member";
 import { useMembers } from "@/hooks/useMembers";
 
+// TODO: assignee shoudltn be null
 interface AssigneeDropdownProps {
   assignee: Member | null;
   setAssignee: (newAssignee: Member) => void;
@@ -28,20 +29,6 @@ export const AssigneeDropdown = ({
 }: AssigneeDropdownProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const members = useMembers();
-
-  // useEffect(() => {
-  //   const fetchMembers = async () => {
-  //     const membersCollection = collection(db, "members");
-  //     const membersSnapshot = await getDocs(membersCollection);
-  //     const membersData = membersSnapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...(doc.data() as { firstName: string; lastName: string }),
-  //     }));
-  //     setMembers(membersData);
-  //   };
-
-  //   fetchMembers();
-  // }, []);
 
   const handleAssigneeChange = async (newAssignee: Member) => {
     setAssignee(newAssignee);

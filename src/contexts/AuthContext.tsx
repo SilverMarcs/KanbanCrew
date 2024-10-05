@@ -51,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         } else {
           const newMemberRef = doc(collection(db, "members"));
           const newMember: Omit<Member, "id"> = {
+            avatarUrl: user.photoURL || "",
             firstName: user.displayName?.split(" ")[0] || "",
             lastName: user.displayName?.split(" ").slice(1).join(" ") || "",
             email: user.email || "",

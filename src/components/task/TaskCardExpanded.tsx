@@ -13,7 +13,7 @@ import { ProjectStagesDropdown } from "@/components/task/ProjectStagesDropdown";
 import { TaskStatusDropdown } from "@/components/task/TaskStatusDropdown";
 import { Member } from "@/models/Member";
 import { AssigneeDropdown } from "@/components/task/AssigneeDropdown";
-import TimeLogs from "@/components/TimeLogs";
+import TimeLogs from "@/components/task/TimeLogs";
 import {
   Dialog,
   DialogContent,

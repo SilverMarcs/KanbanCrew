@@ -10,6 +10,7 @@ import { getPriorityColor } from "@/models/Priority";
 import { TagDot } from "./TagDot";
 import { truncateText } from "@/lib/utils";
 import { Type } from "@/models/Type";
+import { UserAvatar } from "../UserAvatar";
 
 interface TaskCardProps {
   task: Task;
@@ -61,13 +62,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               Story point - {task.storyPoints}
             </div>
             <div className="flex justify-between items-end">
-              <Avatar className="mt-6">
-                <AvatarImage src={task.avatarUrl} />
-                <AvatarFallback>
-                  {task.assignee.firstName[0]}
-                  {task.assignee.lastName[0]}
-                </AvatarFallback>
-              </Avatar>
+              <div className="mt-6">
+                <UserAvatar member={task.assignee} />
+              </div>
+
               <div className="flex space-x-1">
                 {task.tags.map((tag) => (
                   <TagDot key={tag} tag={tag} />
