@@ -58,10 +58,7 @@ export const AssigneeDropdown = ({
               className="cursor-pointer flex space-x-2 items-center rounded-lg hover:bg-accent/50 hover:text-accent-foreground transition-all py-2 px-2"
               onClick={() => setIsDropdownOpen(true)}
             >
-              <UserAvatar member={assignee} />
-              <p className="font-semibold">
-                {`${assignee.firstName} ${assignee.lastName}`}
-              </p>
+              <UserAvatar member={assignee} showName />
             </div>
           </DropdownMenuTrigger>
 
@@ -71,12 +68,7 @@ export const AssigneeDropdown = ({
                 key={member.id}
                 onClick={() => handleAssigneeChange(member)}
               >
-                <Avatar className="h-6 w-6 mr-2">
-                  <AvatarFallback>
-                    {getInitials(member.firstName, member.lastName)}
-                  </AvatarFallback>
-                </Avatar>
-                {`${member.firstName} ${member.lastName}`}
+                <UserAvatar member={member} showName />
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

@@ -21,6 +21,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useMembers } from "@/hooks/useMembers";
+import { StatusBadge } from "./StatusBadge";
 
 interface TaskCardExpandedProps {
   task: Task;
@@ -43,7 +44,6 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
   const [selectedTags, setSelectedTags] = useState(task.tags);
   const [taskType, setTaskType] = useState(task.type);
   const [projectStage, setProjectStage] = useState(task.projectStage);
-  const [status, setStatus] = useState(task.status);
   const [description, setDescription] = useState(task.description);
   const [assignee, setAssignee] = useState(task.assignee);
 
@@ -80,11 +80,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     taskId={task.id}
                     setStoryPoints={setStoryPoints}
                   />
-                  <TaskStatusDropdown
-                    status={status}
-                    setStatus={setStatus}
-                    taskId={task.id}
-                  />
+                  <StatusBadge status={task.status} />
                 </div>
                 <AssigneeDropdown
                   assignee={assignee}

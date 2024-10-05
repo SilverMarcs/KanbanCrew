@@ -51,7 +51,7 @@ export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
   };
 
   return (
-    <div style={{ width: "350px", height: "30px" }}>
+    <div style={{ width: "350px", height: "40px" }}>
       {isEditing ? (
         <Input
           ref={inputRef}

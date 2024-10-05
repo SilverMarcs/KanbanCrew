@@ -14,7 +14,6 @@ export interface Task {
   title: string;
   storyPoints: number;
   priority: Priority;
-  avatarUrl: string;
   tags: Tag[];
   assignee: Member;
   description: string;

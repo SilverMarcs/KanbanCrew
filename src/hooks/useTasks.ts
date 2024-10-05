@@ -40,7 +40,6 @@ export const useTasks = () => {
             title: data.title,
             storyPoints: data.storyPoints,
             priority: data.priority,
-            avatarUrl: data.avatarUrl,
             tags: data.tags as Tag[],
             assignee:
               assignee ||

@@ -38,7 +38,6 @@ export const CreateTaskCard = () => {
   const defaultTitle = "New Task";
   const defaultStoryPoints = 3;
   const defaultPriority = Priority.Low;
-  const defaultAvatarUrl = "";
   const defaultTags: Tag[] = [];
   const defaultDescription = "Task description...";
   const defaultProjectStage = ProjectStage.Planning;
@@ -48,14 +47,11 @@ export const CreateTaskCard = () => {
   const [title, setTitle] = useState(defaultTitle);
   const [storyPoints, setStoryPoints] = useState(defaultStoryPoints);
   const [priority, setPriority] = useState<Priority>(defaultPriority);
-  const [avatarUrl, setAvatarUrl] = useState(defaultAvatarUrl);
   const [tags, setTags] = useState<Tag[]>([]);
   const [description, setDescription] = useState(defaultDescription);
   const [projectStage, setProjectStage] =
     useState<ProjectStage>(defaultProjectStage);
-  const [status, setStatus] = useState<Status>(defaultStatus);
   const [type, setType] = useState<Type>(defaultType);
-
   const [assignee, setAssignee] = useState<Member | null>(null);
 
   const { member: loggedInMember } = useAuthContext();
@@ -63,7 +59,6 @@ export const CreateTaskCard = () => {
 
   useEffect(() => {
     setAssignee(loggedInMember);
-    setAvatarUrl(""); // TODO: set avatar url from member
   }, [loggedInMember]);
 
   const handleCreateTask = async () => {
@@ -76,12 +71,11 @@ export const CreateTaskCard = () => {
       title,
       storyPoints,
       priority,
-      avatarUrl,
       tags,
       assignee: doc(db, "members", assignee!.id), // TODO: shouldnt need such complexity
       description,
       projectStage,
-      status,
+      status: defaultStatus,
       type,
       creationDate: Timestamp.now(),
     };
@@ -100,11 +94,10 @@ export const CreateTaskCard = () => {
     setTitle(defaultTitle);
     setStoryPoints(defaultStoryPoints);
     setPriority(defaultPriority);
-    setAvatarUrl(defaultAvatarUrl);
     setTags(defaultTags);
     setDescription(defaultDescription);
     setProjectStage(defaultProjectStage);
-    setStatus(defaultStatus);
+    // setStatus(defaultStatus);
     setType(defaultType);
   };
 
@@ -150,7 +143,8 @@ export const CreateTaskCard = () => {
                   storyPoints={storyPoints}
                   setStoryPoints={setStoryPoints}
                 />
-                <TaskStatusDropdown status={status} setStatus={setStatus} />
+
+                {/* <TaskStatusDropdown status={status} setStatus={setStatus} /> */}
               </div>
               <AssigneeDropdown
                 assignee={assignee!}
