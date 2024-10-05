@@ -33,6 +33,7 @@ import { StoryPointsField } from "./StoryPointsField";
 import { AssigneeDropdown } from "./AssigneeDropdown";
 import { Member } from "@/models/Member";
 import { TaskStatusDropdown } from "./TaskStatusDropdown";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export const CreateTaskCard = () => {
   const defaultTitle = "New Task";
@@ -58,39 +59,24 @@ export const CreateTaskCard = () => {
 
   const [assignee, setAssignee] = useState<Member | null>(null);
 
-  // Fetch the first member from the members collection
-  useEffect(() => {
-    const fetchFirstMember = async () => {
-      const membersCollection = collection(db, "members");
-      const membersSnapshot = await getDocs(membersCollection);
-
-      if (!membersSnapshot.empty) {
-        const firstMemberDoc = membersSnapshot.docs[0];
-        const memberData = firstMemberDoc.data();
-
-        // Create a Member object
-        const member: Member = {
-          id: firstMemberDoc.id,
-          firstName: memberData.firstName || "No",
-          lastName: memberData.lastName || "Members",
-        };
-
-        setAssignee(member);
-        setAvatarUrl(memberData.avatarUrl || "");
-      }
-    };
-
-    fetchFirstMember();
-  }, []);
-
+  const { member: loggedInMember } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    if (loggedInMember) {
+      setAssignee(loggedInMember);
+      setAvatarUrl(""); // TODO: set avatar url from member
+    }
+  }, [loggedInMember]);
+
   const handleCreateTask = async () => {
-    if (!assignee) {
-      // TODO: assigne to current user automatically first
-      console.error("No assignee selected");
+    if (!assignee && !loggedInMember) {
+      console.error("No assignee selected and no logged-in user");
       return;
     }
+
+    // TODO: we must guarantee there is always a logged-in user
+    const taskAssignee = assignee || loggedInMember;
 
     if (tags.length === 0) {
       console.error("No tags selected");
@@ -103,7 +89,7 @@ export const CreateTaskCard = () => {
       priority,
       avatarUrl,
       tags,
-      assignee: doc(db, "members", assignee.id),
+      assignee: doc(db, "members", taskAssignee!.id),
       description,
       projectStage,
       status,
@@ -152,7 +138,10 @@ export const CreateTaskCard = () => {
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between pr-7">
             <span>Create a new task</span>
-            <Button onClick={handleCreateTask} disabled={tags.length === 0}>
+            <Button
+              onClick={handleCreateTask}
+              disabled={tags.length === 0 || (!assignee && !loggedInMember)}
+            >
               Create Task
             </Button>
           </DialogTitle>
@@ -177,10 +166,12 @@ export const CreateTaskCard = () => {
                 />
                 <TaskStatusDropdown status={status} setStatus={setStatus} />
               </div>
-              <AssigneeDropdown assignee={assignee} setAssignee={setAssignee} />
+              <AssigneeDropdown
+                assignee={loggedInMember}
+                setAssignee={setAssignee}
+              />
               <div className="-mb-10">
-                {" "}
-                {/* This shoudltn be necessary */}
+                {/* This negative bottom padding shoudltn be necessary */}
                 <DescriptionEditable
                   description={description}
                   setDescription={setDescription}

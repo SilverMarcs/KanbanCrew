@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useTasks } from "@/hooks/useTasks";
-import { useMembers } from "@/hooks/useMembers";
 import { useFilteredAndSortedTasks } from "@/hooks/useFilteredAndSortedTasks";
 import { CreateTaskCard } from "@/components/CreateTaskCard";
 import { TaskCard } from "@/components/TaskCard";
@@ -13,8 +12,13 @@ import { Task } from "@/models/Task";
 import { EllipsisIcon } from "lucide-react";
 import { ThemeToggle } from "@/components/themes/ThemeToggle";
 import { ThemeCommandBox } from "@/components/themes/ThemeCommandBox";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { GoogleSignIn } from "@/components/auth/GoogleSignIn";
+import { SignOut } from "@/components/auth/SignOut";
 
 export default function Home() {
+  const { user, member } = useAuthContext();
+
   const tasks = useTasks();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [sortFields, setSortFields] = useState<
@@ -38,6 +42,8 @@ export default function Home() {
       <div className="flex justify-between items-center">
         <h1 className="text-5xl font-bold">Product Backlog</h1>
         <div className="flex space-x-4">
+          {user ? <p>Welcome, {member?.firstName}!</p> : <GoogleSignIn />}
+          <SignOut />
           <TagFilter
             selectedTags={selectedTags}
             onTagChange={setSelectedTags}

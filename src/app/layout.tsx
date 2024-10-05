@@ -7,6 +7,7 @@ import { ToastProvider } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/themes/ThemeProvider";
 import { BackgroundImage } from "@/components/BackgroundImage";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -32,12 +33,14 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ToastProvider>
-            <BackgroundImage />
-            <Sidebar />
-            <div className="flex-1 p-4 px-8 relative z-10">{children}</div>
-            <Toaster />
-          </ToastProvider>
+          <AuthProvider>
+            <ToastProvider>
+              <BackgroundImage />
+              <Sidebar />
+              <div className="flex-1 p-4 px-8 relative z-10">{children}</div>
+              <Toaster />
+            </ToastProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

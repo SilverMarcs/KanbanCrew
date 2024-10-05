@@ -72,7 +72,6 @@ export const TaskCardCompact: React.FC<TaskCardCompactProps> = ({
       </Card>
       <TaskCardExpanded
         task={task}
-        members={members}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         isKanbanBoard={isKanbanBoard}

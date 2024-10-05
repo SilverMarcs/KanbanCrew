@@ -8,12 +8,8 @@ import {
 import { useState, useEffect } from "react";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-
-interface Member {
-  id: string;
-  firstName: string;
-  lastName: string;
-}
+import { Member } from "@/models/Member";
+import { useMembers } from "@/hooks/useMembers";
 
 interface AssigneeDropdownProps {
   assignee: Member | null;
@@ -31,21 +27,21 @@ export const AssigneeDropdown = ({
   taskId,
 }: AssigneeDropdownProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [members, setMembers] = useState<Member[]>([]);
+  const members = useMembers();
 
-  useEffect(() => {
-    const fetchMembers = async () => {
-      const membersCollection = collection(db, "members");
-      const membersSnapshot = await getDocs(membersCollection);
-      const membersData = membersSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as { firstName: string; lastName: string }),
-      }));
-      setMembers(membersData);
-    };
+  // useEffect(() => {
+  //   const fetchMembers = async () => {
+  //     const membersCollection = collection(db, "members");
+  //     const membersSnapshot = await getDocs(membersCollection);
+  //     const membersData = membersSnapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...(doc.data() as { firstName: string; lastName: string }),
+  //     }));
+  //     setMembers(membersData);
+  //   };
 
-    fetchMembers();
-  }, []);
+  //   fetchMembers();
+  // }, []);
 
   const handleAssigneeChange = async (newAssignee: Member) => {
     setAssignee(newAssignee);
