@@ -2,7 +2,7 @@
 "use client";
 
 import { AuthCheck } from "@/components/AuthCheck";
-import SprintList from "./SprintList";
+import SprintList from "@/components/sprint/SprintList";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 export default function SprintsPage() {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { TitleEditable } from "@/components/task/TitleEditable";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -157,11 +156,8 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
 
   return (
     <div>
-      {isEditable ? (
-        <TitleEditable title={title} setTitle={setTitle} />
-      ) : (
-        <h2 className="text-3xl font-bold">{title}</h2>
-      )}
+      <h2 className="text-3xl font-bold">{title}</h2>
+
       <div className="mt-2 font-bold">
         <SprintStatusBadge status={status} />
       </div>

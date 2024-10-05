@@ -13,7 +13,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { ProjectStage } from "@/models/ProjectStage";
 
-export function ProjectStagesDropdown({
+export function TaskProjectStageField({
   projectStage,
   setProjectStage,
   taskId,

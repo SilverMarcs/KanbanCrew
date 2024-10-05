@@ -1,18 +1,16 @@
 import React from "react";
 import { Task } from "@/models/Task";
-import { TagDropdown } from "./TagDropdown";
+import { TaskTagField } from "./taskEditors/TaskTagField";
 import { useState } from "react";
-import { PriorityDropdown } from "./PriorityDropdown";
+import { TaskPriorityField } from "./taskEditors/TaskPriorityField";
 import HistoryLogs from "@/components/task/HistoryLogs";
 import DeleteButton from "@/components/task/DeleteButton";
-import { DescriptionEditable } from "@/components/task/DescriptionEditable";
-import { TitleEditable } from "@/components/task/TitleEditable";
-import { StoryPointsField } from "@/components/task/StoryPointsField";
-import { TaskTypePicker } from "@/components//task/TaskTypePicker";
-import { ProjectStagesDropdown } from "@/components/task/ProjectStagesDropdown";
-import { TaskStatusDropdown } from "@/components/task/TaskStatusDropdown";
-import { Member } from "@/models/Member";
-import { AssigneeDropdown } from "@/components/task/AssigneeDropdown";
+import { TaskDescriptionField } from "@/components/task/taskEditors/TaskDescriptionField";
+import { TaskTitleField } from "@/components/task/taskEditors/TaskTitleField";
+import { StoryPointsField } from "@/components/task/taskEditors/StoryPointsField";
+import { TaskTypeField } from "@/components/task/taskEditors/TaskTypeField";
+import { TaskProjectStageField } from "@/components/task/taskEditors/ProjectStagesDropdown";
+import { AssigneeField } from "@/components/task/taskEditors/AssigneeField";
 import TimeLogs from "@/components/task/TimeLogs";
 import {
   Dialog,
@@ -21,7 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useMembers } from "@/hooks/useMembers";
-import { StatusBadge } from "./StatusBadge";
+import { TaskStatusBadge } from "@/components/task/TaskStatusBadge";
 
 interface TaskCardExpandedProps {
   task: Task;
@@ -56,19 +54,19 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
             <div className="flex">
               <div className="text-start">
                 <div className="flex space-x-3">
-                  <PriorityDropdown
+                  <TaskPriorityField
                     priority={priority}
                     setPriority={setPriority}
                     taskId={task.id}
                   />
-                  <TaskTypePicker
+                  <TaskTypeField
                     taskId={task.id}
                     currentType={taskType}
                     setTaskType={setTaskType}
                   />
                 </div>
                 <div className="mt-1">
-                  <TitleEditable
+                  <TaskTitleField
                     title={title}
                     taskId={task.id}
                     setTitle={setTitle}
@@ -80,14 +78,14 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     taskId={task.id}
                     setStoryPoints={setStoryPoints}
                   />
-                  <StatusBadge status={task.status} />
+                  <TaskStatusBadge status={task.status} />
                 </div>
-                <AssigneeDropdown
+                <AssigneeField
                   assignee={assignee}
                   setAssignee={setAssignee}
                   taskId={task.id}
                 />
-                <DescriptionEditable
+                <TaskDescriptionField
                   description={description}
                   taskId={task.id}
                   setDescription={setDescription}
@@ -112,13 +110,13 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
             </div>
             <div>
               <div className="flex justify-between items-center">
-                <ProjectStagesDropdown
+                <TaskProjectStageField
                   projectStage={projectStage}
                   setProjectStage={setProjectStage}
                   taskId={task.id}
                 />
                 <div className="flex items-center space-x-2 justify-end">
-                  <TagDropdown
+                  <TaskTagField
                     selectedTags={selectedTags}
                     onTagChange={setSelectedTags}
                     taskId={task.id}

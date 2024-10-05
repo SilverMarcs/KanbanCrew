@@ -1,6 +1,6 @@
 "use client";
 
-import SprintBacklog from "../../SprintBacklog";
+import SprintBacklog from "@/components/sprint/SprintBacklog";
 import { useSprints } from "@/hooks/useSprints";
 
 const SprintBacklogPage = ({ params }: { params: { sprint_id: string } }) => {
@@ -14,9 +14,7 @@ const SprintBacklogPage = ({ params }: { params: { sprint_id: string } }) => {
 
   return (
     <div className="p-16">
-      <h1 className="text-5xl font-bold mb-8">
-        {selectedSprint.name} Backlog
-      </h1>
+      <h1 className="text-5xl font-bold mb-8">{selectedSprint.name} Backlog</h1>
       <SprintBacklog sprint={selectedSprint} />
     </div>
   );

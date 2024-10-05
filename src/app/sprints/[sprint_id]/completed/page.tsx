@@ -1,6 +1,6 @@
 "use client";
 
-import CompletedSprint from "../../CompletedSprint";
+import CompletedSprint from "@/components/sprint/CompletedSprint";
 import { useSprints } from "@/hooks/useSprints";
 import { useTasks } from "@/hooks/useTasks";
 

@@ -8,8 +8,8 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircleIcon } from "lucide-react";
 import { useState, useEffect } from "react";
-import { TagDropdown } from "@/components/task/TagDropdown";
-import { PriorityDropdown } from "@/components/task/PriorityDropdown";
+import { TaskTagField } from "@/components/task/taskEditors/TaskTagField";
+import { TaskPriorityField } from "@/components/task/taskEditors/TaskPriorityField";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/firebaseConfig";
 import {
@@ -24,14 +24,14 @@ import { Tag } from "@/models/Tag";
 import { ProjectStage } from "@/models/ProjectStage";
 import { Status } from "@/models/Status";
 import { Type } from "@/models/Type";
-import { TaskTypePicker } from "./TaskTypePicker";
-import { DescriptionEditable } from "./DescriptionEditable";
-import { ProjectStagesDropdown } from "./ProjectStagesDropdown";
-import { TitleEditable } from "./TitleEditable";
-import { StoryPointsField } from "./StoryPointsField";
-import { AssigneeDropdown } from "./AssigneeDropdown";
+import { TaskTypeField } from "./taskEditors/TaskTypeField";
+import { TaskDescriptionField } from "./taskEditors/TaskDescriptionField";
+import { TaskProjectStageField } from "./taskEditors/ProjectStagesDropdown";
+import { TaskTitleField } from "./taskEditors/TaskTitleField";
+import { StoryPointsField } from "./taskEditors/StoryPointsField";
+import { AssigneeField } from "./taskEditors/AssigneeField";
 import { Member } from "@/models/Member";
-import { TaskStatusDropdown } from "./TaskStatusDropdown";
+import { TaskStatusField } from "./taskEditors/TaskStatusDropdown";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 export const CreateTaskCard = () => {
@@ -97,7 +97,6 @@ export const CreateTaskCard = () => {
     setTags(defaultTags);
     setDescription(defaultDescription);
     setProjectStage(defaultProjectStage);
-    // setStatus(defaultStatus);
     setType(defaultType);
   };
 
@@ -129,14 +128,14 @@ export const CreateTaskCard = () => {
           <div className="flex">
             <div className="text-start">
               <div className="flex space-x-3">
-                <PriorityDropdown
+                <TaskPriorityField
                   priority={priority}
                   setPriority={setPriority}
                 />
-                <TaskTypePicker currentType={type} setTaskType={setType} />
+                <TaskTypeField currentType={type} setTaskType={setType} />
               </div>
               <div className="mt-1">
-                <TitleEditable title={title} setTitle={setTitle} />
+                <TaskTitleField title={title} setTitle={setTitle} />
               </div>
               <div className="flex items-center space-x-1">
                 <StoryPointsField
@@ -146,13 +145,10 @@ export const CreateTaskCard = () => {
 
                 {/* <TaskStatusDropdown status={status} setStatus={setStatus} /> */}
               </div>
-              <AssigneeDropdown
-                assignee={assignee!}
-                setAssignee={setAssignee}
-              />
+              <AssigneeField assignee={assignee!} setAssignee={setAssignee} />
               <div className="-mb-10">
                 {/* This negative bottom padding shouldn't be necessary */}
-                <DescriptionEditable
+                <TaskDescriptionField
                   description={description}
                   setDescription={setDescription}
                 />
@@ -163,11 +159,11 @@ export const CreateTaskCard = () => {
             {/* dunno why margin top needed here but not expanded card */}
             <div>
               <div className="mt-14 flex justify-between items-center">
-                <ProjectStagesDropdown
+                <TaskProjectStageField
                   projectStage={projectStage}
                   setProjectStage={setProjectStage}
                 />
-                <TagDropdown selectedTags={tags} onTagChange={setTags} />
+                <TaskTagField selectedTags={tags} onTagChange={setTags} />
               </div>
             </div>
           </div>

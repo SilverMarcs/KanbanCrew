@@ -11,20 +11,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CirclePlus } from "lucide-react";
-import { TagBadge } from "./TagBadge";
+import { TagBadge } from "../TagBadge";
 import { Tag } from "@/models/Tag";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { toast } from "react-toastify";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-interface TagDropdownProps {
+interface TaskTagFieldProps {
   selectedTags: Tag[];
   onTagChange: (tags: Tag[]) => void;
   taskId?: string;
 }
 
-export const TagDropdown: FC<TagDropdownProps> = ({
+export const TaskTagField: FC<TaskTagFieldProps> = ({
   selectedTags,
   onTagChange,
   taskId,

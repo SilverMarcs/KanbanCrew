@@ -1,6 +1,6 @@
 "use client";
 
-import KanbanBoard from "../../KanbanBoard";
+import KanbanBoard from "../../../../components/sprint/KanbanBoard";
 import { useSprints } from "@/hooks/useSprints";
 import { useTasks } from "@/hooks/useTasks";
 

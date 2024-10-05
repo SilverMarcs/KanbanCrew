@@ -1,11 +1,7 @@
 import React from "react";
 import { Status, getStatusColor } from "@/models/Status";
 
-interface StatusBadgeProps {
-  status: Status;
-}
-
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
+export const TaskStatusBadge: React.FC<{ status: Status }> = ({ status }) => {
   return (
     <div className="flex items-center">
       <div

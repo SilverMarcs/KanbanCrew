@@ -10,23 +10,19 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Member } from "@/models/Member";
 import { useMembers } from "@/hooks/useMembers";
-import { UserAvatar } from "../UserAvatar";
+import { UserAvatar } from "../../UserAvatar";
 
-interface AssigneeDropdownProps {
+interface AssigneeFieldProps {
   assignee: Member;
   setAssignee: (newAssignee: Member) => void;
   taskId?: string;
 }
 
-const getInitials = (firstName: string, lastName: string) => {
-  return `${firstName[0]}${lastName[0]}`.toUpperCase();
-};
-
-export const AssigneeDropdown = ({
+export const AssigneeField = ({
   assignee,
   setAssignee,
   taskId,
-}: AssigneeDropdownProps) => {
+}: AssigneeFieldProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const members = useMembers();
 

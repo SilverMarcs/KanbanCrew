@@ -4,13 +4,17 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { truncateText } from "@/lib/utils";
 
-interface TitleEditableProps {
+interface TaskTitleFieldProps {
   title: string;
   setTitle: (title: string) => void;
   taskId?: string;
 }
 
-export function TitleEditable({ title, setTitle, taskId }: TitleEditableProps) {
+export function TaskTitleField({
+  title,
+  setTitle,
+  taskId,
+}: TaskTitleFieldProps) {
   const [isEditing, setIsEditing] = useState(!taskId);
   const [localTitle, setLocalTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
