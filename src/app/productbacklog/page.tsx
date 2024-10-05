@@ -1,21 +1,21 @@
-// app/sprints/page.tsx
+// app/productbacklog/page.tsx
 "use client";
 
 import { AuthCheck } from "@/components/AuthCheck";
-import SprintList from "./SprintList";
+import ProductBacklog from "./ProductBacklog";
 import { useAuthContext } from "@/contexts/AuthContext";
 
-export default function SprintsPage() {
+export default function ProductBacklogPage() {
   const { loading } = useAuthContext();
 
   if (loading) {
-    return <div>Loading...</div>; // or a more sophisticated loading spinner
+    return <div>Loading...</div>; // or a loading spinner
   }
 
   return (
     <AuthCheck>
-      <div className="p-7">
-        <SprintList />
+      <div className="p-10">
+        <ProductBacklog />
       </div>
     </AuthCheck>
   );
