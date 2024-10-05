@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { TagBadge } from "@/components/TagBadge";
+import { TagBadge } from "@/components/task/TagBadge";
 import { Tag } from "@/models/Tag";
 import { Filter, ChevronDown } from "lucide-react";
 

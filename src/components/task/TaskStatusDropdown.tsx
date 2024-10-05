@@ -13,7 +13,7 @@ import { ChevronDown } from "lucide-react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Status } from "@/models/Status";
-import { StatusBadge } from "@/components/StatusBadge";
+import { StatusBadge } from "@/components/task/StatusBadge";
 export function TaskStatusDropdown({
   status,
   setStatus,

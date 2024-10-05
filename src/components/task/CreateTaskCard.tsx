@@ -8,8 +8,8 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircleIcon } from "lucide-react";
 import { useState, useEffect } from "react";
-import { TagDropdown } from "@/components/TagDropdown";
-import { PriorityDropdown } from "@/components/PriorityDropdown";
+import { TagDropdown } from "@/components/task/TagDropdown";
+import { PriorityDropdown } from "@/components/task/PriorityDropdown";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/firebaseConfig";
 import {
@@ -24,7 +24,7 @@ import { Tag } from "@/models/Tag";
 import { ProjectStage } from "@/models/ProjectStage";
 import { Status } from "@/models/Status";
 import { Type } from "@/models/Type";
-import { TagBadge } from "@/components/TagBadge";
+import { TagBadge } from "@/components/task/TagBadge";
 import { TaskTypePicker } from "./TaskTypePicker";
 import { DescriptionEditable } from "./DescriptionEditable";
 import { ProjectStagesDropdown } from "./ProjectStagesDropdown";

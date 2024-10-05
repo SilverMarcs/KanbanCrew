@@ -3,16 +3,16 @@ import { Task } from "@/models/Task";
 import { TagDropdown } from "./TagDropdown";
 import { useState } from "react";
 import { PriorityDropdown } from "./PriorityDropdown";
-import HistoryLogs from "@/components/HistoryLogs";
-import DeleteButton from "@/components/DeleteButton";
-import { DescriptionEditable } from "@/components//DescriptionEditable";
-import { TitleEditable } from "@/components//TitleEditable";
-import { StoryPointsField } from "@/components//StoryPointsField";
-import { TaskTypePicker } from "@/components/TaskTypePicker";
-import { ProjectStagesDropdown } from "@/components/ProjectStagesDropdown";
-import { TaskStatusDropdown } from "@/components/TaskStatusDropdown";
+import HistoryLogs from "@/components/task/HistoryLogs";
+import DeleteButton from "@/components/task/DeleteButton";
+import { DescriptionEditable } from "@/components/task/DescriptionEditable";
+import { TitleEditable } from "@/components/task/TitleEditable";
+import { StoryPointsField } from "@/components/task/StoryPointsField";
+import { TaskTypePicker } from "@/components//task/TaskTypePicker";
+import { ProjectStagesDropdown } from "@/components/task/ProjectStagesDropdown";
+import { TaskStatusDropdown } from "@/components/task/TaskStatusDropdown";
 import { Member } from "@/models/Member";
-import { AssigneeDropdown } from "@/components/AssigneeDropdown";
+import { AssigneeDropdown } from "@/components/task/AssigneeDropdown";
 import TimeLogs from "@/components/TimeLogs";
 import {
   Dialog,

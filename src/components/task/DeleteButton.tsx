@@ -14,6 +14,7 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { useRouter } from "next/navigation";
 
+// TODO: make this a generic delete button where you pass in delete function
 interface DeleteButtonProps {
   taskId: string;
   closeDialog: () => void; // Function to close the dialog
