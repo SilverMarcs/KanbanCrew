@@ -12,8 +12,8 @@ const SprintList: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col space-y-4 my-4">
-      {/* <AnimatePresence> */}
+    <div className="flex flex-col space-y-4 my-4 p-16">
+      <h1 className="text-5xl font-bold mb-8">Sprints</h1>
       {sortedSprints.map((sprint) => (
         <motion.div
           key={sprint.id}
@@ -25,7 +25,6 @@ const SprintList: React.FC = () => {
           <SprintCard sprint={sprint} />
         </motion.div>
       ))}
-      {/* </AnimatePresence> */}
       <CreateSprintCard />
     </div>
   );

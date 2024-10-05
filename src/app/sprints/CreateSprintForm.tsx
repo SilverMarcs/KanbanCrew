@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { TitleEditable } from "@/components/TitleEditable";
+import { TitleEditable } from "@/components/task/TitleEditable";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
