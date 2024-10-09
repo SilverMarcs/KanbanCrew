@@ -7,6 +7,7 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { GoogleSignIn } from "@/components/auth/GoogleSignIn";
 import { EmailSignIn } from "@/components/auth/EmailSignIn";
 import { SignInStep } from "@/models/auth/steps";
+import { ForgotPass } from "@/components/auth/ForgotPass";
 
 export default function SignIn() {
   const { user } = useAuthContext();
@@ -32,6 +33,7 @@ export default function SignIn() {
         <div className="mt-4">
           <GoogleSignIn />
         </div>
+        <ForgotPass />
       </div>
     </div>
   );
