@@ -84,7 +84,7 @@ export const ForgotPassPopup: React.FC<ForgotPasswordPopupProps> = ({
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
               />
-              <Button onClick={handlePasswordReset}>Send Password Recovery Request</Button>
+              <Button>Send password reset email</Button>
               {message && <p className="text-green-500 mt-4">{message}</p>}
               {error && <p className="text-red-500 mt-4">{error}</p>}
             </div>
