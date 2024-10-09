@@ -8,6 +8,10 @@ export const ForgotPass: React.FC = () => {
     return (
       <div className="mt-4">
         <Button onClick={() => setIsDialogOpen(true)}>Forgot Password?</Button>
+        <ForgotPassPopup
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+        />
       </div>
     );
   };
