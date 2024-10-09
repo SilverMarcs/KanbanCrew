@@ -42,11 +42,6 @@ export const ForgotPassPopup: React.FC<ForgotPasswordPopupProps> = ({
           <DialogTitle className="hidden" />
           <DialogDescription>
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.4 }}
-              className=""
               onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
             >
               <h2 className="text-xl font-bold mb-4">Reset Password</h2>
