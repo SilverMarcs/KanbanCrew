@@ -23,6 +23,19 @@ export const ForgotPassPopup: React.FC<ForgotPasswordPopupProps> = ({
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
   
+    const handlePasswordReset = async () => {
+      try {
+        await sendPasswordResetEmail(auth, email);
+        setMessage("Password reset email sent!");
+        setError("");
+        onClose(); // Close the modal on success
+      } catch (error) {
+        console.error("Error sending password reset email", error);
+        setError("Failed to send password reset email");
+        setMessage("");
+      }
+    };
+  
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-md">
@@ -44,7 +57,7 @@ export const ForgotPassPopup: React.FC<ForgotPasswordPopupProps> = ({
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
               />
-              <Button>Send password reset email</Button>
+              <Button onClick={handlePasswordReset}>Send password reset email</Button>
               {message && <p className="text-green-500 mt-4">{message}</p>}
               {error && <p className="text-red-500 mt-4">{error}</p>}
             </motion.div>
