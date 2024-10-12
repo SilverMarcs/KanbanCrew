@@ -6,6 +6,7 @@ import { useMembers } from "@/hooks/useMembers";
 import { DateRangePicker } from "@/components/DateRangePicker";
 import { AddTeamMemberDialog } from "@/components/admin/AddTeamMemberDialog";
 import { MembersTable } from "../team-board/MembersTable";
+import { PasswordBell } from "@/components/admin/PasswordBell";
 
 export function AdminTeamBoard() {
   const members = useMembers();
@@ -14,7 +15,10 @@ export function AdminTeamBoard() {
 
   return (
     <div className="min-h-screen p-16">
-      <h1 className="text-5xl font-bold mb-6 text-primary">Admin Team Board</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-5xl font-bold text-primary">Admin Team Board</h1>
+        <PasswordBell />
+      </div>
 
       <div className="flex justify-between items-center">
         <DateRangePicker
