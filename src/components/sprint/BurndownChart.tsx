@@ -10,11 +10,11 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2"; // Importing react-chartjs-2 for charts
+import { Line } from "react-chartjs-2";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Sprint } from "@/models/sprints/Sprint";
-import { eachDayOfInterval, format } from "date-fns"; // To generate date intervals for the line chart
-import { useTasks } from "@/hooks/useTasks"; // Hook to fetch tasks
+import { eachDayOfInterval, format } from "date-fns";
+import { useTasks } from "@/hooks/useTasks";
 
 // Register required Chart.js components
 ChartJS.register(

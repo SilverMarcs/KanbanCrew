@@ -19,7 +19,7 @@ import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
 import { SprintStatusBadge } from "./SprintStatusBadge";
 import Link from "next/link";
-import BurndownChart from "./BurndownChart"; // Import the BurndownChart component
+import BurndownChart from "./BurndownChart";
 
 interface SprintCardProps {
   sprint: Sprint;
