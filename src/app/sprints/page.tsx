@@ -14,7 +14,7 @@ export default function SprintsPage() {
 
   return (
     <AuthCheck>
-      <div className="p-7">
+      <div className="p-16">
         <SprintList />
       </div>
     </AuthCheck>

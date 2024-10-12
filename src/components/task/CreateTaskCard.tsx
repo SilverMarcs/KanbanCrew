@@ -12,13 +12,7 @@ import { TaskTagField } from "@/components/task/taskEditors/TaskTagField";
 import { TaskPriorityField } from "@/components/task/taskEditors/TaskPriorityField";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/firebaseConfig";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  Timestamp,
-  doc,
-} from "firebase/firestore";
+import { collection, addDoc, Timestamp, doc } from "firebase/firestore";
 import { Priority } from "@/models/Priority";
 import { Tag } from "@/models/Tag";
 import { ProjectStage } from "@/models/ProjectStage";
@@ -141,8 +135,6 @@ export const CreateTaskCard = () => {
                   storyPoints={storyPoints}
                   setStoryPoints={setStoryPoints}
                 />
-
-                {/* <TaskStatusDropdown status={status} setStatus={setStatus} /> */}
               </div>
               <AssigneeField assignee={assignee!} setAssignee={setAssignee} />
               <div className="-mb-10">
