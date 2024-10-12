@@ -1,3 +1,5 @@
+// @/components/auth/ForgotPassPopUp.tsx
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sendPasswordResetEmail } from "firebase/auth";
