@@ -1,18 +1,9 @@
 "use client";
-"use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { User } from "firebase/auth";
 import { signOut as firebaseSignOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Member } from "@/models/Member";
 
 interface AuthContextType {
@@ -40,14 +31,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setUser(user);
       if (user) {
-        const membersRef = collection(db, "members");
-        const querySnapshot = await getDocs(
-          query(membersRef, where("email", "==", user.email))
-        );
+        const memberDocRef = doc(db, "members", user.uid);
+        const memberDocSnap = await getDoc(memberDocRef);
 
-        if (!querySnapshot.empty) {
-          const memberDoc = querySnapshot.docs[0];
-          const memberData = memberDoc.data();
+        if (memberDocSnap.exists()) {
+          const memberData = memberDocSnap.data();
 
           // Check if user's display name has changed
           if (user.displayName) {
@@ -61,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             ) {
               // Update Firestore document with new name
               await setDoc(
-                memberDoc.ref,
+                memberDocRef,
                 { firstName, lastName },
                 { merge: true }
               );
@@ -70,10 +58,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             }
           }
 
-          setMember({ id: memberDoc.id, ...memberData } as Member);
+          setMember({ id: user.uid, ...memberData } as Member);
         } else {
           // Create new member document if it doesn't exist
-          const newMemberRef = doc(collection(db, "members"));
           let firstName = "",
             lastName = "";
 
@@ -91,8 +78,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             hoursWorked: [],
           };
 
-          await setDoc(newMemberRef, newMember);
-          setMember({ id: newMemberRef.id, ...newMember });
+          await setDoc(memberDocRef, newMember);
+          setMember({ id: user.uid, ...newMember });
         }
       } else {
         setMember(null);
@@ -105,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const signOut = async () => {
     try {
-      await signOut();
+      await firebaseSignOut(auth);
       setUser(null);
       setMember(null);
     } catch (error) {
