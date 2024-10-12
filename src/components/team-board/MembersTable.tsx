@@ -16,6 +16,7 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { EffortGraph } from "@/components/member/EffortGraph";
+import { eachDayOfInterval, format } from "date-fns"; // To generate the interval
 
 interface MembersTableProps {
   members: Member[];
@@ -30,6 +31,30 @@ export function MembersTable({
 }: MembersTableProps) {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 
+  // Function to generate date range and fill missing days with 0 hours
+  const generateDateRangeWithHours = (
+    hoursWorked: { date: Timestamp; hours: number }[]
+  ) => {
+    if (!startDate || !endDate) return [];
+
+    // Generate all dates within the range
+    const allDates = eachDayOfInterval({ start: startDate, end: endDate });
+
+    // Fill missing dates with 0 hours
+    return allDates.map((date) => {
+      const entry = hoursWorked.find(
+        (entry) =>
+          format(entry.date.toDate(), "yyyy-MM-dd") ===
+          format(date, "yyyy-MM-dd")
+      );
+      return {
+        date: date,
+        hours: entry ? entry.hours : 0, // Set hours to 0 if not found
+      };
+    });
+  };
+
+  // Function to calculate average hours
   const calculateAvgHours = (
     hoursWorked?: { date: Timestamp; hours: number }[]
   ) => {
@@ -37,22 +62,15 @@ export function MembersTable({
       return 0; // Return 0 if no data or date range is selected
     }
 
-    const startMillis = startDate.getTime();
-    const endMillis = endDate.getTime() + 24 * 60 * 60 * 1000 - 1; // End of the day
+    const filteredHoursWorked = generateDateRangeWithHours(hoursWorked);
 
-    const filteredHours = hoursWorked.filter(
-      (entry) =>
-        entry.date.toMillis() >= startMillis &&
-        entry.date.toMillis() <= endMillis
-    );
-
-    if (filteredHours.length === 0) return 0;
-
-    const totalHours = filteredHours.reduce(
+    const totalHours = filteredHoursWorked.reduce(
       (sum, entry) => sum + entry.hours,
       0
     );
-    return (totalHours / filteredHours.length).toFixed(2);
+    const numberOfDays = filteredHoursWorked.length;
+
+    return numberOfDays > 0 ? (totalHours / numberOfDays).toFixed(2) : "0";
   };
 
   const handleGraphClick = (member: Member) => {
