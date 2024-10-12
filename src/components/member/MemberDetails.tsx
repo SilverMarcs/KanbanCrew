@@ -59,9 +59,25 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
     });
   };
 
+  // Calculate total and average hours worked
+  const calculateTotalAndAverage = (
+    filteredHoursWorked: { date: Date; hours: number }[]
+  ) => {
+    const totalHours = filteredHoursWorked.reduce(
+      (sum, entry) => sum + entry.hours,
+      0
+    );
+    const numberOfDays = filteredHoursWorked.length;
+    const averageHours =
+      numberOfDays > 0 ? (totalHours / numberOfDays).toFixed(2) : "0";
+    return { totalHours, averageHours };
+  };
+
   if (!member) return <div>Loading...</div>;
 
   const filteredHoursWorked = generateDateRangeWithHours();
+  const { totalHours, averageHours } =
+    calculateTotalAndAverage(filteredHoursWorked);
 
   return (
     <Card className="max-w-2xl mx-auto">
@@ -113,6 +129,16 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
             onClose={() => setShowGraph(false)}
           />
         )}
+
+        {/* Display Total and Average Hours */}
+        <div className="mb-6">
+          <p>
+            Total Hours Worked: <strong>{totalHours}</strong>
+          </p>
+          <p>
+            Average Hours per Day: <strong>{averageHours}</strong>
+          </p>
+        </div>
 
         {/* Table showing hours worked */}
         <Table>
