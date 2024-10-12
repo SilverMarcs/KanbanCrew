@@ -14,7 +14,7 @@ export default function ProductBacklogPage() {
 
   return (
     <AuthCheck>
-      <div className="p-10">
+      <div className="p-16">
         <ProductBacklog />
       </div>
     </AuthCheck>
