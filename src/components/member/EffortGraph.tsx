@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog"; // ShadCN Dialog components
+import { Timestamp } from "firebase/firestore";
 
 ChartJS.register(
   CategoryScale,
@@ -29,7 +30,7 @@ ChartJS.register(
 );
 
 interface EffortGraphProps {
-  hoursWorked: { date: firebase.firestore.Timestamp; hours: number }[];
+  hoursWorked: { date: Timestamp; hours: number }[];
   open: boolean;
   onClose: () => void;
 }
