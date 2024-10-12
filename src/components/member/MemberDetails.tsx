@@ -17,8 +17,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"; // ShadCN table components
-import { format } from "date-fns"; // Date utility library
+} from "@/components/ui/table";
+import { format, eachDayOfInterval } from "date-fns"; // Importing utility to generate date intervals
 
 export const MemberDetails = ({ memberId }: { memberId: string }) => {
   const { user } = useAuthContext();
@@ -38,19 +38,25 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
     fetchMember();
   }, [memberId]);
 
+  // Generate date range with hours worked, filling missing days with 0 hours
   const generateDateRangeWithHours = () => {
-    if (!startDate || !endDate) return [];
+    if (!startDate || !endDate || !member) return [];
 
-    const startMillis = startDate.getTime();
-    const endMillis = endDate.getTime() + 24 * 60 * 60 * 1000 - 1;
+    // Generate all dates within the range
+    const allDates = eachDayOfInterval({ start: startDate, end: endDate });
 
-    return (
-      member?.hoursWorked.filter(
+    // Fill missing dates with 0 hours
+    return allDates.map((date) => {
+      const entry = member.hoursWorked.find(
         (entry) =>
-          entry.date.toMillis() >= startMillis &&
-          entry.date.toMillis() <= endMillis
-      ) || []
-    );
+          format(entry.date.toDate(), "yyyy-MM-dd") ===
+          format(date, "yyyy-MM-dd")
+      );
+      return {
+        date: date,
+        hours: entry ? entry.hours : 0, // Set hours to 0 if not found
+      };
+    });
   };
 
   if (!member) return <div>Loading...</div>;
@@ -119,7 +125,7 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
           <TableBody>
             {filteredHoursWorked.map((entry, index) => (
               <TableRow key={index}>
-                <TableCell>{format(entry.date.toDate(), "PPP")}</TableCell>
+                <TableCell>{format(entry.date, "PPP")}</TableCell>
                 <TableCell>{entry.hours} hours</TableCell>
               </TableRow>
             ))}
