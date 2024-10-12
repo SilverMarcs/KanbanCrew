@@ -1,6 +1,6 @@
 export enum SignInStep {
   EMAIL,
   PASSWORD,
-  NEW_USER,
   GOOGLE_REQUIRED,
+  CREATE_ACCOUNT
 }
