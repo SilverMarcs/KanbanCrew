@@ -9,10 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChartBarIcon } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
 import { Member } from "@/models/Member"; // Assuming you have a Member type defined somewhere
+import { UserAvatar } from "@/components/UserAvatar";
+import { Card } from "@/components/ui/card";
+import { useState } from "react";
+import { EffortGraph } from "@/components/member/EffortGraph";
 
 interface MembersTableProps {
   members: Member[];
@@ -25,6 +28,8 @@ export function MembersTable({
   startDate,
   endDate,
 }: MembersTableProps) {
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+
   const calculateAvgHours = (
     hoursWorked?: { date: Timestamp; hours: number }[]
   ) => {
@@ -50,44 +55,52 @@ export function MembersTable({
     return (totalHours / filteredHours.length).toFixed(2);
   };
 
+  const handleGraphClick = (member: Member) => {
+    setSelectedMember(member);
+  };
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-1/4">Member</TableHead>
-          <TableHead className="w-1/4">Avg Working Hours</TableHead>
-          <TableHead className="w-1/6">Effort Graph</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {members.map((member) => (
-          <TableRow key={member.id}>
-            <TableCell className="flex space-x-4 items-center">
-              <Avatar>
-                <AvatarImage
-                  src={member.avatarUrl}
-                  alt={`${member.firstName} ${member.lastName}`}
-                />
-                <AvatarFallback>
-                  {member.firstName.charAt(0)}
-                  {member.lastName.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                {member.firstName} {member.lastName}
-              </div>
-            </TableCell>
-            <TableCell className="ml-12">
-              {calculateAvgHours(member.hoursWorked)}
-            </TableCell>
-            <TableCell>
-              <Button className="bg-transparent text-primary">
-                <ChartBarIcon size={24} />
-              </Button>
-            </TableCell>
+    <Card>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-1/4">Member</TableHead>
+            <TableHead className="w-1/4">Avg Working Hours</TableHead>
+            <TableHead className="w-1/6">Effort Graph</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {members.map((member) => (
+            <TableRow key={member.id}>
+              <TableCell className="flex space-x-4 items-center">
+                <UserAvatar member={member} size="md" />
+                <div>
+                  {member.firstName} {member.lastName}
+                </div>
+              </TableCell>
+              <TableCell className="ml-12">
+                {calculateAvgHours(member.hoursWorked)}
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant={"secondary"}
+                  onClick={() => handleGraphClick(member)}
+                >
+                  <ChartBarIcon />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      {selectedMember && (
+        <EffortGraph
+          hoursWorked={selectedMember.hoursWorked}
+          open={!!selectedMember}
+          onClose={() => setSelectedMember(null)}
+        />
+      )}
+    </Card>
   );
 }
