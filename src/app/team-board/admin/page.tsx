@@ -1,3 +1,4 @@
+// app/team-board/admin/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -7,6 +8,7 @@ import { DateRangePicker } from "@/components/DateRangePicker";
 import { MembersTable } from "@/components/team-board/MembersTable";
 import { AuthCheck } from "@/components/AuthCheck";
 import { AdminLogin } from "./AdminLogin";
+import { AddTeamMemberDialog } from "@/components/admin/AddTeamMemberDialog";
 
 export default function AdminTeamBoard() {
   const { loading } = useAuthContext();
@@ -30,6 +32,10 @@ export default function AdminTeamBoard() {
         <h1 className="text-4xl font-bold mb-6 text-primary">
           Admin Team Board
         </h1>
+
+        <div className="flex justify-end mb-6">
+          <AddTeamMemberDialog />
+        </div>
 
         <DateRangePicker
           startDate={startDate}
