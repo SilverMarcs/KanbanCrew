@@ -1,4 +1,3 @@
-// components/MemberDetails.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -15,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Member } from "@/models/Member";
+import { DateRangePicker } from "@/components/DateRangePicker"; // Assuming we already have a DateRangePicker
 
 export const MemberDetails = ({ memberId }: { memberId: string }) => {
   const { user } = useAuthContext();
@@ -23,6 +23,8 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
 
   useEffect(() => {
     const fetchMember = async () => {
@@ -56,7 +58,23 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
     }
   };
 
+  // Helper function to filter hoursWorked based on the date range
+  const filterHoursWorked = () => {
+    if (!startDate || !endDate || !member) return member?.hoursWorked || [];
+
+    const startMillis = startDate.getTime();
+    const endMillis = endDate.getTime() + 24 * 60 * 60 * 1000 - 1; // Include the end date till the end of the day
+
+    return member.hoursWorked.filter(
+      (entry) =>
+        entry.date.toMillis() >= startMillis &&
+        entry.date.toMillis() <= endMillis
+    );
+  };
+
   if (!member) return <div>Loading...</div>;
+
+  const filteredHoursWorked = filterHoursWorked();
 
   return (
     <Card className="max-w-2xl mx-auto">
@@ -83,21 +101,32 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
           </div>
         </div>
 
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">Hours Worked</h3>
-          {member.hoursWorked.length > 0 ? (
-            <ul>
-              {member.hoursWorked.map((entry, index) => (
-                <li key={index}>
-                  {entry.date.toDate().toLocaleDateString()}: {entry.hours}{" "}
-                  hours
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No hours recorded yet.</p>
-          )}
-        </div>
+        {/* Date Range Picker to filter hours worked */}
+        <DateRangePicker
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+        />
+
+        {/* Only show the filtered hours once both start and end dates are selected */}
+        {startDate && endDate && (
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-2">Hours Worked</h3>
+            {filteredHoursWorked.length > 0 ? (
+              <ul>
+                {filteredHoursWorked.map((entry, index) => (
+                  <li key={index}>
+                    {entry.date.toDate().toLocaleDateString()}: {entry.hours}{" "}
+                    hours
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No hours recorded in this range.</p>
+            )}
+          </div>
+        )}
 
         {user && user.providerData[0].providerId === "password" && (
           <div>
