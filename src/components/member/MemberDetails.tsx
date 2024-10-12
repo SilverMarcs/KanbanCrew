@@ -14,7 +14,15 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Member } from "@/models/Member";
-import { DateRangePicker } from "@/components/DateRangePicker"; // Assuming you have DateRangePicker
+import { DateRangePicker } from "@/components/DateRangePicker";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"; // ShadCN table components
 
 export const MemberDetails = ({ memberId }: { memberId: string }) => {
   const { user } = useAuthContext();
@@ -147,14 +155,24 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
             </div>
 
             {filteredHoursWorked.length > 0 ? (
-              <ul>
-                {filteredHoursWorked.map((entry, index) => (
-                  <li key={index}>
-                    {entry.date.toDate().toLocaleDateString()}: {entry.hours}{" "}
-                    hours
-                  </li>
-                ))}
-              </ul>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Hours Worked</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredHoursWorked.map((entry, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        {entry.date.toDate().toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>{entry.hours} hours</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             ) : (
               <p>No hours recorded in this range.</p>
             )}
