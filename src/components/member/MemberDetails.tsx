@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"; // ShadCN table components
+import { format, eachDayOfInterval } from "date-fns"; // Date utility library
 
 export const MemberDetails = ({ memberId }: { memberId: string }) => {
   const { user } = useAuthContext();
@@ -80,9 +81,30 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
     );
   };
 
+  // Generate all dates between startDate and endDate and merge with the actual hoursWorked data
+  const generateDateRangeWithHours = () => {
+    if (!startDate || !endDate) return [];
+
+    // Generate all dates in the range
+    const allDates = eachDayOfInterval({ start: startDate, end: endDate });
+
+    // Map all dates and set 0 hours for dates with no recorded hours
+    return allDates.map((date) => {
+      const formattedDate = format(date, "yyyy-MM-dd");
+      const hoursWorkedEntry = member?.hoursWorked.find(
+        (entry) => format(entry.date.toDate(), "yyyy-MM-dd") === formattedDate
+      );
+
+      return {
+        date,
+        hours: hoursWorkedEntry ? hoursWorkedEntry.hours : 0, // Use 0 if no hours recorded
+      };
+    });
+  };
+
   // Helper function to calculate total and average hours worked
   const calculateHoursStats = (
-    filteredHours: { date: any; hours: number }[]
+    filteredHours: { date: Date; hours: number }[]
   ) => {
     const totalHours = filteredHours.reduce(
       (sum, entry) => sum + entry.hours,
@@ -102,7 +124,7 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
 
   if (!member) return <div>Loading...</div>;
 
-  const filteredHoursWorked = filterHoursWorked();
+  const filteredHoursWorked = generateDateRangeWithHours();
   const { totalHours, avgHours } = calculateHoursStats(filteredHoursWorked);
 
   return (
@@ -154,28 +176,25 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
               </p>
             </div>
 
-            {filteredHoursWorked.length > 0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Hours Worked</TableHead>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Hours Worked</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredHoursWorked.map((entry, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      {format(entry.date, "PPP")}{" "}
+                      {/* Display human-readable date */}
+                    </TableCell>
+                    <TableCell>{entry.hours}</TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredHoursWorked.map((entry, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        {entry.date.toDate().toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>{entry.hours} hours</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            ) : (
-              <p>No hours recorded in this range.</p>
-            )}
+                ))}
+              </TableBody>
+            </Table>
           </div>
         )}
 
