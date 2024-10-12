@@ -3,18 +3,29 @@ import { Member } from "@/models/Member";
 
 interface UserAvatarProps {
   member: Member;
-  showName?: boolean; // New prop to conditionally show the name
+  showName?: boolean;
+  size?: "sm" | "md" | "lg"; // New prop for size
 }
 
 export const UserAvatar: React.FC<UserAvatarProps> = ({
   member,
   showName = false,
+  size = "md", // Default size if not specified
 }) => {
   const initials = `${member.firstName.charAt(0)}${member.lastName.charAt(0)}`;
 
+  // Define size classes
+  const sizeClasses = {
+    sm: "w-8 h-8",
+    md: "w-10 h-10",
+    lg: "w-12 h-12",
+    xl: "w-16 h-16",
+    xxl: "w-20 h-20",
+  };
+
   return (
     <div className="flex items-center">
-      <Avatar>
+      <Avatar className={sizeClasses[size]}>
         <AvatarImage
           src={member.avatarUrl}
           alt={`${member.firstName} ${member.lastName}`}
