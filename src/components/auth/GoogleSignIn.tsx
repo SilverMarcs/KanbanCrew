@@ -1,4 +1,4 @@
-// components/GoogleSignIn.tsx
+// components/auth/GoogleSignIn.tsx
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/lib/firebaseConfig";
 import { Button } from "@/components/ui/button";
@@ -17,5 +17,9 @@ export const GoogleSignIn = () => {
     }
   };
 
-  return <Button onClick={handleSignIn}>Sign in with Google</Button>;
+  return (
+    <Button onClick={handleSignIn} variant="outline">
+      Sign in with Google
+    </Button>
+  );
 };

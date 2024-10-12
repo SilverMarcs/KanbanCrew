@@ -31,7 +31,6 @@ import { TaskTitleField } from "./taskEditors/TaskTitleField";
 import { StoryPointsField } from "./taskEditors/StoryPointsField";
 import { AssigneeField } from "./taskEditors/AssigneeField";
 import { Member } from "@/models/Member";
-import { TaskStatusField } from "./taskEditors/TaskStatusDropdown";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 export const CreateTaskCard = () => {
