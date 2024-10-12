@@ -14,7 +14,16 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Member } from "@/models/Member";
-import { DateRangePicker } from "@/components/DateRangePicker"; // Assuming we already have a DateRangePicker
+import { DateRangePicker } from "@/components/DateRangePicker";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"; // ShadCN table components
+import { format, eachDayOfInterval } from "date-fns"; // Date utility library
 
 export const MemberDetails = ({ memberId }: { memberId: string }) => {
   const { user } = useAuthContext();
@@ -60,7 +69,7 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
 
   // Helper function to filter hoursWorked based on the date range
   const filterHoursWorked = () => {
-    if (!startDate || !endDate || !member) return member?.hoursWorked || [];
+    if (!startDate || !endDate || !member) return [];
 
     const startMillis = startDate.getTime();
     const endMillis = endDate.getTime() + 24 * 60 * 60 * 1000 - 1; // Include the end date till the end of the day
@@ -72,9 +81,51 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
     );
   };
 
+  // Generate all dates between startDate and endDate and merge with the actual hoursWorked data
+  const generateDateRangeWithHours = () => {
+    if (!startDate || !endDate) return [];
+
+    // Generate all dates in the range
+    const allDates = eachDayOfInterval({ start: startDate, end: endDate });
+
+    // Map all dates and set 0 hours for dates with no recorded hours
+    return allDates.map((date) => {
+      const formattedDate = format(date, "yyyy-MM-dd");
+      const hoursWorkedEntry = member?.hoursWorked.find(
+        (entry) => format(entry.date.toDate(), "yyyy-MM-dd") === formattedDate
+      );
+
+      return {
+        date,
+        hours: hoursWorkedEntry ? hoursWorkedEntry.hours : 0, // Use 0 if no hours recorded
+      };
+    });
+  };
+
+  // Helper function to calculate total and average hours worked
+  const calculateHoursStats = (
+    filteredHours: { date: Date; hours: number }[]
+  ) => {
+    const totalHours = filteredHours.reduce(
+      (sum, entry) => sum + entry.hours,
+      0
+    );
+    const numberOfDays =
+      endDate && startDate
+        ? Math.ceil(
+            (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+          ) + 1
+        : 1; // Avoid division by 0, so assume at least 1 day
+
+    const avgHours =
+      numberOfDays > 0 ? (totalHours / numberOfDays).toFixed(2) : "0";
+    return { totalHours, avgHours };
+  };
+
   if (!member) return <div>Loading...</div>;
 
-  const filteredHoursWorked = filterHoursWorked();
+  const filteredHoursWorked = generateDateRangeWithHours();
+  const { totalHours, avgHours } = calculateHoursStats(filteredHoursWorked);
 
   return (
     <Card className="max-w-2xl mx-auto">
@@ -113,18 +164,37 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
         {startDate && endDate && (
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Hours Worked</h3>
-            {filteredHoursWorked.length > 0 ? (
-              <ul>
+
+            {/* Display Total and Average Hours */}
+            <div className="mb-4">
+              <p>
+                Total Hours: <span className="font-bold">{totalHours}</span>
+              </p>
+              <p>
+                Average Hours per Day:{" "}
+                <span className="font-bold">{avgHours}</span>
+              </p>
+            </div>
+
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Hours Worked</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {filteredHoursWorked.map((entry, index) => (
-                  <li key={index}>
-                    {entry.date.toDate().toLocaleDateString()}: {entry.hours}{" "}
-                    hours
-                  </li>
+                  <TableRow key={index}>
+                    <TableCell>
+                      {format(entry.date, "PPP")}{" "}
+                      {/* Display human-readable date */}
+                    </TableCell>
+                    <TableCell>{entry.hours}</TableCell>
+                  </TableRow>
                 ))}
-              </ul>
-            ) : (
-              <p>No hours recorded in this range.</p>
-            )}
+              </TableBody>
+            </Table>
           </div>
         )}
 
