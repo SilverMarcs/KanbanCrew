@@ -20,7 +20,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/use-toast";
 import { SprintStatusBadge } from "./SprintStatusBadge";
 
 interface SprintDetailsProps {

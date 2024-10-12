@@ -12,7 +12,7 @@ import { SprintStatus } from "@/models/sprints/SprintStatus";
 import { SprintStatusBadge } from "./SprintStatusBadge";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/use-toast";
 import { useSprints } from "@/hooks/useSprints";
 import validateSprintDates from "@/lib/validateSprintDates";
 import { Input } from "@/components/ui/input";
