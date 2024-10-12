@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   fetchSignInMethodsForEmail,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
@@ -28,12 +29,11 @@ export const EmailSignIn: React.FC<EmailSignInProps> = ({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleNextStep = async () => {
     try {
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      console.log(signInMethods);
-
       if (signInMethods.length === 0) {
         setSignInStep(SignInStep.NEW_USER);
       } else if (signInMethods.includes("password")) {
@@ -80,9 +80,20 @@ export const EmailSignIn: React.FC<EmailSignInProps> = ({
     }
   };
 
+  const handleForgotPassword = async () => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setMessage("Password reset email sent. Please check your inbox.");
+    } catch (error) {
+      console.error("Error sending password reset email:", error);
+      setError("Failed to send password reset email. Please try again.");
+    }
+  };
+
   return (
     <div>
       {error && <p className="text-red-500 mb-4">{error}</p>}
+      {message && <p className="text-green-500 mb-4">{message}</p>}
       {signInStep === SignInStep.EMAIL && (
         <>
           <Input
@@ -97,14 +108,27 @@ export const EmailSignIn: React.FC<EmailSignInProps> = ({
       )}
       {signInStep === SignInStep.PASSWORD && (
         <>
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mb-4"
-          />
-          <Button onClick={handleSignIn}>Sign In</Button>
+          <div>
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div className="text-left">
+              <Button
+                onClick={handleForgotPassword}
+                variant="link"
+                className="p-1"
+              >
+                Forgot Password?
+              </Button>
+            </div>
+          </div>
+
+          <Button onClick={handleSignIn} className="mb-2">
+            Sign In
+          </Button>
         </>
       )}
       {signInStep === SignInStep.NEW_USER && (
