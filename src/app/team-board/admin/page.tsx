@@ -13,8 +13,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useMembers } from "@/hooks/useMembers";
-import Image from "next/image";
-import { ChartBar, ChartBarIcon, GitGraphIcon } from "lucide-react";
 
 export default function AdminTeamBoard() {
   const { loading } = useAuthContext();
@@ -47,8 +45,7 @@ export default function AdminTeamBoard() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-1/6">Profile Picture</TableHead>
-            <TableHead className="w-1/4">Name</TableHead>
+            <TableHead className="w-1/4">Member</TableHead>
             <TableHead className="w-1/4">Avg Working Hours</TableHead>
             <TableHead className="w-1/6">Effort Graph</TableHead>
           </TableRow>
@@ -56,26 +53,27 @@ export default function AdminTeamBoard() {
         <TableBody>
           {members.map((member) => (
             <TableRow key={member.id}>
-              <TableCell>
+              <TableCell className="flex space-x-4 items-center">
                 <Avatar>
                   <AvatarImage
-                    src={member.profilePic || "/placeholder.png"}
+                    src={member.avatarUrl}
                     alt={`${member.firstName} ${member.lastName}`}
                   />
                   <AvatarFallback>
                     {member.firstName.charAt(0)}
                     {member.lastName.charAt(0)}
                   </AvatarFallback>{" "}
-                  {/* Fallback for initials */}
                 </Avatar>
+                <div>
+                  {member.firstName} {member.lastName}
+                </div>
               </TableCell>
-              <TableCell>
-                {member.firstName} {member.lastName}
-              </TableCell>
-              <TableCell>{Math.floor(Math.random() * 10) + 1}</TableCell>{" "}
+              <TableCell className="ml-12">
+                {Math.floor(Math.random() * 10) + 1}
+              </TableCell>{" "}
               {/* Random average hours for now */}
               <TableCell>
-                <Button className="bg-accent text-accent-foreground">
+                <Button className="bg-transparent text-primary">
                   <ChartBarIcon size={24} />
                 </Button>
               </TableCell>
