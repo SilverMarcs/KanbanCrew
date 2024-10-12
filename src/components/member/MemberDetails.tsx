@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Member } from "@/models/Member";
-import { DateRangePicker } from "@/components/DateRangePicker"; // Assuming we already have a DateRangePicker
+import { DateRangePicker } from "@/components/DateRangePicker"; // Assuming you have DateRangePicker
 
 export const MemberDetails = ({ memberId }: { memberId: string }) => {
   const { user } = useAuthContext();
@@ -60,7 +60,7 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
 
   // Helper function to filter hoursWorked based on the date range
   const filterHoursWorked = () => {
-    if (!startDate || !endDate || !member) return member?.hoursWorked || [];
+    if (!startDate || !endDate || !member) return [];
 
     const startMillis = startDate.getTime();
     const endMillis = endDate.getTime() + 24 * 60 * 60 * 1000 - 1; // Include the end date till the end of the day
@@ -72,9 +72,30 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
     );
   };
 
+  // Helper function to calculate total and average hours worked
+  const calculateHoursStats = (
+    filteredHours: { date: any; hours: number }[]
+  ) => {
+    const totalHours = filteredHours.reduce(
+      (sum, entry) => sum + entry.hours,
+      0
+    );
+    const numberOfDays =
+      endDate && startDate
+        ? Math.ceil(
+            (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+          ) + 1
+        : 1; // Avoid division by 0, so assume at least 1 day
+
+    const avgHours =
+      numberOfDays > 0 ? (totalHours / numberOfDays).toFixed(2) : "0";
+    return { totalHours, avgHours };
+  };
+
   if (!member) return <div>Loading...</div>;
 
   const filteredHoursWorked = filterHoursWorked();
+  const { totalHours, avgHours } = calculateHoursStats(filteredHoursWorked);
 
   return (
     <Card className="max-w-2xl mx-auto">
@@ -113,6 +134,18 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
         {startDate && endDate && (
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Hours Worked</h3>
+
+            {/* Display Total and Average Hours */}
+            <div className="mb-4">
+              <p>
+                Total Hours: <span className="font-bold">{totalHours}</span>
+              </p>
+              <p>
+                Average Hours per Day:{" "}
+                <span className="font-bold">{avgHours}</span>
+              </p>
+            </div>
+
             {filteredHoursWorked.length > 0 ? (
               <ul>
                 {filteredHoursWorked.map((entry, index) => (
