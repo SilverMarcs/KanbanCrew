@@ -10,10 +10,11 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Line } from "react-chartjs-2"; // Importing react-chartjs-2 for charts
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Sprint } from "@/models/sprints/Sprint";
-import { eachDayOfInterval, format } from "date-fns";
+import { eachDayOfInterval, format } from "date-fns"; // To generate date intervals for the line chart
+import { useTasks } from "@/hooks/useTasks"; // Hook to fetch tasks
 
 // Register required Chart.js components
 ChartJS.register(
@@ -37,6 +38,11 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   isOpen,
   onClose,
 }) => {
+  const allTasks = useTasks(); // Fetch all tasks
+  const sprintTasks = allTasks.filter((task) =>
+    sprint.taskIds?.includes(task.id)
+  ); // Filter tasks for the sprint
+
   // Function to generate the x-axis dates for the burndown chart
   const generateSprintDates = () => {
     const start = sprint.startDate.toDate();
@@ -45,13 +51,24 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
     return dates.map((date) => format(date, "MMM dd"));
   };
 
+  // Calculate the total story points for all tasks
+  const totalStoryPoints = sprintTasks.reduce((total, task) => {
+    return total + (task.storyPoints || 0); // Default to 0 if storyPoints is not defined
+  }, 0);
+
+  // Generate the ideal burndown line
+  const idealBurndown = generateSprintDates().map((_, index, dates) => {
+    // Linear interpolation from total story points to 0 over the course of the sprint
+    return totalStoryPoints - (totalStoryPoints / (dates.length - 1)) * index;
+  });
+
   // Sample data for the burndown chart
   const chartData = {
     labels: generateSprintDates(),
     datasets: [
       {
-        label: "Work Remaining",
-        data: Array(generateSprintDates().length).fill(100),
+        label: "Ideal Burndown",
+        data: idealBurndown,
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         fill: false,
@@ -67,7 +84,11 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
           <h2 className="text-lg font-bold">Burndown Chart</h2>
         </DialogHeader>
         <div className="p-4">
-          <Line data={chartData} />
+          {sprintTasks.length > 0 ? (
+            <Line data={chartData} />
+          ) : (
+            <p>No tasks available for this sprint.</p>
+          )}
         </div>
       </DialogContent>
     </Dialog>
