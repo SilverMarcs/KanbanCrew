@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog"; // ShadCN Dialog components
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore"; // Importing Firebase Timestamp
 
 ChartJS.register(
   CategoryScale,
@@ -30,7 +30,7 @@ ChartJS.register(
 );
 
 interface EffortGraphProps {
-  hoursWorked: { date: Timestamp; hours: number }[];
+  hoursWorked: { date: Timestamp | Date; hours: number }[]; // Allowing both Timestamp and Date
   open: boolean;
   onClose: () => void;
 }
@@ -47,10 +47,11 @@ export const EffortGraph = ({
 
   // Map data to be used in the chart
   const chartData = past7Days.map((date) => {
-    const entry = hoursWorked.find(
-      (entry) =>
-        format(entry.date.toDate(), "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
-    );
+    const entry = hoursWorked.find((entry) => {
+      const entryDate =
+        entry.date instanceof Timestamp ? entry.date.toDate() : entry.date; // Convert Firebase Timestamp to JS Date
+      return format(entryDate, "yyyy-MM-dd") === format(date, "yyyy-MM-dd");
+    });
     return entry ? entry.hours : 0;
   });
 
