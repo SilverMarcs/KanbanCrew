@@ -1,5 +1,3 @@
-// @/components/auth/ForgotPass.tsx
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ForgotPassPopup } from '@/components/auth/ForgotPassPopUp';
@@ -12,8 +10,7 @@ export const ForgotPass: React.FC = () => {
         <Button onClick={() => setIsDialogOpen(true)}>Forgot Password?</Button>
         <ForgotPassPopup
           isOpen={isDialogOpen}
-          onClose={() => setIsDialogOpen(false)}
-        />
+          onClose={() => setIsDialogOpen(false)} adminDocId={""} />
       </div>
     );
   };
