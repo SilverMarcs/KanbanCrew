@@ -3,18 +3,13 @@
 import { useState, useEffect } from "react";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { doc, getDoc } from "firebase/firestore";
-import { db, auth } from "@/lib/firebaseConfig";
-import {
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  updatePassword,
-} from "firebase/auth";
+import { db } from "@/lib/firebaseConfig";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Member } from "@/models/Member";
 import { DateRangePicker } from "@/components/DateRangePicker";
+import { EffortGraph } from "@/components/member/EffortGraph";
 import {
   Table,
   TableBody,
@@ -22,16 +17,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"; // ShadCN table components
-import { format, eachDayOfInterval } from "date-fns"; // Date utility library
+} from "@/components/ui/table";
+import { format, eachDayOfInterval } from "date-fns"; // Importing utility to generate date intervals
 
 export const MemberDetails = ({ memberId }: { memberId: string }) => {
   const { user } = useAuthContext();
   const [member, setMember] = useState<Member | null>(null);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const [showGraph, setShowGraph] = useState(false); // State to control graph visibility
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
 
@@ -46,86 +38,30 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
     fetchMember();
   }, [memberId]);
 
-  const handlePasswordChange = async () => {
-    if (!user) return;
-
-    try {
-      const credential = EmailAuthProvider.credential(
-        user.email!,
-        currentPassword
-      );
-      await reauthenticateWithCredential(user, credential);
-      await updatePassword(user, newPassword);
-      setMessage("Password updated successfully");
-      setCurrentPassword("");
-      setNewPassword("");
-    } catch (error) {
-      console.error("Error updating password:", error);
-      setError(
-        "Failed to update password. Please check your current password and try again."
-      );
-    }
-  };
-
-  // Helper function to filter hoursWorked based on the date range
-  const filterHoursWorked = () => {
+  // Generate date range with hours worked, filling missing days with 0 hours
+  const generateDateRangeWithHours = () => {
     if (!startDate || !endDate || !member) return [];
 
-    const startMillis = startDate.getTime();
-    const endMillis = endDate.getTime() + 24 * 60 * 60 * 1000 - 1; // Include the end date till the end of the day
-
-    return member.hoursWorked.filter(
-      (entry) =>
-        entry.date.toMillis() >= startMillis &&
-        entry.date.toMillis() <= endMillis
-    );
-  };
-
-  // Generate all dates between startDate and endDate and merge with the actual hoursWorked data
-  const generateDateRangeWithHours = () => {
-    if (!startDate || !endDate) return [];
-
-    // Generate all dates in the range
+    // Generate all dates within the range
     const allDates = eachDayOfInterval({ start: startDate, end: endDate });
 
-    // Map all dates and set 0 hours for dates with no recorded hours
+    // Fill missing dates with 0 hours
     return allDates.map((date) => {
-      const formattedDate = format(date, "yyyy-MM-dd");
-      const hoursWorkedEntry = member?.hoursWorked.find(
-        (entry) => format(entry.date.toDate(), "yyyy-MM-dd") === formattedDate
+      const entry = member.hoursWorked.find(
+        (entry) =>
+          format(entry.date.toDate(), "yyyy-MM-dd") ===
+          format(date, "yyyy-MM-dd")
       );
-
       return {
-        date,
-        hours: hoursWorkedEntry ? hoursWorkedEntry.hours : 0, // Use 0 if no hours recorded
+        date: date,
+        hours: entry ? entry.hours : 0, // Set hours to 0 if not found
       };
     });
-  };
-
-  // Helper function to calculate total and average hours worked
-  const calculateHoursStats = (
-    filteredHours: { date: Date; hours: number }[]
-  ) => {
-    const totalHours = filteredHours.reduce(
-      (sum, entry) => sum + entry.hours,
-      0
-    );
-    const numberOfDays =
-      endDate && startDate
-        ? Math.ceil(
-            (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-          ) + 1
-        : 1; // Avoid division by 0, so assume at least 1 day
-
-    const avgHours =
-      numberOfDays > 0 ? (totalHours / numberOfDays).toFixed(2) : "0";
-    return { totalHours, avgHours };
   };
 
   if (!member) return <div>Loading...</div>;
 
   const filteredHoursWorked = generateDateRangeWithHours();
-  const { totalHours, avgHours } = calculateHoursStats(filteredHoursWorked);
 
   return (
     <Card className="max-w-2xl mx-auto">
@@ -160,66 +96,41 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
           setEndDate={setEndDate}
         />
 
-        {/* Only show the filtered hours once both start and end dates are selected */}
-        {startDate && endDate && (
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Hours Worked</h3>
+        {/* Button to display Effort Graph */}
+        <div className="mb-6">
+          <Button
+            className="bg-primary w-full mt-4"
+            onClick={() => setShowGraph(true)}
+          >
+            View Effort Graph (Last 7 Days)
+          </Button>
+        </div>
 
-            {/* Display Total and Average Hours */}
-            <div className="mb-4">
-              <p>
-                Total Hours: <span className="font-bold">{totalHours}</span>
-              </p>
-              <p>
-                Average Hours per Day:{" "}
-                <span className="font-bold">{avgHours}</span>
-              </p>
-            </div>
-
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Hours Worked</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredHoursWorked.map((entry, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      {format(entry.date, "PPP")}{" "}
-                      {/* Display human-readable date */}
-                    </TableCell>
-                    <TableCell>{entry.hours}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+        {showGraph && (
+          <EffortGraph
+            hoursWorked={filteredHoursWorked}
+            open={showGraph}
+            onClose={() => setShowGraph(false)}
+          />
         )}
 
-        {user && user.providerData[0].providerId === "password" && (
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Change Password</h3>
-            {error && <p className="text-red-500 mb-2">{error}</p>}
-            {message && <p className="text-green-500 mb-2">{message}</p>}
-            <Input
-              type="password"
-              placeholder="Current Password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="mb-2"
-            />
-            <Input
-              type="password"
-              placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="mb-2"
-            />
-            <Button onClick={handlePasswordChange}>Change Password</Button>
-          </div>
-        )}
+        {/* Table showing hours worked */}
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Date</TableHead>
+              <TableHead>Hours Worked</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredHoursWorked.map((entry, index) => (
+              <TableRow key={index}>
+                <TableCell>{format(entry.date, "PPP")}</TableCell>
+                <TableCell>{entry.hours} hours</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
