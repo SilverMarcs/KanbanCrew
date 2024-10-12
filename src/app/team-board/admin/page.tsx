@@ -13,6 +13,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useMembers } from "@/hooks/useMembers";
+import { ChartBarIcon } from "lucide-react";
 
 export default function AdminTeamBoard() {
   const { loading } = useAuthContext();
