@@ -1,6 +1,9 @@
+// app/member/[member_id]/page.tsx
 "use client";
 
-import { useRouter } from "next/navigation"; // New import for programmatic navigation
+import { useAuthContext } from "@/contexts/AuthContext";
+import { MemberDetails } from "@/components/member/MemberDetails";
+import { AuthCheck } from "@/components/AuthCheck";
 
 interface MemberPageProps {
   params: {
@@ -9,10 +12,18 @@ interface MemberPageProps {
 }
 
 export default function MemberPage({ params }: MemberPageProps) {
+  const { member: loggedInMember } = useAuthContext();
+
   return (
-    <div>
-      <h1>Team Member</h1>
-      <p>Member ID: {params.member_id}</p>
-    </div>
+    <AuthCheck>
+      <div className="container mx-auto py-8">
+        <h1 className="text-3xl font-bold mb-6">Team Member</h1>
+        {loggedInMember && loggedInMember.id === params.member_id ? (
+          <MemberDetails memberId={params.member_id} />
+        ) : (
+          <p>You don't have permission to view this member's details.</p>
+        )}
+      </div>
+    </AuthCheck>
   );
 }

@@ -29,14 +29,16 @@ export default function TeamBoard() {
         <h1 className="text-5xl font-bold mb-8 text-center">Team Board</h1>
         <div className="flex justify-center space-x-4">
           <Button
+            variant={"secondary"}
             onClick={handleAdminClick}
-            className="px-6 py-3 bg-card text-white rounded-lg hover:bg-blue-600 transition-colors"
+            className="px-6 py-3 bg-card rounded-lg hover:bg-blue-600 transition-colors"
           >
             Admin
           </Button>
           <Button
+            variant={"secondary"}
             onClick={handleTeamClick}
-            className="px-6 py-3 bg-card text-white rounded-lg hover:bg-green-600 transition-colors"
+            className="px-6 py-3 bg-card rounded-lg hover:bg-green-600 transition-colors"
           >
             Team
           </Button>

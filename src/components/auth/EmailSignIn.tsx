@@ -12,19 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SignInStep } from "@/models/auth/steps";
 
-interface EmailSignInProps {
-  signInStep: SignInStep;
-  setSignInStep: (step: SignInStep) => void;
-  email: string;
-  setEmail: (email: string) => void;
-}
-
-export const EmailSignIn: React.FC<EmailSignInProps> = ({
-  signInStep,
-  setSignInStep,
-  email,
-  setEmail,
-}) => {
+export const EmailSignIn: React.FC = () => {
+  const [signInStep, setSignInStep] = useState<SignInStep>(SignInStep.EMAIL);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");

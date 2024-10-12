@@ -28,12 +28,7 @@ export default function SignIn() {
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center bg-background/80 p-8 rounded-lg backdrop-blur-sm">
         <h1 className="text-4xl font-bold mb-8">Welcome to KanbanCrew</h1>
-        <EmailSignIn
-          signInStep={signInStep}
-          setSignInStep={setSignInStep}
-          email={email}
-          setEmail={setEmail}
-        />
+        <EmailSignIn />
         <div className="mt-4">
           <GoogleSignIn />
         </div>
