@@ -1,13 +1,10 @@
 // components/admin/AdminTeamBoard.tsx
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useMembers } from "@/hooks/useMembers";
 import { DateRangePicker } from "@/components/DateRangePicker";
 import { AddTeamMemberDialog } from "@/components/admin/AddTeamMemberDialog";
-import { Card, CardContent } from "@/components/ui/card";
-import { Timestamp } from "@firebase/firestore";
-import { UserAvatar } from "../UserAvatar";
 import { MembersTable } from "../team-board/MembersTable";
 
 export function AdminTeamBoard() {
@@ -16,8 +13,8 @@ export function AdminTeamBoard() {
   const [endDate, setEndDate] = useState<Date>();
 
   return (
-    <div className="min-h-screen py-12 px-24">
-      <h1 className="text-4xl font-bold mb-6 text-primary">Admin Team Board</h1>
+    <div className="min-h-screen p-16">
+      <h1 className="text-5xl font-bold mb-6 text-primary">Admin Team Board</h1>
 
       <div className="flex justify-between items-center">
         <DateRangePicker
