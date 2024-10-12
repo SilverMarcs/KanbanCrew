@@ -19,12 +19,18 @@ import {
 } from "@/components/ui/table";
 import { format, eachDayOfInterval } from "date-fns";
 import { UserAvatar } from "@/components/UserAvatar";
+import { ChangePasswordDialog } from "@/components/member/ChangePasswordDialog";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export const MemberDetails = ({ memberId }: { memberId: string }) => {
   const [member, setMember] = useState<Member | null>(null);
   const [showGraph, setShowGraph] = useState(false); // State to control graph visibility
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const { user } = useAuthContext();
+  const canChangePassword =
+    user && user.providerData[0].providerId === "password";
 
   useEffect(() => {
     const fetchMember = async () => {
@@ -84,15 +90,27 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
         <CardTitle className="text-2xl font-bold">Member Details</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center space-x-4 mb-6">
-          <UserAvatar member={member} size="2xl" />
-          <div>
-            <h2 className="text-xl font-semibold">
-              {member.firstName} {member.lastName}
-            </h2>
-            <p className="text-gray-500">{member.email}</p>
+        <div className="flex items-center justify-between space-x-4 mb-6">
+          <div className="flex items-center space-x-4">
+            <UserAvatar member={member} size="2xl" />
+            <div>
+              <h2 className="text-xl font-semibold">
+                {member.firstName} {member.lastName}
+              </h2>
+              <p className="text-gray-500">{member.email}</p>
+            </div>
           </div>
+          {canChangePassword && (
+            <Button onClick={() => setIsChangePasswordOpen(true)}>
+              Change Password
+            </Button>
+          )}
         </div>
+
+        <ChangePasswordDialog
+          isOpen={isChangePasswordOpen}
+          onClose={() => setIsChangePasswordOpen(false)}
+        />
 
         {/* Date Range Picker to filter hours worked */}
         <DateRangePicker
