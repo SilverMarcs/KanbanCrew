@@ -47,15 +47,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (!querySnapshot.empty) {
           const memberDoc = querySnapshot.docs[0];
-          setMember({ id: memberDoc.id, ...memberDoc.data() } as Member);
+          const memberData = memberDoc.data();
+
+          // Check if user's display name has changed
+          if (user.displayName) {
+            const nameParts = user.displayName.split(" ");
+            const firstName = nameParts[0];
+            const lastName = nameParts.slice(1).join(" ");
+
+            if (
+              memberData.firstName !== firstName ||
+              memberData.lastName !== lastName
+            ) {
+              // Update Firestore document with new name
+              await setDoc(
+                memberDoc.ref,
+                { firstName, lastName },
+                { merge: true }
+              );
+              memberData.firstName = firstName;
+              memberData.lastName = lastName;
+            }
+          }
+
+          setMember({ id: memberDoc.id, ...memberData } as Member);
         } else {
+          // Create new member document if it doesn't exist
           const newMemberRef = doc(collection(db, "members"));
+          let firstName = "",
+            lastName = "";
+
+          if (user.displayName) {
+            const nameParts = user.displayName.split(" ");
+            firstName = nameParts[0];
+            lastName = nameParts.slice(1).join(" ");
+          }
+
           const newMember: Omit<Member, "id"> = {
             avatarUrl: user.photoURL || "",
-            firstName: user.displayName?.split(" ")[0] || "",
-            lastName: user.displayName?.split(" ").slice(1).join(" ") || "",
+            firstName,
+            lastName,
             email: user.email || "",
+            hoursWorked: [],
           };
+
           await setDoc(newMemberRef, newMember);
           setMember({ id: newMemberRef.id, ...newMember });
         }
