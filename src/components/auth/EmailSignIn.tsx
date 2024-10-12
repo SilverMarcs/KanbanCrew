@@ -1,72 +1,38 @@
 // components/auth/EmailSignIn.tsx
 import { useState } from "react";
-import { auth, db } from "@/lib/firebaseConfig";
+import { auth } from "@/lib/firebaseConfig";
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   fetchSignInMethodsForEmail,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SignInStep } from "@/models/auth/steps";
 
 export const EmailSignIn: React.FC = () => {
-  const [signInStep, setSignInStep] = useState<SignInStep>(SignInStep.EMAIL);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleNextStep = async () => {
+  const handleSignIn = async () => {
     try {
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
       if (signInMethods.length === 0) {
-        setSignInStep(SignInStep.NEW_USER);
+        setError("No account found with this email. Please create an account first.");
       } else if (signInMethods.includes("password")) {
-        setSignInStep(SignInStep.PASSWORD);
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (error) {
+          console.error("Error signing in:", error);
+          setError("Invalid email or password. Please try again.");
+        }
       } else if (signInMethods.includes("google.com")) {
-        setSignInStep(SignInStep.GOOGLE_REQUIRED);
+        setError("This email is associated with a Google account. Please use Google Sign In.");
       }
     } catch (error) {
-      console.error("Error checking email:", error);
+      console.error("Error checking email methods:", error);
       setError("An error occurred. Please try again.");
-    }
-  };
-
-  const handleSignIn = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      console.error("Error signing in:", error);
-      setError("Invalid email or password. Please try again.");
-    }
-  };
-
-  const handleSignUp = async () => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Create new member document
-      const newMemberRef = doc(db, "members", user.uid);
-      await setDoc(newMemberRef, {
-        avatarUrl: "",
-        firstName,
-        lastName,
-        email,
-        hoursWorked: [],
-      });
-    } catch (error) {
-      console.error("Error signing up:", error);
-      setError("An error occurred during sign up. Please try again.");
     }
   };
 
@@ -84,75 +50,24 @@ export const EmailSignIn: React.FC = () => {
     <div>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {message && <p className="text-green-500 mb-4">{message}</p>}
-      {signInStep === SignInStep.EMAIL && (
-        <>
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mb-4"
-          />
-          <Button onClick={handleNextStep}>Next</Button>
-        </>
-      )}
-      {signInStep === SignInStep.PASSWORD && (
-        <>
-          <div>
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <div className="text-left">
-              <Button
-                onClick={handleForgotPassword}
-                variant="link"
-                className="p-1"
-              >
-                Forgot Password?
-              </Button>
-            </div>
-          </div>
-
-          <Button onClick={handleSignIn} className="mb-2">
-            Sign In
-          </Button>
-        </>
-      )}
-      {signInStep === SignInStep.NEW_USER && (
-        <>
-          <Input
-            type="text"
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="mb-4"
-          />
-          <Input
-            type="text"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="mb-4"
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mb-4"
-          />
-          <Button onClick={handleSignUp}>Sign Up</Button>
-        </>
-      )}
-      {signInStep === SignInStep.GOOGLE_REQUIRED && (
-        <p>
-          This email is associated with a Google account. Please use Google Sign
-          In.
-        </p>
-      )}
+      <Input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="mb-4"
+      />
+      <Input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="mb-4"
+      />
+      <Button onClick={handleSignIn} className="mb-2">Sign In</Button>
+      <Button onClick={handleForgotPassword} variant="link" className="p-1">
+        Forgot Password?
+      </Button>
     </div>
   );
 };
