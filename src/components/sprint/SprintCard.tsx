@@ -11,7 +11,7 @@ import { SprintDetails } from "./SprintDetails";
 import { Sprint } from "@/models/sprints/Sprint";
 import { doc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/use-toast";
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";

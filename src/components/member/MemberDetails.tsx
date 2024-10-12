@@ -5,7 +5,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Member } from "@/models/Member";
 import { DateRangePicker } from "@/components/DateRangePicker";
 import { EffortGraph } from "@/components/member/EffortGraph";
@@ -92,13 +91,7 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
       <CardContent>
         <div className="flex items-center justify-between space-x-4 mb-6">
           <div className="flex items-center space-x-4">
-            <UserAvatar member={member} size="2xl" />
-            <div>
-              <h2 className="text-xl font-semibold">
-                {member.firstName} {member.lastName}
-              </h2>
-              <p className="text-gray-500">{member.email}</p>
-            </div>
+            <UserAvatar member={member} size="xl" showEmail showName />
           </div>
           {canChangePassword && (
             <Button onClick={() => setIsChangePasswordOpen(true)}>

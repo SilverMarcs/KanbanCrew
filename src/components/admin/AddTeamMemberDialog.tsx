@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { createTeamMember } from "@/lib/createTeamMember";
+import { createTeamMember } from "@/lib/auth/createTeamMember";
 import { db } from "@/lib/firebaseConfig"; // Import your Firestore instance
 import { doc, setDoc } from "firebase/firestore";
 

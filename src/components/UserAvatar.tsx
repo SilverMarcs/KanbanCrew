@@ -4,12 +4,14 @@ import { Member } from "@/models/Member";
 interface UserAvatarProps {
   member: Member;
   showName?: boolean;
+  showEmail?: boolean;
   size?: "sm" | "md" | "lg" | "xl" | "2xl";
 }
 
 export const UserAvatar: React.FC<UserAvatarProps> = ({
   member,
   showName = false,
+  showEmail = false,
   size = "md", // Default size if not specified
 }) => {
   const initials = `${member.firstName.charAt(0)}${member.lastName.charAt(0)}`;
@@ -33,10 +35,19 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         />
         <AvatarFallback>{initials}</AvatarFallback>
       </Avatar>
-      {showName && (
-        <span className="ml-2 font-semibold">
-          {member.firstName} {member.lastName}
-        </span>
+      {(showName || showEmail) && (
+        <div className="ml-2 flex flex-col">
+          {showName && (
+            <span className="font-semibold">
+              {member.firstName} {member.lastName}
+            </span>
+          )}
+          {showEmail && (
+            <span className="text-sm text-muted-foreground">
+              {member.email}
+            </span>
+          )}
+        </div>
       )}
     </div>
   );

@@ -16,7 +16,7 @@ import {
   updatePassword,
   EmailAuthProvider,
 } from "firebase/auth";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { ToastProvider } from "@radix-ui/react-toast";
 
 interface ChangePasswordDialogProps {
