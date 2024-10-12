@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
 import { auth } from "@/lib/firebaseConfig";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export default function GoogleSignInButton() {
   const router = useRouter();
-  const [error, setError] = useState("");
+  const { toast } = useToast();
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
@@ -18,7 +18,11 @@ export default function GoogleSignInButton() {
       router.push("/productbacklog");
     } catch (error) {
       console.error("Error signing in with Google", error);
-      setError("Failed to sign in with Google. Please try again.");
+      toast({
+        title: "Google Sign In Failed",
+        description: "Failed to sign in with Google. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -37,7 +41,6 @@ export default function GoogleSignInButton() {
       <Button variant="outline" onClick={handleGoogleSignIn}>
         <Mail className="mr-2 h-4 w-4" /> Google
       </Button>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
     </>
   );
 }

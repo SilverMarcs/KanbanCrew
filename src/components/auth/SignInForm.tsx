@@ -11,6 +11,7 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { ForgotPasswordButton } from "./ForgotPasswordButton";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -18,33 +19,45 @@ export default function SignInForm() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const { toast } = useToast();
 
   const handleSignIn = async () => {
     setIsLoading(true);
-    setError("");
     try {
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
       if (signInMethods.length === 0) {
-        setError(
-          "No account found with this email. Please create an account first."
-        );
+        toast({
+          title: "Account not found",
+          description: "Please create an account first.",
+          variant: "destructive",
+        });
       } else if (signInMethods.includes("password")) {
         try {
           await signInWithEmailAndPassword(auth, email, password);
           router.push("/productbacklog");
         } catch (error) {
           console.error("Error signing in:", error);
-          setError("Invalid email or password. Please try again.");
+          toast({
+            title: "Sign in failed",
+            description: "Invalid email or password. Please try again.",
+            variant: "destructive",
+          });
         }
       } else if (signInMethods.includes("google.com")) {
-        setError(
-          "This email is associated with a Google account. Please use Google Sign In."
-        );
+        toast({
+          title: "Google account",
+          description:
+            "This email is associated with a Google account. Please use Google Sign In.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error checking email methods:", error);
-      setError("An error occurred. Please try again.");
+      toast({
+        title: "Error",
+        description: "An error occurred. Please try again.",
+        variant: "destructive",
+      });
     }
     setIsLoading(false);
   };
@@ -74,7 +87,6 @@ export default function SignInForm() {
           )}
           <ForgotPasswordButton />
         </div>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button
           onClick={showPassword ? handleSignIn : () => setShowPassword(true)}
           disabled={isLoading}

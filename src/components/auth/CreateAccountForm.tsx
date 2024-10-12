@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 import { auth, db } from "@/lib/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { ForgotPasswordButton } from "./ForgotPasswordButton";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function CreateAccountForm() {
   const [email, setEmail] = useState("");
@@ -15,13 +15,10 @@ export default function CreateAccountForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const { toast } = useToast();
 
   const handleCreateAccount = async () => {
     setIsLoading(true);
-    setError("");
-    setMessage("");
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -36,15 +33,24 @@ export default function CreateAccountForm() {
         email,
         hoursWorked: [],
       });
-      setMessage(
-        "Account created successfully. Please check your email to verify."
-      );
+      toast({
+        title: "Account created",
+        description: "Please check your email to verify.",
+      });
       console.log("Account created successfully:", user.email);
     } catch (error) {
       if (error instanceof Error) {
-        setError("Failed to create account: " + error.message);
+        toast({
+          title: "Failed to create account",
+          description: error.message,
+          variant: "destructive",
+        });
       } else {
-        setError("Failed to create account due to an unexpected issue.");
+        toast({
+          title: "Error",
+          description: "Failed to create account due to an unexpected issue.",
+          variant: "destructive",
+        });
       }
       console.error("Error creating account:", error);
     }
@@ -87,8 +93,6 @@ export default function CreateAccountForm() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {message && <p className="text-green-500 text-sm">{message}</p>}
         <Button onClick={handleCreateAccount} disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Create Account
