@@ -1,9 +1,6 @@
 // @/components/auth/ForgotPassPopUp.tsx
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "@/lib/firebaseConfig"; 
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,10 +8,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { updateDoc, doc, arrayUnion, collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebaseConfig";
 
 interface ForgotPasswordPopupProps {
     isOpen: boolean;
     onClose: () => void;
+    adminDocId: string; //to pass the admin documengt ID
   }
   
 export const ForgotPassPopup: React.FC<ForgotPasswordPopupProps> = ({
@@ -24,16 +24,46 @@ export const ForgotPassPopup: React.FC<ForgotPasswordPopupProps> = ({
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [adminDocId, setAdminDocId] = useState<string | null>(null);
+
+    useEffect(() => {
+      const fetchAdminDocId = async () => {
+        try {
+          const adminCollection = collection(db, "admin");
+          const adminSnapshot = await getDocs(adminCollection);
+          if (!adminSnapshot.empty) {
+            const adminDoc = adminSnapshot.docs[0];
+            setAdminDocId(adminDoc.id);
+          } else {
+            setError("No admin document found");
+          }
+        } catch (error) {
+          console.error("Error fetching admin document ID", error);
+          setError("Failed to fetch admin document ID");
+        }
+      };
+  
+      fetchAdminDocId();
+    }, []);
   
     const handlePasswordReset = async () => {
+      if (!adminDocId) {
+        setError("Admin document ID not found");
+        return;
+      }
+      
+      const adminRef = doc(db, "admin", adminDocId);
+
       try {
-        await sendPasswordResetEmail(auth, email);
-        setMessage("Password reset email sent!");
+        await updateDoc(adminRef, {
+          emailNeedingRecovery: arrayUnion(email), //adds email if it doesnt already exist
+        });
+        setMessage("Password recovery request recorded!");
         setError("");
         onClose(); // Close the modal on success
       } catch (error) {
-        console.error("Error sending password reset email", error);
-        setError("Failed to send password reset email");
+        console.error("Error recording password recovery request", error);
+        setError("Failed to record password recovery request");
         setMessage("");
       }
     };
@@ -43,7 +73,7 @@ export const ForgotPassPopup: React.FC<ForgotPasswordPopupProps> = ({
         <DialogContent className="max-w-md">
           <DialogTitle className="hidden" />
           <DialogDescription>
-            <motion.div
+            <div
               onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
             >
               <h2 className="text-xl font-bold mb-4">Reset Password</h2>
@@ -54,10 +84,10 @@ export const ForgotPassPopup: React.FC<ForgotPasswordPopupProps> = ({
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
               />
-              <Button onClick={handlePasswordReset}>Send password reset email</Button>
+              <Button onClick={handlePasswordReset}>Send Password Recovery Request</Button>
               {message && <p className="text-green-500 mt-4">{message}</p>}
               {error && <p className="text-red-500 mt-4">{error}</p>}
-            </motion.div>
+            </div>
           </DialogDescription>
         </DialogContent>
       </Dialog>
