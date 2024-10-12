@@ -1,4 +1,6 @@
-// @/components/admin/AddTeamMemberDialog.tsx
+// components/admin/AddTeamMemberDialog.tsx
+"use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,54 +11,43 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createTeamMember } from "@/lib/createTeamMember";
+import { db } from "@/lib/firebaseConfig"; // Import your Firestore instance
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebaseConfig";
 
-export const AddTeamMemberDialog = () => {
+export function AddTeamMemberDialog() {
   const [open, setOpen] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleAddMember = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage("");
+  async function handleAddMember(formData: FormData) {
+    const result = await createTeamMember(formData);
 
-    try {
-      // Create the user in Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        "password12345"
-      );
-      const user = userCredential.user;
+    if (result.success && result.user) {
+      try {
+        // Create Firestore document
+        await setDoc(doc(db, "members", result.user.uid), {
+          firstName: result.user.firstName,
+          lastName: result.user.lastName,
+          email: result.user.email,
+          avatarUrl: "",
+          hoursWorked: [],
+        });
 
-      // Create the member document in Firestore
-      await setDoc(doc(db, "members", user.uid), {
-        firstName,
-        lastName,
-        email,
-        avatarUrl: "",
-        hoursWorked: [],
-      });
+        setMessage("Team member added successfully");
 
-      setMessage("Team member added successfully!");
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-
-      // Close the dialog after a short delay
-      setTimeout(() => {
-        setOpen(false);
-        setMessage("");
-      }, 2000);
-    } catch (error) {
-      console.error("Error adding team member:", error);
-      setMessage("Error adding team member. Please try again.");
+        // Close the dialog after a short delay
+        setTimeout(() => {
+          setOpen(false);
+          setMessage("");
+        }, 2000);
+      } catch (error) {
+        console.error("Error adding member to Firestore:", error);
+        setMessage("Error adding member to database");
+      }
+    } else {
+      setMessage(result.message);
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -67,32 +58,19 @@ export const AddTeamMemberDialog = () => {
         <DialogHeader>
           <DialogTitle>Add New Team Member</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleAddMember} className="space-y-4">
+        <form action={handleAddMember} className="space-y-4">
           <Input
+            name="firstName"
             type="text"
             placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
             required
           />
-          <Input
-            type="text"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <Input name="lastName" type="text" placeholder="Last Name" required />
+          <Input name="email" type="email" placeholder="Email" required />
           <Button type="submit">Add Team Member</Button>
           {message && <p className="text-sm text-green-500">{message}</p>}
         </form>
       </DialogContent>
     </Dialog>
   );
-};
+}
