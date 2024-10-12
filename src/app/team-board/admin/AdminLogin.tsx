@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // Assuming you're using ShadCN input component
-import { Label } from "@/components/ui/label"; // Assuming ShadCN has a label component
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardHeader,
@@ -12,7 +12,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { getDoc, doc } from "firebase/firestore"; // Import Firestore functions
-import { db } from "@/lib/firebaseConfig"; // Assuming your firebase config is in lib/firebaseConfig
+import { db } from "@/lib/firebaseConfig";
 
 interface AdminLoginProps {
   onLoginSuccess: () => void; // Callback when login succeeds
@@ -22,6 +22,7 @@ export function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
   const [password, setPassword] = useState("");
   const [adminPassword, setAdminPassword] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     // Fetch the admin password from Firestore when the component mounts
@@ -33,18 +34,18 @@ export function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
       } else {
         console.error("No admin password found in Firestore.");
       }
-      setLoading(false); // Stop loading after fetching the password
+      setLoading(false);
     };
 
     fetchPassword();
   }, []);
 
   const handleLogin = () => {
-    // Check if the entered password matches the stored admin password from Firestore
     if (password === adminPassword) {
-      onLoginSuccess(); // Call the parent component's callback on success
+      setError(false);
+      onLoginSuccess();
     } else {
-      alert("Incorrect password");
+      setError(true);
     }
   };
 
@@ -73,8 +74,13 @@ export function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full mb-6"
+            className={`w-full mb-4 ${error ? "border-red-500" : ""}`}
           />
+          {error && (
+            <p className="text-red-500 text-sm mb-4">
+              Incorrect password. Please try again.
+            </p>
+          )}
           <p className="text-sm text-center text-muted-foreground mb-20">
             <a href="#" className="underline">
               Forgot password?
