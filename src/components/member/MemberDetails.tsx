@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuthContext } from "@/contexts/AuthContext";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Button } from "@/components/ui/button";
@@ -18,10 +17,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { format, eachDayOfInterval } from "date-fns"; // Importing utility to generate date intervals
+import { format, eachDayOfInterval } from "date-fns";
+import { UserAvatar } from "@/components/UserAvatar";
 
 export const MemberDetails = ({ memberId }: { memberId: string }) => {
-  const { user } = useAuthContext();
   const [member, setMember] = useState<Member | null>(null);
   const [showGraph, setShowGraph] = useState(false); // State to control graph visibility
   const [startDate, setStartDate] = useState<Date | undefined>();
@@ -54,7 +53,7 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
       );
       return {
         date: date,
-        hours: entry ? entry.hours : 0, // Set hours to 0 if not found
+        hours: entry ? entry.hours : 0,
       };
     });
   };
@@ -86,16 +85,7 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-4 mb-6">
-          <Avatar className="h-20 w-20">
-            <AvatarImage
-              src={member.avatarUrl}
-              alt={`${member.firstName} ${member.lastName}`}
-            />
-            <AvatarFallback>
-              {member.firstName[0]}
-              {member.lastName[0]}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar member={member} size="2xl" />
           <div>
             <h2 className="text-xl font-semibold">
               {member.firstName} {member.lastName}
@@ -112,51 +102,56 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
           setEndDate={setEndDate}
         />
 
-        {/* Button to display Effort Graph */}
-        <div className="mb-6">
-          <Button
-            className="bg-primary w-full mt-4"
-            onClick={() => setShowGraph(true)}
-          >
-            View Effort Graph (Last 7 Days)
-          </Button>
-        </div>
+        {/* Conditionally render the Effort Graph button, table, total, and average only if startDate and endDate are selected */}
+        {startDate && endDate && (
+          <>
+            {/* Button to display Effort Graph */}
+            <div className="mb-6">
+              <Button
+                className="bg-primary w-full mt-4"
+                onClick={() => setShowGraph(true)}
+              >
+                View Effort Graph (Last 7 Days)
+              </Button>
+            </div>
 
-        {showGraph && (
-          <EffortGraph
-            hoursWorked={filteredHoursWorked}
-            open={showGraph}
-            onClose={() => setShowGraph(false)}
-          />
+            {showGraph && (
+              <EffortGraph
+                hoursWorked={filteredHoursWorked}
+                open={showGraph}
+                onClose={() => setShowGraph(false)}
+              />
+            )}
+
+            {/* Display Total and Average Hours */}
+            <div className="mb-6">
+              <p>
+                Total Hours Worked: <strong>{totalHours}</strong>
+              </p>
+              <p>
+                Average Hours per Day: <strong>{averageHours}</strong>
+              </p>
+            </div>
+
+            {/* Table showing hours worked */}
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Hours Worked</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredHoursWorked.map((entry, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{format(entry.date, "PPP")}</TableCell>
+                    <TableCell>{entry.hours} hours</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </>
         )}
-
-        {/* Display Total and Average Hours */}
-        <div className="mb-6">
-          <p>
-            Total Hours Worked: <strong>{totalHours}</strong>
-          </p>
-          <p>
-            Average Hours per Day: <strong>{averageHours}</strong>
-          </p>
-        </div>
-
-        {/* Table showing hours worked */}
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Date</TableHead>
-              <TableHead>Hours Worked</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredHoursWorked.map((entry, index) => (
-              <TableRow key={index}>
-                <TableCell>{format(entry.date, "PPP")}</TableCell>
-                <TableCell>{entry.hours} hours</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
       </CardContent>
     </Card>
   );

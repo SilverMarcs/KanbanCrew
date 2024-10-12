@@ -4,7 +4,7 @@ import { Member } from "@/models/Member";
 interface UserAvatarProps {
   member: Member;
   showName?: boolean;
-  size?: "sm" | "md" | "lg"; // New prop for size
+  size?: "sm" | "md" | "lg" | "xl" | "2xl";
 }
 
 export const UserAvatar: React.FC<UserAvatarProps> = ({
@@ -20,7 +20,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     md: "w-10 h-10",
     lg: "w-12 h-12",
     xl: "w-16 h-16",
-    xxl: "w-20 h-20",
+    "2xl": "w-20 h-20",
   };
 
   return (
