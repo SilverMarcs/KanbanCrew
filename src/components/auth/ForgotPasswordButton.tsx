@@ -98,10 +98,16 @@ export function ForgotPasswordButton({ isAdmin }: { isAdmin: boolean }) {
           answer: answers[index],
         })),
       });
-      alert("Security questions updated successfully");
+      setMessage("Security questions updated successfully");
+      setError("");
+      setEmail("");
+      setTimeout(() => {
+        setIsOpen(false); // Close the modal after delay
+      }, 2000);
     } catch (error) {
       console.error("Error updating security questions: ", error);
-      alert("Failed to update security questions");
+      setError("Failed to update security questions");
+      setMessage("");
     }
   };
 
@@ -118,9 +124,9 @@ export function ForgotPasswordButton({ isAdmin }: { isAdmin: boolean }) {
         <DialogContent className="sm:max-w-[425px]">
           {isAdmin ?(
             <>
-              <DialogTitle>Set Security Questions</DialogTitle>
+              <DialogTitle>Answer Security Questions</DialogTitle>
               <DialogDescription>
-                Set security questions and their answers
+                Answer the security questions to reset your password
               </DialogDescription>
               {questions.map((question, index) => (
                 <div key={index} className="grid gap-4 py-2">
