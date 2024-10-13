@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -42,7 +41,7 @@ export function DateRangePicker({
             <Calendar
               mode="single"
               selected={startDate}
-              onSelect={setStartDate}
+              onSelect={(date) => date && setStartDate(date)}
               initialFocus
             />
           </PopoverContent>
@@ -65,7 +64,7 @@ export function DateRangePicker({
             <Calendar
               mode="single"
               selected={endDate}
-              onSelect={setEndDate}
+              onSelect={(date) => date && setEndDate(date)}
               initialFocus
             />
           </PopoverContent>
