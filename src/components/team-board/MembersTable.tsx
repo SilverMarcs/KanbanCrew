@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/table";
 import { ChartBarIcon } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
-import { Member } from "@/models/Member"; // Assuming you have a Member type defined somewhere
+import { Member } from "@/models/Member";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { EffortGraph } from "@/components/member/EffortGraph";
-import { eachDayOfInterval, format } from "date-fns"; // To generate the interval
+import { eachDayOfInterval, format } from "date-fns";
 
 interface MembersTableProps {
   members: Member[];

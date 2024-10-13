@@ -21,6 +21,7 @@ export interface Task {
   status: Status;
   type: Type;
   creationDate: Timestamp;
+  completedDate?: Timestamp | null;
   historyLogs: HistoryLog[];
   timeLogs: TimeLog[];
   sprintId?: string | null;

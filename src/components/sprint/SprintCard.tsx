@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
@@ -12,11 +14,12 @@ import { Sprint } from "@/models/sprints/Sprint";
 import { doc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { toast } from "@/components/ui/use-toast";
-import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
+import { EllipsisVertical, LineChart, Pencil, Trash2 } from "lucide-react";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
 import { SprintStatusBadge } from "./SprintStatusBadge";
 import Link from "next/link";
+import BurndownChart from "./BurndownChart";
 
 interface SprintCardProps {
   sprint: Sprint;
@@ -25,6 +28,7 @@ interface SprintCardProps {
 const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isBurndownOpen, setIsBurndownOpen] = useState(false); // State for burndown chart
 
   const confirmDelete = async () => {
     try {
@@ -131,6 +135,16 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
               </div>
             </Link>
           </div>
+          {/* LineChart icon for Burndown chart */}
+          <Button
+            variant="ghost"
+            className="mr-2"
+            onClick={(e) => {
+              setIsBurndownOpen(true);
+            }}
+          >
+            <LineChart size={20} />
+          </Button>
         </Card>
 
         <DialogContent className="max-w-lg border-0 shadow-lg">
@@ -139,6 +153,13 @@ const SprintCard: React.FC<SprintCardProps> = ({ sprint }) => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
+
+      {/* Burndown Chart for the Sprint */}
+      <BurndownChart
+        sprint={sprint}
+        isOpen={isBurndownOpen}
+        onClose={() => setIsBurndownOpen(false)}
+      />
     </div>
   );
 };

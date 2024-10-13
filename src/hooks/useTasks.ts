@@ -8,10 +8,6 @@ import {
 import { db } from "@/lib/firebaseConfig";
 import { Task } from "@/models/Task";
 import { Member } from "@/models/Member";
-import { Type } from "@/models/Type";
-import { Status } from "@/models/Status";
-import { ProjectStage } from "@/models/ProjectStage";
-import { Tag } from "@/models/Tag";
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -40,7 +36,7 @@ export const useTasks = () => {
             title: data.title,
             storyPoints: data.storyPoints,
             priority: data.priority,
-            tags: data.tags as Tag[],
+            tags: data.tags,
             assignee:
               assignee ||
               ({
@@ -49,10 +45,11 @@ export const useTasks = () => {
                 lastName: "Assignee",
               } as Member),
             description: data.description,
-            projectStage: data.projectStage as ProjectStage,
-            status: data.status as Status,
-            type: data.type as Type,
+            projectStage: data.projectStage,
+            status: data.status,
+            type: data.type,
             creationDate: data.creationDate,
+            completedDate: data.completedDate,
             historyLogs: data.historyLogs,
             timeLogs: data.timeLogs,
             sprintId: data.sprintId || null, // Use sprintId instead of sprint reference
