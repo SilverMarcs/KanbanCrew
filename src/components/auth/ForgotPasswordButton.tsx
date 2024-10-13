@@ -104,12 +104,7 @@ export function ForgotPasswordButton({ isAdmin }: { isAdmin: boolean }) {
   };
 
   const handleChangePassword = async () => {
-    if (!adminDocId) {
-      setError("Admin document ID not found");
-      return;
-    }
-
-    const adminRef = doc(db, "admin", adminDocId);
+    const adminRef = doc(db, "admin", "secret");
 
     try {
       await updateDoc(adminRef, {
@@ -121,6 +116,8 @@ export function ForgotPasswordButton({ isAdmin }: { isAdmin: boolean }) {
       setTimeout(() => {
         setIsOpen(false); // Close the modal after delay
         setMessage("")
+        setIsAnswerCorrect(false);
+        setProvidedAnswers([]);
       }, 2000);
     } catch (error) {
       console.error("Error updating password: ", error);
@@ -140,7 +137,7 @@ export function ForgotPasswordButton({ isAdmin }: { isAdmin: boolean }) {
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px]">
-          {isAdmin ? (
+          {isAdmin && !isAnswerCorrect ? (
             <>
               <DialogTitle>Answer Security Questions</DialogTitle>
               <DialogDescription>
@@ -162,24 +159,26 @@ export function ForgotPasswordButton({ isAdmin }: { isAdmin: boolean }) {
                   </div>
                 ))}
                 <Button onClick={handleAnswerSubmit}>Submit Answers</Button>
+                {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
               </div>
-              {isAnswerCorrect && (
-                <>
-                  <DialogTitle>Change Password</DialogTitle>
-                  <DialogDescription>
-                    Enter your new password.
-                  </DialogDescription>
-                  <div className="grid gap-4 py-2">
-                    <Input
-                      placeholder="New Password"
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                    />
-                    <Button onClick={handleChangePassword}>Change Password</Button>
-                  </div>
-                </>
-              )}
+            </>
+          ) : isAdmin && isAnswerCorrect ? (
+            <>
+              <DialogTitle>Change Password</DialogTitle>
+              <DialogDescription>
+                Enter your new password.
+              </DialogDescription>
+              <div className="grid gap-4 py-2">
+                <Input
+                  placeholder="New Password"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+                <Button onClick={handleChangePassword}>Change Password</Button>
+                {message && <p className="text-sm text-green-500 mt-2">{message}</p>}
+                {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+              </div>
             </>
           ) : (
             <>
@@ -199,8 +198,8 @@ export function ForgotPasswordButton({ isAdmin }: { isAdmin: boolean }) {
               <Button onClick={handlePasswordResetRequest}>
                 Send Password Reset Request
               </Button>
-              {message && <p className="text-green-500 mt-4">{message}</p>}
-              {error && <p className="text-red-500 mt-4">{error}</p>}
+              {message && <p className="text-sm text-green-500 mt-2">{message}</p>}
+              {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
             </>
           )}
         </DialogContent>
