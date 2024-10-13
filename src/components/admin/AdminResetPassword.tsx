@@ -9,6 +9,7 @@ import { ForgotPasswordButton } from "@/components/auth/ForgotPasswordButton";
 export function AdminResetPassword() {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [adminDocId, setAdminDocId] = useState<string | null>(null);
   const [questions, setQuestions] = useState<string[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
@@ -23,7 +24,8 @@ export function AdminResetPassword() {
         const adminSnapshot = await getDocs(adminCollection);
         if (!adminSnapshot.empty) {
           const adminDoc = adminSnapshot.docs[0];
-          setAdminDocId(adminDoc.id);
+          const adminDocID = adminSnapshot.docs[1];
+          setAdminDocId(adminDocID.id);
           const adminData = adminDoc.data();
           setQuestions(adminData.securityQuestions.map((q: any) => q.question));
           setAnswers(adminData.securityQuestions.map((q: any) => q.answer));
@@ -46,11 +48,6 @@ export function AdminResetPassword() {
   };
 
   const handleAnswerSubmit = async () => {
-    if (!adminDocId) {
-      setError("Admin document ID not found");
-      return;
-    }
-
     const allAnswersCorrect = answers.every((answer, index) => answer === providedAnswers[index]);
 
     if (allAnswersCorrect) {
@@ -74,12 +71,14 @@ export function AdminResetPassword() {
       await updateDoc(adminRef, {
         password: newPassword,
       });
+      setMessage("Password updated successfully!")
       setError("");
       setNewPassword("");
       setTimeout(() => {
         setIsOpen(false); // Close the modal after delay
         setIsAnswerCorrect(false);
         setProvidedAnswers([]);
+        setMessage("");
       }, 2000);
     } catch (error) {
       console.error("Error updating password: ", error);
@@ -87,21 +86,10 @@ export function AdminResetPassword() {
     }
   };
 
-  const handleDialogClose = (isOpen: boolean) => {
-    setIsOpen(isOpen);
-    if (!isOpen) {
-      // Reset the state when the dialog is closed
-      setError("");
-      setProvidedAnswers([]);
-      setNewPassword("");
-      setIsAnswerCorrect(false);
-    }
-  };
-
   return (
     <>
       <ForgotPasswordButton onClick={() => setIsOpen(true)} />
-      <Dialog open={isOpen} onOpenChange={handleDialogClose}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px]">
           {!isAnswerCorrect ? (
             <>
@@ -125,7 +113,7 @@ export function AdminResetPassword() {
                   </div>
                 ))}
                 <Button onClick={handleAnswerSubmit}>Submit Answer</Button>
-                {error && <p className="text-sm text-red-500 mt-2 mb-1">{error}</p>}
+                {error && <p className="text-sm text-red-500 mt-4">{error}</p>}
               </div>
             </>
           ) : (
@@ -142,7 +130,8 @@ export function AdminResetPassword() {
                   onChange={(e) => setNewPassword(e.target.value)}
                 />
                 <Button onClick={handleChangePassword}>Change Password</Button>
-                {error && <p className="text-sm text-red-500 mt-2 mb-1">{error}</p>}
+                {message && <p className="text-sm text-green-500 mt-4">{message}</p>}
+                {error && <p className="text-sm text-red-500 mt-4">{error}</p>}
               </div>
             </>
           )}
