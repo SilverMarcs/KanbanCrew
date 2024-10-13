@@ -21,7 +21,7 @@ export default function MemberPage({ params }: MemberPageProps) {
         {loggedInMember && loggedInMember.id === params.member_id ? (
           <MemberDetails memberId={params.member_id} />
         ) : (
-          <p>You don't have permission to view this member's details.</p>
+          <p>You do not have permission to view details of this member.</p>
         )}
       </div>
     </AuthCheck>
