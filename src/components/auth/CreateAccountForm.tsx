@@ -33,10 +33,6 @@ export default function CreateAccountForm() {
         email,
         hoursWorked: [],
       });
-      toast({
-        title: "Account created",
-        description: "Please check your email to verify.",
-      });
       console.log("Account created successfully:", user.email);
     } catch (error) {
       if (error instanceof Error) {
