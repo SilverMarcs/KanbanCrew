@@ -70,18 +70,12 @@ export function ResetSecurityQuestions() {
       setError("");
       setTimeout(() => {
         setIsOpen(false); // Close the modal after delay
+        setMessage("")
       }, 2000);
     } catch (error) {
       console.error("Error updating security questions: ", error);
       setError("Failed to update security questions");
       setMessage("");
-    }
-  };
-  const handleDialogClose = (isOpen: boolean) => {
-    setIsOpen(isOpen);
-    if (!isOpen) {
-      setMessage("");
-      setError("");
     }
   };
 
@@ -90,7 +84,7 @@ export function ResetSecurityQuestions() {
       <Button className="" onClick={() => setIsOpen(true)}>
         Reset Security Questions
       </Button>
-      <Dialog open={isOpen} onOpenChange={handleDialogClose}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px]">
         <>
           <DialogTitle>Set Security Questions</DialogTitle>
