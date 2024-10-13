@@ -85,7 +85,7 @@ export default function SignInForm() {
               onChange={(e) => setPassword(e.target.value)}
             />
           )}
-          <ForgotPasswordButton />
+          <ForgotPasswordButton isAdmin={false}/>
         </div>
         <Button
           onClick={showPassword ? handleSignIn : () => setShowPassword(true)}
