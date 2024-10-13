@@ -138,7 +138,7 @@ export const CreateTaskCard = () => {
               </div>
               <AssigneeField assignee={assignee!} setAssignee={setAssignee} />
               <div className="-mb-10">
-                {/* This negative bottom padding shouldn't be necessary */}
+                {/* This negative bottom padding shouldn not be necessary */}
                 <TaskDescriptionField
                   description={description}
                   setDescription={setDescription}

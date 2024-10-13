@@ -92,7 +92,7 @@ export const SprintDetails: React.FC<SprintDetailsProps> = ({
       );
       const activeSprintSnapshot = await getDocs(activeSprintQuery);
 
-      // If there's an active sprint, end it
+      // If there is an active sprint, end it
       if (!activeSprintSnapshot.empty) {
         const activeSprintDoc = activeSprintSnapshot.docs[0];
         const activeSprintRef = doc(db, "sprints", activeSprintDoc.id);

@@ -83,7 +83,7 @@ export function ForgotPasswordButton() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogTitle>Reset Password</DialogTitle>
           <DialogDescription>
-            Enter your email address and we'll send a password reset request to the admin.
+            Enter email address to send password reset request for
           </DialogDescription>
           <div className="grid gap-4 py-4">
             <Input
