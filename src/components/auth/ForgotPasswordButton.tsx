@@ -18,12 +18,14 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 
-export function ForgotPasswordButton() {
+export function ForgotPasswordButton({ isAdmin }: { isAdmin: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [adminDocId, setAdminDocId] = useState<string | null>(null);
+  const [questions, setQuestions] = useState(["", "", ""]);
+  const [answers, setAnswers] = useState(["", "", ""]);
 
   useEffect(() => {
     const fetchAdminDocId = async () => {
@@ -70,6 +72,39 @@ export function ForgotPasswordButton() {
     }
   };
 
+  const handleQuestionChange = (index: number, value: string) => {
+    const newQuestions = [...questions];
+    newQuestions[index] = value;
+    setQuestions(newQuestions);
+  };
+
+  const handleAnswerChange = (index: number, value: string) => {
+    const newAnswers = [...answers];
+    newAnswers[index] = value;
+    setAnswers(newAnswers);
+  };
+
+  const handleSubmit = async () => {
+    if (!adminDocId) {
+      setError("Admin document ID not found");
+      return;
+    }
+
+    const adminRef = doc(db, "admin", adminDocId);
+    try {
+      await updateDoc(adminRef, {
+        securityQuestions: questions.map((question, index) => ({
+          question,
+          answer: answers[index],
+        })),
+      });
+      alert("Security questions updated successfully");
+    } catch (error) {
+      console.error("Error updating security questions: ", error);
+      alert("Failed to update security questions");
+    }
+  };
+
   return (
     <>
       <Button
@@ -81,24 +116,54 @@ export function ForgotPasswordButton() {
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogTitle>Reset Password</DialogTitle>
-          <DialogDescription>
-            Enter email address to send password reset request for
-          </DialogDescription>
-          <div className="grid gap-4 py-4">
-            <Input
-              id="email"
-              placeholder="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <Button onClick={handlePasswordReset}>
-            Send Password Reset Request
-          </Button>
-          {message && <p className="text-green-500 mt-4">{message}</p>}
-          {error && <p className="text-red-500 mt-4">{error}</p>}
+          {isAdmin ?(
+            <>
+              <DialogTitle>Set Security Questions</DialogTitle>
+              <DialogDescription>
+                Set security questions and their answers
+              </DialogDescription>
+              {questions.map((question, index) => (
+                <div key={index} className="grid gap-4 py-2">
+                  <Input
+                    placeholder={`Question ${index + 1}`}
+                    value={question}
+                    onChange={(e) =>
+                      handleQuestionChange(index, e.target.value)
+                    }
+                  />
+                  <Input
+                    placeholder={`Answer ${index + 1}`}
+                    value={answers[index]}
+                    onChange={(e) =>
+                      handleAnswerChange(index, e.target.value)
+                    }
+                  />
+                </div>
+              ))}
+              <Button onClick={handleSubmit}>Submit</Button>
+            </>
+          ) : (
+            <>
+              <DialogTitle>Reset Password</DialogTitle>
+              <DialogDescription>
+                Enter email address to send password reset request for
+              </DialogDescription>
+              <div className="grid gap-4 py-4">
+                <Input
+                  id="email"
+                  placeholder="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <Button onClick={handlePasswordReset}>
+                Send Password Reset Request
+              </Button>
+              {message && <p className="text-green-500 mt-4">{message}</p>}
+              {error && <p className="text-red-500 mt-4">{error}</p>}
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </>
