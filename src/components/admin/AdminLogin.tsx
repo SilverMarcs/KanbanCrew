@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { getDoc, doc } from "firebase/firestore"; // Import Firestore functions
 import { db } from "@/lib/firebaseConfig";
+import { ForgotPasswordButton } from "../auth/ForgotPasswordButton";
 
 interface AdminLoginProps {
   onLoginSuccess: () => void; // Callback when login succeeds
@@ -83,7 +84,7 @@ export function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
           )}
           <p className="text-sm text-center text-muted-foreground mb-20">
             <a href="#" className="underline">
-              Forgot password?
+              <ForgotPasswordButton isAdmin={true}/>
             </a>
           </p>
         </CardContent>
