@@ -17,8 +17,8 @@ export function ResetSecurityQuestions() {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const [adminDocId, setAdminDocId] = useState<string | null>(null);
-    const [questions, setQuestions] = useState(["", "", ""]);
-    const [answers, setAnswers] = useState(["", "", ""]);
+    const [questions, setQuestions] = useState([""]);
+    const [answers, setAnswers] = useState([""]);
 
     useEffect(() => {
       const fetchAdminDocId = async () => {
@@ -77,33 +77,37 @@ export function ResetSecurityQuestions() {
       setMessage("");
     }
   };
+  const handleDialogClose = (isOpen: boolean) => {
+    setIsOpen(isOpen);
+    if (!isOpen) {
+      setMessage("");
+      setError("");
+    }
+  };
 
   return (
     <>
-      <Button
-        className=""
-        onClick={() => setIsOpen(true)}
-      >
+      <Button className="" onClick={() => setIsOpen(true)}>
         Reset Security Questions
       </Button>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isOpen} onOpenChange={handleDialogClose}>
         <DialogContent className="sm:max-w-[425px]">
         <>
-        <DialogTitle>Set Security Questions</DialogTitle>
-        <DialogDescription>
-        Set security questions and their answers
-        </DialogDescription>
+          <DialogTitle>Set Security Questions</DialogTitle>
+          <DialogDescription>
+            Set security questions and their answers
+          </DialogDescription>
         {questions.map((question, index) => (
         <div key={index} className="grid gap-4 py-2">
             <Input
-            placeholder={`Question ${index + 1}`}
+            placeholder={`Question`}
             value={question}
             onChange={(e) =>
                 handleQuestionChange(index, e.target.value)
             }
             />
             <Input
-            placeholder={`Answer ${index + 1}`}
+            placeholder={`Answer`}
             value={answers[index]}
             onChange={(e) =>
                 handleAnswerChange(index, e.target.value)
@@ -112,6 +116,8 @@ export function ResetSecurityQuestions() {
         </div>
         ))}
         <Button onClick={handleSubmit}>Submit</Button>
+        {message && <p className="text-sm text-green-500 mt-2">{message}</p>}
+        {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
         </>
         </DialogContent>
       </Dialog>
