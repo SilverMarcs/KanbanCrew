@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Sprint } from "@/models/sprints/Sprint";
 import { eachDayOfInterval, format } from "date-fns";
 import { useTasks } from "@/hooks/useTasks";
+import { Timestamp } from "firebase/firestore";
 
 // Register required Chart.js components
 ChartJS.register(
@@ -48,8 +49,12 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
     const start = sprint.startDate.toDate();
     const end = sprint.endDate.toDate();
     const dates = eachDayOfInterval({ start, end });
-    return dates.map((date) => format(date, "MMM dd"));
+    return dates;
   };
+
+  // Generate the formatted dates for the chart labels
+  const sprintDates = generateSprintDates();
+  const formattedDates = sprintDates.map((date) => format(date, "MMM dd"));
 
   // Calculate the total story points for all tasks
   const totalStoryPoints = sprintTasks.reduce((total, task) => {
@@ -57,20 +62,53 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   }, 0);
 
   // Generate the ideal burndown line
-  const idealBurndown = generateSprintDates().map((_, index, dates) => {
-    // Linear interpolation from total story points to 0 over the course of the sprint
-    return totalStoryPoints - (totalStoryPoints / (dates.length - 1)) * index;
+  const idealBurndown = sprintDates.map((_, index) => {
+    return (
+      totalStoryPoints - (totalStoryPoints / (sprintDates.length - 1)) * index
+    );
   });
 
-  // Sample data for the burndown chart
+  // Generate the actual burndown line
+  const actualBurndown = sprintDates.map((date) => {
+    // Calculate remaining story points by subtracting completed tasks up to this day
+    const completedStoryPoints = sprintTasks.reduce((total, task) => {
+      // Ensure completedDate is a Firebase Timestamp and convert it to a Date
+      if (
+        task.status === "Completed" &&
+        task.completedDate instanceof Timestamp
+      ) {
+        const completedDate = format(task.completedDate.toDate(), "yyyy-MM-dd");
+        const currentDate = format(date, "yyyy-MM-dd");
+
+        // Compare the formatted dates without the time part
+        if (completedDate <= currentDate) {
+          return total + (task.storyPoints || 0);
+        }
+      }
+      return total;
+    }, 0);
+
+    // Subtract completed story points from total
+    return totalStoryPoints - completedStoryPoints;
+  });
+
+  // Chart data for the burndown chart
   const chartData = {
-    labels: generateSprintDates(),
+    labels: formattedDates,
     datasets: [
       {
         label: "Ideal Burndown",
         data: idealBurndown,
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
+        fill: false,
+        tension: 0.1,
+      },
+      {
+        label: "Actual Progress",
+        data: actualBurndown,
+        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
         fill: false,
         tension: 0.1,
       },
