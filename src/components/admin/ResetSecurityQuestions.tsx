@@ -5,11 +5,9 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { db } from "@/lib/firebaseConfig"; // Import your Firestore instance
+import { db } from "@/lib/firebaseConfig";
 import { collection, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 
 export function ResetSecurityQuestions() {
@@ -71,6 +69,8 @@ export function ResetSecurityQuestions() {
       setTimeout(() => {
         setIsOpen(false); // Close the modal after delay
         setMessage("")
+        setQuestions([""]);
+        setAnswers([""]);
       }, 2000);
     } catch (error) {
       console.error("Error updating security questions: ", error);
