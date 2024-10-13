@@ -83,7 +83,7 @@ export function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
             </p>
           )}
           <p className="text-sm text-center text-muted-foreground mb-20">
-            <a href="#" className="underline">
+            <a className="underline">
               <ForgotPasswordButton isAdmin={true}/>
             </a>
           </p>
