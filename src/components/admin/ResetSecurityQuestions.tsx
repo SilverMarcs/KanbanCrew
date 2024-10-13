@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,17 +10,36 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { db } from "@/lib/firebaseConfig"; // Import your Firestore instance
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 
 export function ResetSecurityQuestions() {
     const [isOpen, setIsOpen] = useState(false);
-    const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const [adminDocId, setAdminDocId] = useState<string | null>(null);
     const [questions, setQuestions] = useState(["", "", ""]);
     const [answers, setAnswers] = useState(["", "", ""]);
 
+    useEffect(() => {
+      const fetchAdminDocId = async () => {
+        try {
+          const adminCollection = collection(db, "admin");
+          const adminSnapshot = await getDocs(adminCollection);
+          if (!adminSnapshot.empty) {
+            const adminDoc = adminSnapshot.docs[0];
+            setAdminDocId(adminDoc.id);
+          } else {
+            setError("No admin document found");
+          }
+        } catch (error) {
+          console.error("Error fetching admin document ID", error);
+          setError("Failed to fetch admin document ID");
+        }
+      };
+  
+      fetchAdminDocId();
+    }, []);
+    
   const handleQuestionChange = (index: number, value: string) => {
     const newQuestions = [...questions];
     newQuestions[index] = value;
@@ -49,7 +68,6 @@ export function ResetSecurityQuestions() {
       });
       setMessage("Security questions updated successfully");
       setError("");
-      setEmail("");
       setTimeout(() => {
         setIsOpen(false); // Close the modal after delay
       }, 2000);
