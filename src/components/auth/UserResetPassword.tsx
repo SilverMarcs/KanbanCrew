@@ -35,20 +35,10 @@ export function UserResetPassword() {
     }
   };
 
-  const handleDialogClose = (isOpen: boolean) => {
-    setIsOpen(isOpen);
-    if (!isOpen) {
-      // Reset the state when the dialog is closed
-      setMessage("");
-      setError("");
-      setEmail("");
-    }
-  };
-
   return (
     <>
       <ForgotPasswordButton onClick={() => setIsOpen(true)} />
-      <Dialog open={isOpen} onOpenChange={handleDialogClose}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogTitle>Reset Password</DialogTitle>
           <DialogDescription>
