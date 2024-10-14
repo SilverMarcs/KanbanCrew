@@ -28,10 +28,10 @@ export function AdminTeamBoard() {
           setStartDate={setStartDate}
           setEndDate={setEndDate}
         />
-        <AddTeamMemberDialog />
-      </div>
-      <div>
-        <ResetSecurityQuestions />
+        <div className="flex space-x-4">
+          <AddTeamMemberDialog />
+          <ResetSecurityQuestions />
+        </div>
       </div>
 
       {startDate && endDate && (
