@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react"; // Assuming you are using lucide-react for icons
 import { updateDoc, doc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { ForgotPasswordButton } from "@/components/auth/ForgotPasswordButton";
@@ -13,7 +15,8 @@ export function AdminResetPassword() {
   const [adminDocId, setAdminDocId] = useState<string | null>(null);
   const [questions, setQuestions] = useState<string[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
-  const [providedAnswers, setProvidedAnswers] = useState<string[]>([]);
+  const [selectedQuestion, setSelectedQuestion] = useState<string>("");
+  const [providedAnswer, setProvidedAnswer] = useState<string>("");
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
   const [newPassword, setNewPassword] = useState("");
 
@@ -24,8 +27,7 @@ export function AdminResetPassword() {
         const adminSnapshot = await getDocs(adminCollection);
         if (!adminSnapshot.empty) {
           const adminDoc = adminSnapshot.docs[0];
-          const adminDocID = adminSnapshot.docs[1];
-          setAdminDocId(adminDocID.id);
+          setAdminDocId(adminDoc.id);
           const adminData = adminDoc.data();
           setQuestions(adminData.securityQuestions.map((q: any) => q.question));
           setAnswers(adminData.securityQuestions.map((q: any) => q.answer));
@@ -41,20 +43,13 @@ export function AdminResetPassword() {
     fetchAdminDocId();
   }, []);
 
-  const handleProvidedAnswerChange = (index: number, value: string) => {
-    const newProvidedAnswers = [...providedAnswers];
-    newProvidedAnswers[index] = value;
-    setProvidedAnswers(newProvidedAnswers);
-  };
-
   const handleAnswerSubmit = async () => {
-    const allAnswersCorrect = answers.every((answer, index) => answer === providedAnswers[index]);
-
-    if (allAnswersCorrect) {
+    const questionIndex = questions.indexOf(selectedQuestion);
+    if (questionIndex !== -1 && answers[questionIndex] === providedAnswer) {
       setIsAnswerCorrect(true);
       setError("");
     } else {
-      setError("Incorrect answer to the security questions");
+      setError("Incorrect answer to the security question");
       setIsAnswerCorrect(false);
     }
   };
@@ -71,13 +66,14 @@ export function AdminResetPassword() {
       await updateDoc(adminRef, {
         password: newPassword,
       });
-      setMessage("Password updated successfully!")
+      setMessage("Password updated successfully!");
       setError("");
       setNewPassword("");
       setTimeout(() => {
         setIsOpen(false); // Close the modal after delay
         setIsAnswerCorrect(false);
-        setProvidedAnswers([]);
+        setSelectedQuestion("");
+        setProvidedAnswer("");
         setMessage("");
       }, 2000);
     } catch (error) {
@@ -86,32 +82,54 @@ export function AdminResetPassword() {
     }
   };
 
+  const handleDialogClose = (isOpen: boolean) => {
+    setIsOpen(isOpen);
+    if (!isOpen) {
+      // Reset the state when the dialog is closed
+      setError("");
+      setProvidedAnswer("");
+      setNewPassword("");
+      setIsAnswerCorrect(false);
+      setSelectedQuestion("");
+    }
+  };
+
   return (
     <>
       <ForgotPasswordButton onClick={() => setIsOpen(true)} />
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isOpen} onOpenChange={handleDialogClose}>
         <DialogContent className="sm:max-w-[425px]">
           {!isAnswerCorrect ? (
             <>
-              <DialogTitle>Answer Security Questions</DialogTitle>
+              <DialogTitle>Answer Security Question</DialogTitle>
               <DialogDescription>
-                Answer the security questions to reset your password.
+                Answer one of the security questions to reset your password.
               </DialogDescription>
               <div className="grid gap-4 py-2">
-                {questions.map((question, index) => (
-                  <div key={index}>
-                    <Input
-                      placeholder={`Question`}
-                      value={question}
-                      disabled
-                    />
-                    <Input
-                      placeholder={`Answer`}
-                      value={providedAnswers[index] || ""}
-                      onChange={(e) => handleProvidedAnswerChange(index, e.target.value)}
-                    />
-                  </div>
-                ))}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="flex justify-between px-3 py-2">
+                      <span>{selectedQuestion || "Select a question"}</span>
+                      <ChevronDown className="ml-2" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-full border border-gray-300">
+                    {questions.map((question, index) => (
+                      <DropdownMenuItem
+                        key={index}
+                        onSelect={() => setSelectedQuestion(question)}
+                        className="w-full text-left px-4 py-2"
+                      >
+                        {question}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Input
+                  placeholder={`Answer`}
+                  value={providedAnswer}
+                  onChange={(e) => setProvidedAnswer(e.target.value)}
+                />
                 <Button onClick={handleAnswerSubmit}>Submit Answer</Button>
                 {error && <p className="text-sm text-red-500 mt-4">{error}</p>}
               </div>
