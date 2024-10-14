@@ -54,7 +54,7 @@ export default function SignInForm() {
     } catch (error) {
       console.error("Error checking email methods:", error);
       toast({
-        title: "Error",
+        title: "Invalid Email",
         description: "An error occurred. Please try again.",
         variant: "destructive",
       });
