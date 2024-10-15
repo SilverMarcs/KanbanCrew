@@ -7,6 +7,7 @@ import { DateRangePicker } from "@/components/DateRangePicker";
 import { AddTeamMemberDialog } from "@/components/admin/AddTeamMemberDialog";
 import { MembersTable } from "../team-board/MembersTable";
 import { PasswordBell } from "@/components/admin/PasswordBell";
+import { ResetSecurityQuestions } from "@/components/admin/ResetSecurityQuestions";
 
 export function AdminTeamBoard() {
   const members = useMembers();
@@ -27,7 +28,10 @@ export function AdminTeamBoard() {
           setStartDate={setStartDate}
           setEndDate={setEndDate}
         />
-        <AddTeamMemberDialog />
+        <div className="flex space-x-4">
+          <AddTeamMemberDialog />
+          <ResetSecurityQuestions />
+        </div>
       </div>
 
       {startDate && endDate && (

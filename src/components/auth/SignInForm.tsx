@@ -10,8 +10,8 @@ import {
   signInWithEmailAndPassword,
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
-import { ForgotPasswordButton } from "./ForgotPasswordButton";
 import { useToast } from "@/components/ui/use-toast";
+import { UserResetPassword } from "./UserResetPassword";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -85,7 +85,7 @@ export default function SignInForm() {
               onChange={(e) => setPassword(e.target.value)}
             />
           )}
-          <ForgotPasswordButton />
+          <UserResetPassword/>
         </div>
         <Button
           onClick={showPassword ? handleSignIn : () => setShowPassword(true)}
