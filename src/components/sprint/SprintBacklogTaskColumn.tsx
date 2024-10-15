@@ -1,7 +1,6 @@
 import React from "react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { Task } from "@/models/Task";
-import { Grip } from "lucide-react";
 import { TaskCardCompact } from "@/components/task/TaskCardCompact";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -22,7 +21,6 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
     <Droppable droppableId={droppableId}>
       {(provided) => (
         <div className="flex flex-col">
-          {/* Make this area scrollable with fixed height */}
           <ScrollArea
             className="h-[500px]"
             {...provided.droppableProps}
@@ -43,7 +41,6 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
                       <TaskCardCompact
                         task={task}
                         members={[]}
-                        topTrailingChild={<Grip size={20} />}
                         isEditable={false}
                       />
                     </div>
