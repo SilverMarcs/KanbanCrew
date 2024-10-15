@@ -17,7 +17,7 @@ const SprintList: React.FC = () => {
         <h1 className="text-5xl font-bold">Sprints</h1>
       </div>
 
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4 max-w-4xl mx-auto">
         {sortedSprints.map((sprint) => (
           <motion.div
             key={sprint.id}
