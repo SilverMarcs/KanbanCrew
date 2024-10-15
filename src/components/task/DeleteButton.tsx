@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { useRouter } from "next/navigation";
 
 // TODO: make this a generic delete button where you pass in delete function
 interface DeleteButtonProps {
