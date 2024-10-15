@@ -53,7 +53,8 @@ export function TaskProjectStageField({
             }`}
             disabled={disabled} // Disable button when disabled is true
           >
-            {projectStage} <ChevronDown className="ml-2 h-4 w-4" />
+            {projectStage}{" "}
+            {!disabled && <ChevronDown className="ml-2 h-4 w-4" />}
           </Button>
         </DropdownMenuTrigger>
         {!disabled && (

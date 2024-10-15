@@ -82,8 +82,8 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
               <div className="text-start">
                 <div className="flex space-x-3">
                   <TaskPriorityField
-                    taskId={task.id}
                     priority={priority}
+                    taskId={task.id}
                     setPriority={(newPriority) => {
                       setPriority(newPriority);
                       logHistory();
@@ -91,8 +91,8 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     disabled={!isEditable}
                   />
                   <TaskTypeField
-                    taskId={task.id}
                     currentType={taskType}
+                    taskId={task.id}
                     setTaskType={(newType) => {
                       setTaskType(newType);
                       logHistory();
@@ -145,8 +145,8 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
               <div className="mt-14 ml-6">
                 {isKanbanBoard ? (
                   <TimeLogs
-                    taskId={task.id}
                     timeLogs={task.timeLogs}
+                    taskId={task.id}
                     members={members}
                     assignee={assignee || members[0]}
                   />
@@ -172,16 +172,19 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                 <div className="flex items-center space-x-2 justify-end">
                   <TaskTagField
                     selectedTags={selectedTags}
+                    taskId={task.id}
                     onTagChange={(newTags) => {
                       setSelectedTags(newTags);
                       logHistory();
                     }}
-                    taskId={task.id}
+                    disabled={!isEditable}
                   />
-                  <DeleteButton
-                    taskId={task.id}
-                    closeDialog={onClose || (() => {})}
-                  />
+                  {isEditable && (
+                    <DeleteButton
+                      taskId={task.id}
+                      closeDialog={onClose || (() => {})}
+                    />
+                  )}
                 </div>
               </div>
             </div>

@@ -22,12 +22,14 @@ interface TaskTagFieldProps {
   selectedTags: Tag[];
   onTagChange: (tags: Tag[]) => void;
   taskId?: string;
+  disabled?: boolean;
 }
 
 export const TaskTagField: FC<TaskTagFieldProps> = ({
   selectedTags,
   onTagChange,
   taskId,
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const tags = Object.values(Tag);
@@ -75,22 +77,24 @@ export const TaskTagField: FC<TaskTagFieldProps> = ({
       </ScrollArea>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <Button
-            // className="bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors"
-            variant="secondary"
-            onClick={() => setIsOpen(true)}
-          >
-            {selectedTags.length === 0 ? (
-              <>
-                <span className="text-sm text-secondary-foreground text- mr-2">
-                  Select a tag
-                </span>
+          {!disabled && (
+            <Button
+              // className="bg-transparent hover:bg-gray-100 border-gray-300 hover:border-gray-400 transition-colors"
+              variant="secondary"
+              onClick={() => setIsOpen(true)}
+            >
+              {selectedTags.length === 0 ? (
+                <>
+                  <span className="text-sm text-secondary-foreground text- mr-2">
+                    Select a tag
+                  </span>
+                  <CirclePlus size={20} />
+                </>
+              ) : (
                 <CirclePlus size={20} />
-              </>
-            ) : (
-              <CirclePlus size={20} />
-            )}
-          </Button>
+              )}
+            </Button>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>Tags</DropdownMenuLabel>
