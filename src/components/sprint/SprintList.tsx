@@ -17,17 +17,14 @@ const SprintList: React.FC = () => {
         <h1 className="text-5xl font-bold">Sprints</h1>
       </div>
 
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4 max-w-4xl mx-auto">
         {sortedSprints.map((sprint) => (
-          <motion.div
+          <div
             key={sprint.id}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.2 }}
-            whileHover={{ scale: 1.01 }}
+            className="hover:scale-105 transition-transform duration-300"   
           >
             <SprintCard sprint={sprint} />
-          </motion.div>
+          </div>
         ))}
         <CreateSprintCard />
       </div>

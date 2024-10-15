@@ -149,6 +149,9 @@ textarea {
 }
 
 .grayed-out {
-  opacity: 0.65;
+  filter: grayscale(100%) brightness(80%); /* Makes it darker and fully gray */
+  opacity: 0.83; /* You can adjust this to be lighter or darker */
+  background-color: rgba(128, 128, 128, 0.2); /* Optional: Adds a subtle gray background */
 }
+
 

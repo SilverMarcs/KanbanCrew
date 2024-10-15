@@ -19,8 +19,8 @@ const CompletedSprintPage = ({ params }: { params: { sprint_id: string } }) => {
   if (!selectedSprint) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col items-center space-y-12 w-full mt-12">
-      <h1 className="uppercase text-5xl">Completed Sprint</h1>
+    <div className="p-16">
+      <h1 className="text-5xl font-bold">Completed Sprint</h1>
       <CompletedSprint sprint={selectedSprint} tasks={sprintTasks} />
     </div>
   );
