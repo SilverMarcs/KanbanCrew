@@ -18,8 +18,8 @@ const CompletedSprint: React.FC<CompletedSprintProps> = ({ sprint, tasks }) => {
   );
 
   const columns = {
-    [Status.NotStarted]: [],
-    [Status.InProgress]: [],
+    [Status.NotStarted]: [], // Empty because the sprint is completed
+    [Status.InProgress]: [], // Empty because the sprint is completed
     [Status.Completed]: completedTasks,
   };
 
@@ -32,9 +32,7 @@ const CompletedSprint: React.FC<CompletedSprintProps> = ({ sprint, tasks }) => {
         {Object.entries(columns).map(([status, columnTasks]) => (
           <div
             key={status}
-            className={`flex-1 min-w-[26rem] max-w-[26rem] ${
-              status !== Status.Completed ? "grayed-out" : ""
-            }`}
+            className="flex-1 min-w-[26rem] max-w-[26rem] grayed-out" // Apply "grayed-out" class to all columns
           >
             <div className="p-4 rounded-lg min-h-[500px] kanban-board">
               <h2 className="text-xl font-semibold mb-4 drop-shadow">
