@@ -20,6 +20,11 @@ import {
 } from "@/components/ui/dialog";
 import { useMembers } from "@/hooks/useMembers";
 import { TaskStatusBadge } from "@/components/task/TaskStatusBadge";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { HistoryLog } from "@/models/HistoryLog";
+import { Timestamp, updateDoc } from "@firebase/firestore";
+import { db } from "@/lib/firebaseConfig";
+import { doc } from "firebase/firestore";
 
 interface TaskCardExpandedProps {
   task: Task;
@@ -35,6 +40,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
   isKanbanBoard = false,
 }) => {
   const members = useMembers();
+  const { member: currentMember } = useAuthContext();
 
   const [title, setTitle] = useState(task.title);
   const [storyPoints, setStoryPoints] = useState(task.storyPoints);
@@ -44,6 +50,25 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
   const [projectStage, setProjectStage] = useState(task.projectStage);
   const [description, setDescription] = useState(task.description);
   const [assignee, setAssignee] = useState(task.assignee);
+
+  const logHistory = () => {
+    if (!currentMember) {
+      throw new Error("Current member is not available");
+    }
+
+    const historyLog: HistoryLog = {
+      member: doc(db, "members", currentMember.id),
+      time: Timestamp.now(),
+    };
+
+    try {
+      updateDoc(doc(db, "tasks", task.id), {
+        historyLogs: [...task.historyLogs, historyLog],
+      });
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -56,43 +81,60 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                 <div className="flex space-x-3">
                   <TaskPriorityField
                     priority={priority}
-                    setPriority={setPriority}
+                    setPriority={(newPriority) => {
+                      setPriority(newPriority);
+                      logHistory();
+                    }}
                     taskId={task.id}
                   />
                   <TaskTypeField
                     taskId={task.id}
                     currentType={taskType}
-                    setTaskType={setTaskType}
+                    setTaskType={(newType) => {
+                      setTaskType(newType);
+                      logHistory();
+                    }}
                   />
                 </div>
                 <div className="mt-1">
                   <TaskTitleField
                     title={title}
                     taskId={task.id}
-                    setTitle={setTitle}
+                    setTitle={(newTitle) => {
+                      setTitle(newTitle);
+                      logHistory();
+                    }}
                   />
                 </div>
                 <div className="flex items-center space-x-1">
                   <StoryPointsField
                     storyPoints={storyPoints}
                     taskId={task.id}
-                    setStoryPoints={setStoryPoints}
+                    setStoryPoints={(newStoryPoints) => {
+                      setStoryPoints(newStoryPoints);
+                      logHistory();
+                    }}
                   />
                   <TaskStatusBadge status={task.status} />
                 </div>
                 <AssigneeField
                   assignee={assignee}
-                  setAssignee={setAssignee}
+                  setAssignee={(newAssignee) => {
+                    setAssignee(newAssignee);
+                    logHistory();
+                  }}
                   taskId={task.id}
                 />
                 <TaskDescriptionField
                   description={description}
                   taskId={task.id}
-                  setDescription={setDescription}
+                  setDescription={(newDescription) => {
+                    setDescription(newDescription);
+                    logHistory();
+                  }}
                 />
               </div>
               <div className="mt-14 ml-6">
-                {/* Conditionally render TimeLogs or HistoryLogs */}
                 {isKanbanBoard ? (
                   <TimeLogs
                     taskId={task.id}
@@ -112,13 +154,19 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
               <div className="flex justify-between items-center">
                 <TaskProjectStageField
                   projectStage={projectStage}
-                  setProjectStage={setProjectStage}
+                  setProjectStage={(newStage) => {
+                    setProjectStage(newStage);
+                    logHistory();
+                  }}
                   taskId={task.id}
                 />
                 <div className="flex items-center space-x-2 justify-end">
                   <TaskTagField
                     selectedTags={selectedTags}
-                    onTagChange={setSelectedTags}
+                    onTagChange={(newTags) => {
+                      setSelectedTags(newTags);
+                      logHistory();
+                    }}
                     taskId={task.id}
                   />
                   <DeleteButton
