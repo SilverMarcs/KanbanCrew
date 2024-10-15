@@ -1,80 +1,58 @@
-import { Layers } from "lucide-react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { Layers, ChevronLeft, ChevronRight } from "lucide-react";
+
+const images = ['/images/slideshow_BdownChart.png', '/images/slideshow_EffortGraph.png'];
 
 export function WelcomeSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [fade, setFade] = useState(true); // State for fade animation
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const slides = [
-    { src: "/images/Welcome Slide1.png", alt: "Welcome Slide 1", description: "Burntdown Chart" },
-    { src: "/images/Welcome Slide2.png", alt: "Welcome Slide 2", description: "Effort Graph" },
-    ];
-
-  const nextSlide = () => {
-    setFade(false); // Start fading out
-    setTimeout(() => {
-      setCurrentSlide((currentSlide + 1) % slides.length);
-      setFade(true); // Fade in after changing the slide
-    }, 500); // Duration of fade-out before changing the slide
-  };
-
-  const prevSlide = () => {
-    setFade(false); // Start fading out
-    setTimeout(() => {
-      setCurrentSlide((currentSlide - 1 + slides.length) % slides.length);
-      setFade(true); // Fade in after changing the slide
-    }, 500); // Duration of fade-out before changing the slide
-  };
-
-  // Automatically change the slide every 3 seconds
   useEffect(() => {
-    const intervalId = setInterval(nextSlide, 3000);
-    return () => clearInterval(intervalId); // Clean up the interval on component unmount
-  }, [currentSlide]);
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 2000); // Change image every 5 seconds
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
 
   return (
-    <div className="flex">
-      {/* Welcome Text Section */}
-      <div className="w-1/2 bg-gradient-to-r from-black via-gray-900 to-gray-800 text-white p-12 flex flex-col justify-between">
-        <div className="flex items-center space-x-2 mb-8">
-          <Layers className="h-10 w-10 text-teal-500" />
-          <span className="font-extrabold text-3xl tracking-widest">KanbanCrew Inc</span>
-        </div>
-        <div className="space-y-6">
-          <h1 className="text-8xl font-extrabold text-teal-400">Welcome</h1>
-          <p className="text-2xl">
-            Streamline your project management with our intuitive Kanban board system.
-          </p>
-        </div>
-        <div className="space-y-2 mt-6">
-          <p className="text-lg font-medium text-gray-400">
-            Be productive. Be efficient. Be AGILE.
-          </p>
-        </div>
+    <div className="w-2/3 bg-background flex-col justify-between flex p-8">
+      <div className="flex items-center space-x-2">
+        <Layers className="h-6 w-6" />
+        <span className="font-bold text-xl">KanbanCrew Inc</span>
       </div>
-
-      {/* Sliding Demo Section */}
-      <div className="w-1/2 relative overflow-hidden">
-        <img
-          src={slides[currentSlide].src}
-          alt={slides[currentSlide].alt}
-          className={`object-cover w-full h-full transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}
+      <div className="relative w-full h-96">
+        <Image
+          src={images[currentImageIndex]}
+          alt={`Slide ${currentImageIndex + 1}`}
+          layout="fill"
+          objectFit="contain"
         />
-        <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-40 text-white p-4">
-          <p>{slides[currentSlide].description}</p>
-        </div>
         <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white bg-teal-500 p-2 rounded-full"
+          onClick={prevImage}
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
         >
-          &#8249;
+          <ChevronLeft className="h-6 w-6" />
         </button>
         <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-teal-500 p-2 rounded-full"
+          onClick={nextImage}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
         >
-          &#8250;
+          <ChevronRight className="h-6 w-6" />
         </button>
+      </div>
+      <div className="space-y-2">
+        <p className="text-sm text-muted-foreground">
+          Streamline your project management with our intuitive Kanban board system.
+        </p>
       </div>
     </div>
   );
