@@ -55,12 +55,7 @@ export function AdminResetPassword() {
   };
 
   const handleChangePassword = async () => {
-    if (!adminDocId) {
-      setError("Admin document ID not found");
-      return;
-    }
-
-    const adminRef = doc(db, "admin", adminDocId);
+    const adminRef = doc(db, "admin", "secret");
 
     try {
       await updateDoc(adminRef, {
