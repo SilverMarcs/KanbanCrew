@@ -119,6 +119,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                       setStoryPoints(newStoryPoints);
                       logHistory();
                     }}
+                    disabled={!isEditable}
                   />
                   <TaskStatusBadge status={task.status} />
                 </div>
