@@ -26,7 +26,7 @@ export const SignOut = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="focus:outline-none">
+        <button className="focus:outline-none rounded-full hover:border-white shadow-lg transition-all">
           <UserAvatar member={member} />
         </button>
       </PopoverTrigger>
