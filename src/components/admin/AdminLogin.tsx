@@ -26,19 +26,19 @@ export function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const fetchPassword = async () => {
+    const docRef = doc(db, "admin", "secret");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setAdminPassword(docSnap.data().password);
+    } else {
+      console.error("No admin password found in Firestore.");
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     // Fetch the admin password from Firestore when the component mounts
-    const fetchPassword = async () => {
-      const docRef = doc(db, "admin", "secret");
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setAdminPassword(docSnap.data().password);
-      } else {
-        console.error("No admin password found in Firestore.");
-      }
-      setLoading(false);
-    };
-
     fetchPassword();
   }, []);
 
@@ -85,7 +85,7 @@ export function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
           )}
           <p className="text-sm text-center text-muted-foreground mb-20">
             <a className="underline">
-              <AdminResetPassword/>
+              <AdminResetPassword onPasswordChange={fetchPassword} />
             </a>
           </p>
         </CardContent>
