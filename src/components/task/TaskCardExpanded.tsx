@@ -20,6 +20,11 @@ import {
 } from "@/components/ui/dialog";
 import { useMembers } from "@/hooks/useMembers";
 import { TaskStatusBadge } from "@/components/task/TaskStatusBadge";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { HistoryLog } from "@/models/HistoryLog";
+import { Timestamp, updateDoc } from "@firebase/firestore";
+import { db } from "@/lib/firebaseConfig";
+import { doc } from "firebase/firestore";
 
 interface TaskCardExpandedProps {
   task: Task;
@@ -44,6 +49,28 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
   const [projectStage, setProjectStage] = useState(task.projectStage);
   const [description, setDescription] = useState(task.description);
   const [assignee, setAssignee] = useState(task.assignee);
+  const { member: currentMember } = useAuthContext();
+
+  const logHistory = () => {
+    if (!currentMember) {
+      throw new Error("Current member is not available");
+    }
+
+    // Create a new history log
+    const historyLog: HistoryLog = {
+      member: doc(db, "members", currentMember.id),
+      time: Timestamp.now(),
+    };
+
+    // Update the task with the new history log
+    try {
+      updateDoc(doc(db, "tasks", task.id), {
+        historyLogs: [...task.historyLogs, historyLog],
+      });
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -56,7 +83,10 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                 <div className="flex space-x-3">
                   <TaskPriorityField
                     priority={priority}
-                    setPriority={setPriority}
+                    setPriority={(newPriority) => {
+                      setPriority(newPriority);
+                      logHistory();
+                    }}
                     taskId={task.id}
                   />
                   <TaskTypeField
