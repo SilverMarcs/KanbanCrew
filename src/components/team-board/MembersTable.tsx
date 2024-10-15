@@ -116,19 +116,19 @@ export function MembersTable({
                 >
                   <ChartBarIcon /> Graph
                 </Button>
+              </TableCell>
+              <TableCell>
                 <Button
                   variant="secondary"
                   onClick={() => handleEditClick(member)}
-                  className="ml-2"
                 >
-                  <PencilIcon /> Edit
+                  <PencilIcon />
                 </Button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
       {selectedMember && showGraph && (
         <EffortGraph
           hoursWorked={selectedMember.hoursWorked}
@@ -136,7 +136,6 @@ export function MembersTable({
           onClose={() => setShowGraph(false)}
         />
       )}
-
       {selectedMember && isEditDialogOpen && (
         <MemberEdit
           member={selectedMember}
