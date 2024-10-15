@@ -44,6 +44,7 @@ const CompletedSprint: React.FC<CompletedSprintProps> = ({ sprint, tasks }) => {
                     task={task}
                     members={members}
                     isKanbanBoard={true}
+                    isEditable={false}
                   />
                 </div>
               ))}
