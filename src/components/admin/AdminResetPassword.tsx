@@ -8,7 +8,11 @@ import { updateDoc, doc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { ForgotPasswordButton } from "@/components/auth/ForgotPasswordButton";
 
-export function AdminResetPassword() {
+interface AdminResetPasswordProps {
+  onPasswordChange: () => void; // Callback when password is changed
+}
+
+export function AdminResetPassword({ onPasswordChange }: AdminResetPasswordProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -70,6 +74,7 @@ export function AdminResetPassword() {
         setSelectedQuestion("");
         setProvidedAnswer("");
         setMessage("");
+        onPasswordChange(); // Call the callback function
       }, 2000);
     } catch (error) {
       console.error("Error updating password: ", error);
