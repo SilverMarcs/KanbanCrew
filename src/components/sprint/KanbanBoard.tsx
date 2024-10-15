@@ -7,7 +7,6 @@ import { Status } from "@/models/Status";
 import { useMembers } from "@/hooks/useMembers";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { Grip } from "lucide-react";
 import { toast } from "../ui/use-toast";
 
 interface KanbanBoardProps {
