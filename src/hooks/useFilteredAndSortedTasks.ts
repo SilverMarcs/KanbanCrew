@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Task } from "@/models/Task";
 import { Tag } from "@/models/Tag";
 import { SortField, SortOrder } from "@/components/task/SortButton";
-import { Priority, PriorityOrder } from "@/models/Priority";
+import { PriorityOrder } from "@/models/Priority";
 
 export const useFilteredAndSortedTasks = (
   tasks: Task[],
