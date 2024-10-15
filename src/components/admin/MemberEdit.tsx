@@ -196,7 +196,7 @@ export const MemberEdit: React.FC<MemberEditProps> = ({ member, onClose }) => {
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete{" "}
-              {firstName} {lastName}'s account and remove their data from our
+              {firstName} {lastName} account and remove their data from our
               servers.
             </AlertDialogDescription>
           </AlertDialogHeader>

@@ -38,6 +38,8 @@ const TimeLogs: React.FC<TimeLogsProps> = ({
   const [minutes, setMinutes] = useState<string>("00");
   const [seconds, setSeconds] = useState<string>("00");
 
+  // TODO: maek it not ediatable when spirnt is done
+
   useEffect(() => {
     if (!timeLogs || !date) {
       return;
