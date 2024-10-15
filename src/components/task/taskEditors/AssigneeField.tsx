@@ -71,8 +71,7 @@ export const AssigneeField = ({
 
           {!disabled && (
             <DropdownMenuContent align="start" className="p-0">
-              {/* Scrollable Area for member list */}
-              <ScrollArea className="mt-1 mb-1 mr-1 h-48"> {/* Adjust height as needed */}
+              <ScrollArea className="mt-1 mb-1 mr-1 h-48"> 
                 {members.map((member) => (
                   <DropdownMenuItem
                     key={member.id}
