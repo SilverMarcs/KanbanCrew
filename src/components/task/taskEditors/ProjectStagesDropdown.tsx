@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Ghost } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { ProjectStage } from "@/models/ProjectStage";
@@ -17,12 +17,15 @@ export function TaskProjectStageField({
   projectStage,
   setProjectStage,
   taskId,
+  disabled = false,
 }: {
   projectStage: ProjectStage;
   setProjectStage: (stage: ProjectStage) => void;
   taskId?: string;
+  disabled?: boolean;
 }) {
   const handleStageChange = async (value: string) => {
+    if (disabled) return; // Block changes if disabled
     const newStage = value as ProjectStage;
     setProjectStage(newStage);
 
@@ -45,25 +48,31 @@ export function TaskProjectStageField({
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="bg-transparent font-bold hover:bg-transparent flex items-center"
+            className={`bg-transparent font-bold flex items-center ${
+              disabled ? "" : "hover:bg-transparent"
+            }`}
+            disabled={disabled} // Disable button when disabled is true
           >
-            {projectStage} <ChevronDown className="ml-2 h-4 w-4" />
+            {projectStage}{" "}
+            {!disabled && <ChevronDown className="ml-2 h-4 w-4" />}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>Project Stage</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup
-            value={projectStage}
-            onValueChange={handleStageChange}
-          >
-            {Object.values(ProjectStage).map((stage) => (
-              <DropdownMenuRadioItem key={stage} value={stage}>
-                {stage}
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
+        {!disabled && (
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Project Stage</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup
+              value={projectStage}
+              onValueChange={handleStageChange}
+            >
+              {Object.values(ProjectStage).map((stage) => (
+                <DropdownMenuRadioItem key={stage} value={stage}>
+                  {stage}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        )}
       </DropdownMenu>
     </div>
   );

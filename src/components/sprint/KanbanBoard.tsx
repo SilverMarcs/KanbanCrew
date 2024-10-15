@@ -119,6 +119,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                             task={task}
                             members={members}
                             isKanbanBoard={true}
+                            isEditable={false}
                           />
                         </div>
                       )}

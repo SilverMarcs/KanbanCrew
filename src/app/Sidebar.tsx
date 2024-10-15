@@ -37,7 +37,7 @@ const Sidebar = () => {
             key={index}
             href={item.link}
             className={cn(
-              "p-2 rounded-md",
+              "p-2 rounded-md hover:scale-105 transition-all duration-200",
               pathname.startsWith(item.link)
                 ? "bg-primary/95 text-primary-foreground"
                 : "text-secondary-foreground"

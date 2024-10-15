@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Scroll, Bug } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
@@ -15,11 +14,13 @@ interface TaskCardCompactProps {
   task: Task;
   members: Member[];
   isKanbanBoard?: boolean;
+  isEditable?: boolean;
 }
 
 export const TaskCardCompact: React.FC<TaskCardCompactProps> = ({
   task,
   isKanbanBoard = false,
+  isEditable = true,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -66,6 +67,7 @@ export const TaskCardCompact: React.FC<TaskCardCompactProps> = ({
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         isKanbanBoard={isKanbanBoard}
+        isEditable={isEditable}
       />
     </>
   );

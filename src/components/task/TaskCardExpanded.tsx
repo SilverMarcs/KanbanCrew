@@ -31,6 +31,7 @@ interface TaskCardExpandedProps {
   isOpen: boolean;
   onClose: () => void;
   isKanbanBoard?: boolean;
+  isEditable?: boolean;
 }
 
 export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
@@ -38,6 +39,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
   isOpen,
   onClose,
   isKanbanBoard = false,
+  isEditable = true,
 }) => {
   const members = useMembers();
   const { member: currentMember } = useAuthContext();
@@ -81,19 +83,21 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                 <div className="flex space-x-3">
                   <TaskPriorityField
                     priority={priority}
+                    taskId={task.id}
                     setPriority={(newPriority) => {
                       setPriority(newPriority);
                       logHistory();
                     }}
-                    taskId={task.id}
+                    disabled={!isEditable}
                   />
                   <TaskTypeField
-                    taskId={task.id}
                     currentType={taskType}
+                    taskId={task.id}
                     setTaskType={(newType) => {
                       setTaskType(newType);
                       logHistory();
                     }}
+                    disabled={!isEditable}
                   />
                 </div>
                 <div className="mt-1">
@@ -104,6 +108,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                       setTitle(newTitle);
                       logHistory();
                     }}
+                    disabled={!isEditable}
                   />
                 </div>
                 <div className="flex items-center space-x-1">
@@ -114,16 +119,18 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                       setStoryPoints(newStoryPoints);
                       logHistory();
                     }}
+                    disabled={!isEditable}
                   />
                   <TaskStatusBadge status={task.status} />
                 </div>
                 <AssigneeField
                   assignee={assignee}
+                  taskId={task.id}
                   setAssignee={(newAssignee) => {
                     setAssignee(newAssignee);
                     logHistory();
                   }}
-                  taskId={task.id}
+                  disabled={!isEditable}
                 />
                 <TaskDescriptionField
                   description={description}
@@ -132,15 +139,16 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     setDescription(newDescription);
                     logHistory();
                   }}
+                  disabled={!isEditable}
                 />
               </div>
               <div className="mt-14 ml-6">
                 {isKanbanBoard ? (
                   <TimeLogs
-                    taskId={task.id}
                     timeLogs={task.timeLogs}
+                    taskId={task.id}
                     members={members}
-                    assignee={assignee}
+                    assignee={assignee || members[0]}
                   />
                 ) : (
                   <HistoryLogs
@@ -154,22 +162,29 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
               <div className="flex justify-between items-center">
                 <TaskProjectStageField
                   projectStage={projectStage}
+                  taskId={task.id}
                   setProjectStage={(newStage) => {
                     setProjectStage(newStage);
                     logHistory();
                   }}
-                  taskId={task.id}
+                  disabled={!isEditable}
                 />
                 <div className="flex items-center space-x-2 justify-end">
                   <TaskTagField
                     selectedTags={selectedTags}
+                    taskId={task.id}
                     onTagChange={(newTags) => {
                       setSelectedTags(newTags);
                       logHistory();
                     }}
-                    taskId={task.id}
+                    disabled={!isEditable}
                   />
-                  <DeleteButton taskId={task.id} closeDialog={onClose} />
+                  {isEditable && (
+                    <DeleteButton
+                      taskId={task.id}
+                      closeDialog={onClose || (() => {})}
+                    />
+                  )}
                 </div>
               </div>
             </div>

@@ -16,17 +16,20 @@ interface AssigneeFieldProps {
   assignee: Member;
   setAssignee: (newAssignee: Member) => void;
   taskId?: string;
+  disabled?: boolean;
 }
 
 export const AssigneeField = ({
   assignee,
   setAssignee,
   taskId,
+  disabled = false,
 }: AssigneeFieldProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const members = useMembers();
 
   const handleAssigneeChange = async (newAssignee: Member) => {
+    if (disabled) return; // Prevent changes if disabled
     setAssignee(newAssignee);
     setIsDropdownOpen(false);
 
@@ -48,26 +51,35 @@ export const AssigneeField = ({
         Assignee
       </p>
       <div className="flex space-x-2 w-full items-center">
-        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+        <DropdownMenu
+          open={isDropdownOpen && !disabled}
+          onOpenChange={setIsDropdownOpen}
+        >
           <DropdownMenuTrigger asChild>
             <div
-              className="cursor-pointer flex space-x-2 items-center rounded-lg hover:bg-accent/50 hover:text-accent-foreground transition-all py-2 px-2"
-              onClick={() => setIsDropdownOpen(true)}
+              className={`flex space-x-2 items-center rounded-lg py-2 px-2 ${
+                disabled
+                  ? ""
+                  : "cursor-pointer hover:bg-accent/50 hover:text-accent-foreground transition-all"
+              }`}
+              onClick={() => !disabled && setIsDropdownOpen(true)} // Prevent dropdown opening if disabled
             >
               <UserAvatar member={assignee} showName />
             </div>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="start">
-            {members.map((member) => (
-              <DropdownMenuItem
-                key={member.id}
-                onClick={() => handleAssigneeChange(member)}
-              >
-                <UserAvatar member={member} showName />
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
+          {!disabled && (
+            <DropdownMenuContent align="start">
+              {members.map((member) => (
+                <DropdownMenuItem
+                  key={member.id}
+                  onClick={() => handleAssigneeChange(member)}
+                >
+                  <UserAvatar member={member} showName />
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          )}
         </DropdownMenu>
       </div>
     </div>

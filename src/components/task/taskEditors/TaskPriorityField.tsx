@@ -17,10 +17,12 @@ export function TaskPriorityField({
   priority,
   setPriority,
   taskId,
+  disabled = false,
 }: {
   priority: Priority;
   setPriority: (priority: Priority) => void;
   taskId?: string;
+  disabled?: boolean;
 }) {
   const handlePriorityChange = async (value: string) => {
     const newPriority = value as Priority;
@@ -39,30 +41,37 @@ export function TaskPriorityField({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          className={`${priorityBgColor} ${priorityTextColor} font-bold hover:${priorityBgColor} hover:${priorityTextColor}`}
+          className={`${priorityBgColor} ${priorityTextColor} font-bold hover:${priorityBgColor} hover:${priorityTextColor} ${
+            disabled ? "cursor-default" : "cursor-pointer"
+          }`}
         >
           {priority}
-          <ChevronDown className="ml-1 w-5 h-5" />
+
+          {!disabled && <ChevronDown className="ml-1 w-5 h-5" />}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>Task Priority</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup
-          value={priority}
-          onValueChange={handlePriorityChange}
-        >
-          <DropdownMenuRadioItem value={Priority.Important}>
-            Important
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value={Priority.Urgent}>
-            Urgent
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value={Priority.Low}>
-            Low
-          </DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
+
+      {/* Disable the entire DropdownMenuContent when disabled */}
+      {!disabled && (
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Task Priority</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup
+            value={priority}
+            onValueChange={handlePriorityChange}
+          >
+            <DropdownMenuRadioItem value={Priority.Important}>
+              Important
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value={Priority.Urgent}>
+              Urgent
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value={Priority.Low}>
+              Low
+            </DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      )}
     </DropdownMenu>
   );
 }

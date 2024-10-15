@@ -70,7 +70,9 @@ export function MembersTable({
     );
     const numberOfDays = filteredHoursWorked.length;
 
-    return numberOfDays > 0 ? (totalHours / numberOfDays).toFixed(2) : "0";
+    const avgHours =
+      numberOfDays > 0 ? (totalHours / numberOfDays).toFixed(2) : "0";
+    return avgHours === "0.00" ? "0" : avgHours;
   };
 
   const handleGraphClick = (member: Member) => {
