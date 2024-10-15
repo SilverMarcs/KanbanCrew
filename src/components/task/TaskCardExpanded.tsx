@@ -82,12 +82,12 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
               <div className="text-start">
                 <div className="flex space-x-3">
                   <TaskPriorityField
+                    taskId={task.id}
                     priority={priority}
                     setPriority={(newPriority) => {
                       setPriority(newPriority);
                       logHistory();
                     }}
-                    taskId={task.id}
                     disabled={!isEditable}
                   />
                   <TaskTypeField
@@ -97,6 +97,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                       setTaskType(newType);
                       logHistory();
                     }}
+                    disabled={!isEditable}
                   />
                 </div>
                 <div className="mt-1">
