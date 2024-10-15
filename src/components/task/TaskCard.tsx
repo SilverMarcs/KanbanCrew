@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Scroll, Bug } from "lucide-react";
 import { TaskCardExpanded } from "./TaskCardExpanded";
 import { Task } from "@/models/Task";
-import { Member } from "@/models/Member";
 import { getPriorityColor } from "@/models/Priority";
 import { TagDot } from "./TagDot";
 import { truncateText } from "@/lib/utils";
