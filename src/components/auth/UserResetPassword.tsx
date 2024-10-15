@@ -5,33 +5,51 @@ import { Button } from "@/components/ui/button";
 import { updateDoc, doc, arrayUnion } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { ForgotPasswordButton } from "@/components/auth/ForgotPasswordButton";
+import { useToast } from "@/components/ui/use-toast";
 
 export function UserResetPassword() {
+  const { toast } = useToast(); // Hook for toasts
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const handlePasswordResetRequest = async () => {
-    const adminDocId = "6HNXdtPtvx2WlLp2e3HT";
+  const validateEmail = (email: string) => {
+    return email.trim() !== "" && email.includes("@");
+  };
 
+  const handlePasswordResetRequest = async () => {
+    if (!validateEmail(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const adminDocId = "6HNXdtPtvx2WlLp2e3HT";
     const adminRef = doc(db, "admin", adminDocId);
 
     try {
       await updateDoc(adminRef, {
         emailNeedingRecovery: arrayUnion(email),
       });
-      setMessage("Password recovery request recorded!");
-      setError("");
-      setEmail("");
+      toast({
+        title: "Success",
+        description: "Password recovery request recorded!",
+        variant: "default", // You can use 'default' or any other variant
+      });
+      setEmail(""); // Clear email after successful request
       setTimeout(() => {
         setIsOpen(false); // Close the modal after delay
-        setMessage("");
       }, 2000);
     } catch (error) {
-      console.error("Error recording password recovery request", error);
-      setError("Failed to record password recovery request");
-      setMessage("");
+      toast({
+        title: "Error",
+        description: "Failed to record password recovery request.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -56,8 +74,6 @@ export function UserResetPassword() {
           <Button onClick={handlePasswordResetRequest}>
             Send Password Reset Request
           </Button>
-          {message && <p className="text-sm text-green-500 mt-2 mb-1">{message}</p>}
-          {error && <p className="text-sm text-red-500 mt-2 mb-1">{error}</p>}
         </DialogContent>
       </Dialog>
     </>
