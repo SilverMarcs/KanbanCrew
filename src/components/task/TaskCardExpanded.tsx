@@ -140,7 +140,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     taskId={task.id}
                     timeLogs={task.timeLogs}
                     members={members}
-                    assignee={assignee || members[0]}
+                    assignee={assignee}
                   />
                 ) : (
                   <HistoryLogs
@@ -169,10 +169,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     }}
                     taskId={task.id}
                   />
-                  <DeleteButton
-                    taskId={task.id}
-                    closeDialog={onClose || (() => {})}
-                  />
+                  <DeleteButton taskId={task.id} closeDialog={onClose} />
                 </div>
               </div>
             </div>

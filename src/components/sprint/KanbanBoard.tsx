@@ -76,10 +76,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                   ref={provided.innerRef}
                   className="p-4 rounded-lg min-h-[500px] kanban-board"
                 >
-                  <h2
-                    className="text-xl font-semibold mb-4 drop-shadow"
-                    // style={{ color: "#FCE79C" }}
-                  >
+                  <h2 className="text-xl font-semibold mb-4 drop-shadow">
                     {status}
                   </h2>
                   {tasks.map((task, index) => (
