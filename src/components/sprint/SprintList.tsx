@@ -21,7 +21,7 @@ const SprintList: React.FC = () => {
         {sortedSprints.map((sprint) => (
           <div
             key={sprint.id}
-
+            className="hover:scale-105 transition-transform duration-300"   
           >
             <SprintCard sprint={sprint} />
           </div>
