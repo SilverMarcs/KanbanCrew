@@ -47,6 +47,29 @@ export const MemberEdit: React.FC<MemberEditProps> = ({ member, onClose }) => {
     }
   };
 
+  const handleResetPassword = async () => {
+    setIsLoading(true);
+    try {
+      const result = await resetUserPassword(member.id, member.email);
+      if (result.success) {
+        toast({
+          title: "Password Reset",
+          description: `Password reset for ${firstName} ${lastName} to the default password.`,
+        });
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error('Failed to reset password:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reset password. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -63,8 +86,23 @@ export const MemberEdit: React.FC<MemberEditProps> = ({ member, onClose }) => {
             <label className="block text-sm font-medium text-gray-700">Last Name</label>
             <Input value={lastName} onChange={e => setLastName(e.target.value)} className="mt-1" />
           </div>
+          <div className="flex justify-between items-center mt-4">
+            <Button 
+              onClick={handleResetPassword} 
+              variant="outline"
+              disabled={isLoading}
+            >
+              Reset to Default Password
+            </Button>
+            <div className="space-x-2">
+              <Button onClick={onClose} variant="outline" disabled={isLoading}>Cancel</Button>
+              <Button onClick={saveChanges} disabled={isLoading}>
+                {isLoading ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
   );
-};  
+};                     
