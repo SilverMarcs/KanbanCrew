@@ -1,7 +1,6 @@
 import { useSprints } from "@/hooks/useSprints";
 import { CreateSprintCard } from "./CreateSprintCard";
 import SprintCard from "./SprintCard";
-import { AnimatePresence, motion } from "framer-motion";
 
 const SprintList: React.FC = () => {
   const sprints = useSprints();
