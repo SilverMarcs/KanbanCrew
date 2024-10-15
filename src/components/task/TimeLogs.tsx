@@ -136,7 +136,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({
                   {getRelativeTime(log.time.toDate())}
                 </div>
                 <div className="flex items-center space-x-1">
-                  <div className="text-black font-bold">
+                  <div className="font-bold">
                     {getMemberName(members, assignee.id).firstName}{" "}
                     {getMemberName(members, assignee.id).lastName}
                   </div>
