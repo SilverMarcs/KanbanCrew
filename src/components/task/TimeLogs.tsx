@@ -1,5 +1,5 @@
 import { Timer } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TimeLog } from "@/models/TimeLog";
@@ -16,7 +16,7 @@ import { CalendarIcon, Plus } from "lucide-react";
 import { format, isSameDay } from "date-fns";
 import { getMemberName, formatTime } from "@/lib/utils";
 import { db } from "@/lib/firebaseConfig";
-import { updateDoc, Timestamp, doc } from "firebase/firestore";
+import { updateDoc, Timestamp, doc, getDoc } from "firebase/firestore";
 
 interface TimeLogsProps {
   timeLogs: TimeLog[];
@@ -56,37 +56,7 @@ const TimeLogs: React.FC<TimeLogsProps> = ({
       0
     );
     setTimeSpent(totalTime);
-  }, [timeLogs, date, assignee.id]);
-
-  const updateTimeLogs = async (
-    assignee: Member,
-    taskId: string,
-    timeLogged: number,
-    daysAgo: number
-  ) => {
-    const taskRef = doc(db, "tasks", taskId);
-
-    // Create a new Date object and set it to the desired day
-    const date = new Date();
-    date.setDate(date.getDate() - daysAgo); // Set to the previous day or any other day by changing daysAgo
-
-    const newLog = {
-      assignee: assignee, // members (logged in user)
-      taskId: taskId, // The task for which time is being logged
-      time: date, // The timestamp of when the time was logged
-      timeLogged: timeLogged, // Time logged in seconds
-    };
-
-    const updatedTimeLogs = [...timeLogs, newLog];
-
-    try {
-      await updateDoc(taskRef, {
-        timeLogs: updatedTimeLogs,
-      });
-    } catch (error) {
-      console.error("Error adding time log: ", error);
-    }
-  };
+  }, [timeLogs, date, assignee]);
 
   const handleLogTime = async () => {
     // Default values are used if the user leaves any input empty

@@ -65,12 +65,14 @@ export const CreateTaskCard = () => {
       storyPoints,
       priority,
       tags,
-      assignee: doc(db, "members", assignee!.id), // TODO: shouldnt need such complexity
+      assignee: assignee, // TODO: shouldnt need such complexity
       description,
       projectStage,
       status: defaultStatus,
       type,
       creationDate: Timestamp.now(),
+      historyLogs: [],
+      timeLogs: [],
     };
 
     // Add the new task to Firebase

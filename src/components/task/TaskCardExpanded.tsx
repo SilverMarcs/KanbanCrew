@@ -140,7 +140,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     taskId={task.id}
                     timeLogs={task.timeLogs}
                     members={members}
-                    assignee={assignee || members[0]}
+                    assignee={assignee}
                   />
                 ) : (
                   <HistoryLogs

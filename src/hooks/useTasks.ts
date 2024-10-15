@@ -27,6 +27,7 @@ export const useTasks = () => {
             const assigneeDoc = await getDoc(data.assignee);
             if (assigneeDoc.exists()) {
               assignee = assigneeDoc.data() as Member;
+              assignee.id = assigneeDoc.id;
             }
           }
 
