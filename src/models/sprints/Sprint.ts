@@ -1,6 +1,5 @@
 import { SprintStatus } from "@/models/sprints/SprintStatus";
-import { DocumentReference, Timestamp } from "firebase/firestore";
-import { Task } from "../Task";
+import { Timestamp } from "firebase/firestore";
 
 export interface Sprint {
   id: string;
