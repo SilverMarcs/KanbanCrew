@@ -26,6 +26,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useTasks } from "@/hooks/useTasks";
+import { ReassignTasksDialog } from "./ReassignTasksDialog";
 
 interface MemberEditProps {
   member: Member;
@@ -37,6 +39,8 @@ export const MemberEdit: React.FC<MemberEditProps> = ({ member, onClose }) => {
   const [lastName, setLastName] = useState(member.lastName);
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showReassignDialog, setShowReassignDialog] = useState(false);
+  const tasks = useTasks();
 
   const saveChanges = async () => {
     setIsLoading(true);
@@ -90,6 +94,18 @@ export const MemberEdit: React.FC<MemberEditProps> = ({ member, onClose }) => {
   };
 
   const handleDeleteMember = () => {
+    const assignedTasks = tasks.filter(
+      (task) => task.assignee.id === member.id
+    );
+    if (assignedTasks.length > 0) {
+      setShowReassignDialog(true);
+    } else {
+      setShowDeleteConfirm(true);
+    }
+  };
+
+  const handleReassignComplete = () => {
+    setShowReassignDialog(false);
     setShowDeleteConfirm(true);
   };
 
@@ -192,6 +208,13 @@ export const MemberEdit: React.FC<MemberEditProps> = ({ member, onClose }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {showReassignDialog && (
+        <ReassignTasksDialog
+          member={member}
+          onClose={() => setShowReassignDialog(false)}
+          onComplete={handleReassignComplete}
+        />
+      )}
     </Dialog>
   );
 };
