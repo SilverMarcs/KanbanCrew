@@ -51,14 +51,22 @@ export const MemberDetails = ({ memberId }: { memberId: string }) => {
 
     // Fill missing dates with 0 hours
     return allDates.map((date) => {
-      const entry = member.hoursWorked.find(
+      // Find all entries that match the current date
+      const entriesForDate = member.hoursWorked.filter(
         (entry) =>
           format(entry.date.toDate(), "yyyy-MM-dd") ===
           format(date, "yyyy-MM-dd")
       );
+
+      // Sum the hours for all entries on the same date
+      const totalHoursForDate = entriesForDate.reduce(
+        (sum, entry) => sum + entry.hours,
+        0
+      );
+
       return {
         date: date,
-        hours: entry ? entry.hours : 0,
+        hours: totalHoursForDate,
       };
     });
   };

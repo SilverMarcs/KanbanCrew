@@ -84,10 +84,22 @@ const TimeLogs: React.FC<TimeLogsProps> = ({
     try {
       // Push to Firebase
       await updateDoc(taskRef, {
-        timeLogs: [
-          ...timeLogs, // Existing logs
-          newLog,
-        ],
+        timeLogs: [...timeLogs, newLog],
+      });
+
+      // Update hours worked for member
+      const memberRef = doc(db, "members", assignee.id);
+      const memberDoc = await getDoc(memberRef);
+      const memberData = memberDoc.data();
+      const updatedHoursWorked = memberData
+        ? [
+            ...memberData.hoursWorked,
+            { date: firebaseTimestamp.toDate(), hours: totalSeconds / 3600 },
+          ]
+        : [{ date: firebaseTimestamp.toDate(), hours: totalSeconds / 3600 }];
+
+      await updateDoc(memberRef, {
+        hoursWorked: updatedHoursWorked,
       });
 
       // Update filtered logs
