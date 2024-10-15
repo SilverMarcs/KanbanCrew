@@ -38,11 +38,7 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
                       {...provided.dragHandleProps}
                       className="mb-4"
                     >
-                      <TaskCardCompact
-                        task={task}
-                        members={[]}
-                        isEditable={false}
-                      />
+                      <TaskCardCompact task={task} isEditable={false} />
                     </div>
                   )}
                 </Draggable>

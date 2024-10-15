@@ -11,8 +11,6 @@ interface CompletedSprintProps {
 }
 
 const CompletedSprint: React.FC<CompletedSprintProps> = ({ sprint, tasks }) => {
-  const members = useMembers();
-
   const completedTasks = tasks.filter(
     (task) => task.status === Status.Completed
   );
@@ -42,7 +40,6 @@ const CompletedSprint: React.FC<CompletedSprintProps> = ({ sprint, tasks }) => {
                 <div key={task.id} className="mb-4">
                   <TaskCardCompact
                     task={task}
-                    members={members}
                     isKanbanBoard={true}
                     isEditable={false}
                   />

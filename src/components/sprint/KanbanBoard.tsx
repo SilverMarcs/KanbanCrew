@@ -15,7 +15,6 @@ interface KanbanBoardProps {
 
 const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
   const [tasks, setTasks] = useState(initialTasks);
-  const members = useMembers();
 
   useEffect(() => {
     setTasks(initialTasks);
@@ -116,7 +115,6 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                         >
                           <TaskCardCompact
                             task={task}
-                            members={members}
                             isKanbanBoard={true}
                             isEditable={false}
                           />
