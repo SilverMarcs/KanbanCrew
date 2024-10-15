@@ -125,11 +125,12 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                 </div>
                 <AssigneeField
                   assignee={assignee}
+                  taskId={task.id}
                   setAssignee={(newAssignee) => {
                     setAssignee(newAssignee);
                     logHistory();
                   }}
-                  taskId={task.id}
+                  disabled={!isEditable}
                 />
                 <TaskDescriptionField
                   description={description}
