@@ -1,6 +1,6 @@
-"use client";
-
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Timestamp } from "firebase/firestore";
 import {
   Table,
   TableBody,
@@ -9,14 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChartBarIcon } from "lucide-react";
-import { Timestamp } from "firebase/firestore";
+import { PencilIcon, ChartBarIcon } from "lucide-react";
 import { Member } from "@/models/Member";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
 import { EffortGraph } from "@/components/member/EffortGraph";
 import { eachDayOfInterval, format } from "date-fns";
+import { MemberEdit } from "@/components/admin/MemberEdit";
 
 interface MembersTableProps {
   members: Member[];
@@ -30,6 +29,8 @@ export function MembersTable({
   endDate,
 }: MembersTableProps) {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [showGraph, setShowGraph] = useState(false);
 
   // Function to generate date range and fill missing days with 0 hours
   const generateDateRangeWithHours = (
@@ -63,20 +64,22 @@ export function MembersTable({
     }
 
     const filteredHoursWorked = generateDateRangeWithHours(hoursWorked);
-
     const totalHours = filteredHoursWorked.reduce(
       (sum, entry) => sum + entry.hours,
       0
     );
     const numberOfDays = filteredHoursWorked.length;
+    return numberOfDays > 0 ? (totalHours / numberOfDays).toFixed(2) : "0";
+  };
 
-    const avgHours =
-      numberOfDays > 0 ? (totalHours / numberOfDays).toFixed(2) : "0";
-    return avgHours === "0.00" ? "0" : avgHours;
+  const handleEditClick = (member: Member) => {
+    setSelectedMember(member);
+    setIsEditDialogOpen(true);
   };
 
   const handleGraphClick = (member: Member) => {
     setSelectedMember(member);
+    setShowGraph(true);
   };
 
   return (
@@ -85,8 +88,11 @@ export function MembersTable({
         <TableHeader>
           <TableRow>
             <TableHead className="w-1/4">Member</TableHead>
-            <TableHead className="w-1/4">Avg Working Hours</TableHead>
-            <TableHead className="w-1/6">Effort Graph</TableHead>
+            <TableHead className="w-1/4 text-center">
+              Avg Working Hours
+            </TableHead>
+            <TableHead className="w-1/4 text-center">Effort Graph</TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -98,27 +104,37 @@ export function MembersTable({
                   {member.firstName} {member.lastName}
                 </div>
               </TableCell>
-              <TableCell className="ml-12">
+              <TableCell className="text-center">
                 {calculateAvgHours(member.hoursWorked)}
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 <Button
-                  variant={"secondary"}
+                  variant="secondary"
                   onClick={() => handleGraphClick(member)}
                 >
                   <ChartBarIcon />
+                </Button>
+              </TableCell>
+              <TableCell className="text-center">
+                <Button variant="ghost" onClick={() => handleEditClick(member)}>
+                  <PencilIcon />
                 </Button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
-      {selectedMember && (
+      {selectedMember && showGraph && (
         <EffortGraph
           hoursWorked={selectedMember.hoursWorked}
-          open={!!selectedMember}
-          onClose={() => setSelectedMember(null)}
+          open={showGraph}
+          onClose={() => setShowGraph(false)}
+        />
+      )}
+      {selectedMember && isEditDialogOpen && (
+        <MemberEdit
+          member={selectedMember}
+          onClose={() => setIsEditDialogOpen(false)}
         />
       )}
     </Card>
