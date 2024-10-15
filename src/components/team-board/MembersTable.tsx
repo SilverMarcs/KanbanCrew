@@ -1,6 +1,8 @@
 "use client";
 
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Timestamp } from "firebase/firestore";
 import {
   Table,
   TableBody,
@@ -9,14 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChartBarIcon } from "lucide-react";
-import { Timestamp } from "firebase/firestore";
+import { PencilIcon, ChartBarIcon } from "lucide-react"; // Ensure you have the correct icons for editing and viewing graphs
 import { Member } from "@/models/Member";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
 import { EffortGraph } from "@/components/member/EffortGraph";
-import { eachDayOfInterval, format } from "date-fns";
+import { eachDayOfInterval, format } from "date-fns"; // To generate the interval
+import { MemberEdit } from "@/components/admin/MemberEdit";
 
 interface MembersTableProps {
   members: Member[];
@@ -30,6 +31,8 @@ export function MembersTable({
   endDate,
 }: MembersTableProps) {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [showGraph, setShowGraph] = useState(false);
 
   // Function to generate date range and fill missing days with 0 hours
   const generateDateRangeWithHours = (
@@ -63,7 +66,6 @@ export function MembersTable({
     }
 
     const filteredHoursWorked = generateDateRangeWithHours(hoursWorked);
-
     const totalHours = filteredHoursWorked.reduce(
       (sum, entry) => sum + entry.hours,
       0
@@ -75,8 +77,14 @@ export function MembersTable({
     return avgHours === "0.00" ? "0" : avgHours;
   };
 
+  const handleEditClick = (member: Member) => {
+    setSelectedMember(member);
+    setIsEditDialogOpen(true);
+  };
+
   const handleGraphClick = (member: Member) => {
     setSelectedMember(member);
+    setShowGraph(true);
   };
 
   return (
@@ -84,29 +92,32 @@ export function MembersTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-1/4">Member</TableHead>
-            <TableHead className="w-1/4">Avg Working Hours</TableHead>
-            <TableHead className="w-1/6">Effort Graph</TableHead>
+            <TableHead>Member</TableHead>
+            <TableHead>Avg Working Hours</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {members.map((member) => (
             <TableRow key={member.id}>
-              <TableCell className="flex space-x-4 items-center">
+              <TableCell>
                 <UserAvatar member={member} size="md" />
-                <div>
-                  {member.firstName} {member.lastName}
-                </div>
+                {member.firstName} {member.lastName}
               </TableCell>
-              <TableCell className="ml-12">
-                {calculateAvgHours(member.hoursWorked)}
-              </TableCell>
+              <TableCell>{calculateAvgHours(member.hoursWorked)}</TableCell>
               <TableCell>
                 <Button
-                  variant={"secondary"}
+                  variant="secondary"
                   onClick={() => handleGraphClick(member)}
                 >
-                  <ChartBarIcon />
+                  <ChartBarIcon /> Graph
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleEditClick(member)}
+                  className="ml-2"
+                >
+                  <PencilIcon /> Edit
                 </Button>
               </TableCell>
             </TableRow>
@@ -114,11 +125,18 @@ export function MembersTable({
         </TableBody>
       </Table>
 
-      {selectedMember && (
+      {selectedMember && showGraph && (
         <EffortGraph
           hoursWorked={selectedMember.hoursWorked}
-          open={!!selectedMember}
-          onClose={() => setSelectedMember(null)}
+          open={showGraph}
+          onClose={() => setShowGraph(false)}
+        />
+      )}
+
+      {selectedMember && isEditDialogOpen && (
+        <MemberEdit
+          member={selectedMember}
+          onClose={() => setIsEditDialogOpen(false)}
         />
       )}
     </Card>
