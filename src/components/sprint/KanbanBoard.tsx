@@ -8,6 +8,7 @@ import { useMembers } from "@/hooks/useMembers";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
 import { Grip } from "lucide-react";
+import { toast } from "../ui/use-toast";
 
 interface KanbanBoardProps {
   tasks: Task[];
@@ -33,6 +34,10 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
     ),
   };
 
+  const hasTimeLogs = (task: Task): boolean => {
+    return task.timeLogs && task.timeLogs.length > 0;
+  };
+
   const onDragEnd = (result: any) => {
     if (!result.destination) return;
 
@@ -40,6 +45,24 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
 
     if (source.droppableId !== destination.droppableId) {
       const newStatus = destination.droppableId as Status;
+      const task = tasks.find((t) => t.id === draggableId);
+
+      if (!task) return;
+
+      // Check if moving backwards to "Not Started" and task has time logs
+      if (
+        hasTimeLogs(task) &&
+        newStatus === Status.NotStarted &&
+        (task.status === Status.InProgress || task.status === Status.Completed)
+      ) {
+        // Don't allow the move and show a toast
+        toast({
+          title: "Cannot move task",
+          description:
+            "Cannot move task back to Not Started as it has time logged",
+        });
+        return;
+      }
 
       // Optimistic update
       setTasks((prevTasks) =>
@@ -95,7 +118,6 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks: initialTasks }) => {
                           <TaskCardCompact
                             task={task}
                             members={members}
-                            topTrailingChild={<Grip size={20} color="black" />}
                             isKanbanBoard={true}
                           />
                         </div>

@@ -34,7 +34,7 @@ export default function ProductBacklog() {
     <div>
       <div className="flex justify-between items-center">
         <h1 className="text-5xl font-bold">Product Backlog</h1>
-        <div className="flex space-x-4">
+        <div className="flex-col lg:flex-row space-x-4 ">
           <TagFilter
             selectedTags={selectedTags}
             onTagChange={setSelectedTags}
@@ -42,7 +42,7 @@ export default function ProductBacklog() {
           <SortButton onSortChange={handleSortChange} />
         </div>
       </div>
-      <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
+      <div className="mt-20 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10 place-items-center">
         {filteredAndSortedTasks.map((task: Task) => (
           <TaskCard
             key={task.id}
