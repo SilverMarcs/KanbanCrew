@@ -29,11 +29,14 @@ export function WelcomeSection() {
   };
 
   return (
-    <div className="w-2/3 bg-background flex-col justify-between flex p-8">
-      <div className="flex items-center space-x-2">
-        <Layers className="h-6 w-6" />
-        <span className="font-bold text-xl">KanbanCrew Inc</span>
+    <div className="w-2/3 flex flex-col justify-between p-8 bg-gradient-to-b from-gray-800 to-[#0f121a] h-screen">
+      {/* Top Section */}
+      <div className="flex flex-col text-center">
+        <h1 className="text-6xl font-bold text-teal-500">Welcome</h1>
+        <p className="text-lg text-secondary-foreground text-center">Be productive. Be efficient. Be AGILE.</p>
       </div>
+
+      {/* Centered Slideshow */}
       <div className="relative w-full h-96">
         {images.map((img, index) => (
           <div
@@ -63,10 +66,11 @@ export function WelcomeSection() {
           <ChevronRight className="h-6 w-6" />
         </button>
       </div>
-      <div className="space-y-2">
-        <p className="text-sm text-muted-foreground">
-          Streamline your project management with our intuitive Kanban board system.
-        </p>
+
+      {/* Bottom Section */}
+      <div className="flex items-start space-x-2 mt-4">
+        <Layers className="h-6 w-6 text-muted-foreground" />
+        <span className="font-bold text-xl text-muted-foreground">KanbanCrew Inc</span>
       </div>
     </div>
   );
