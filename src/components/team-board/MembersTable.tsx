@@ -92,17 +92,21 @@ export function MembersTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Member</TableHead>
-            <TableHead>Avg Working Hours</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="w-1/5">Member</TableHead>
+            <TableHead className="w-1/5">Avg Working Hours</TableHead>
+            <TableHead className="w-1/5">Effort Graph</TableHead>
+            <TableHead className="w-1/5">Edit</TableHead>{" "}
+            {/* New column for Edit */}
           </TableRow>
         </TableHeader>
         <TableBody>
           {members.map((member) => (
             <TableRow key={member.id}>
-              <TableCell>
+              <TableCell className="flex space-x-4 items-center">
                 <UserAvatar member={member} size="md" />
-                {member.firstName} {member.lastName}
+                <div>
+                  {member.firstName} {member.lastName}
+                </div>
               </TableCell>
               <TableCell>{calculateAvgHours(member.hoursWorked)}</TableCell>
               <TableCell>
