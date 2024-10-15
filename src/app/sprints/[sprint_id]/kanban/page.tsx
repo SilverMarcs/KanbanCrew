@@ -18,8 +18,10 @@ const KanbanBoardPage = ({ params }: { params: { sprint_id: string } }) => {
   if (!selectedSprint) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col items-center space-y-12 w-full mt-12">
-      <h1 className="uppercase text-5xl">Kanban Board</h1>
+    <div className="flex flex-col p-16">
+      <h1 className="uppercase text-5xl font-bold text-left mb-12">
+        Kanban Board
+      </h1>
       <KanbanBoard tasks={sprintTasks} />
     </div>
   );

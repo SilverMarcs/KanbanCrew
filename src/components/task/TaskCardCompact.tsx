@@ -12,7 +12,6 @@ import { UserAvatar } from "@/components/UserAvatar";
 
 interface TaskCardCompactProps {
   task: Task;
-  members: Member[];
   isKanbanBoard?: boolean;
   isEditable?: boolean;
 }

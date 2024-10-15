@@ -10,7 +10,7 @@ import { db } from "@/lib/firebaseConfig";
 import { Member } from "@/models/Member";
 import { useMembers } from "@/hooks/useMembers";
 import { UserAvatar } from "../../UserAvatar";
-import { ScrollArea } from "@/components/ui/scroll-area"; // Import ScrollArea
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface AssigneeFieldProps {
   assignee: Member;
@@ -70,11 +70,12 @@ export const AssigneeField = ({
 
           {!disabled && (
             <DropdownMenuContent align="start" className="p-0">
-              <ScrollArea className="mt-1 mb-1 mr-1 h-48"> 
+              <ScrollArea className="mt-1 mb-1 mr-1 h-48">
                 {members.map((member) => (
                   <DropdownMenuItem
                     key={member.id}
                     onClick={() => handleAssigneeChange(member)}
+                    onWheel={(e) => e.stopPropagation()}
                   >
                     <UserAvatar member={member} showName />
                   </DropdownMenuItem>
