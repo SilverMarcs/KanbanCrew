@@ -108,6 +108,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                       setTitle(newTitle);
                       logHistory();
                     }}
+                    disabled={!isEditable}
                   />
                 </div>
                 <div className="flex items-center space-x-1">

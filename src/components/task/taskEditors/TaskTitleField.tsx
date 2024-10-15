@@ -8,12 +8,14 @@ interface TaskTitleFieldProps {
   title: string;
   setTitle: (title: string) => void;
   taskId?: string;
+  disabled?: boolean;
 }
 
 export function TaskTitleField({
   title,
   setTitle,
   taskId,
+  disabled = false,
 }: TaskTitleFieldProps) {
   const [isEditing, setIsEditing] = useState(!taskId);
   const [localTitle, setLocalTitle] = useState(title);
@@ -56,7 +58,7 @@ export function TaskTitleField({
 
   return (
     <div style={{ width: "350px", height: "40px" }}>
-      {isEditing ? (
+      {isEditing && !disabled ? (
         <Input
           ref={inputRef}
           value={localTitle}
@@ -68,8 +70,10 @@ export function TaskTitleField({
         />
       ) : (
         <h2
-          className="text-3xl font-bold cursor-pointer truncate"
-          onClick={() => setIsEditing(true)}
+          className={`text-3xl font-bold truncate ${
+            disabled ? "" : "cursor-pointer"
+          }`}
+          onClick={() => !disabled && setIsEditing(true)} // Prevent entering edit mode if disabled
           style={{ width: "350px", height: "35px", whiteSpace: "nowrap" }}
         >
           {truncateText(title, 26)}
