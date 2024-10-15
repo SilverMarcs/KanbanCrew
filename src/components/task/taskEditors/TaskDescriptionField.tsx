@@ -7,12 +7,14 @@ interface TaskDescriptionFieldProps {
   description: string;
   setDescription: (description: string) => void;
   taskId?: string;
+  disabled?: boolean;
 }
 
 export function TaskDescriptionField({
   description,
   setDescription,
   taskId,
+  disabled = false,
 }: TaskDescriptionFieldProps) {
   const [isEditing, setIsEditing] = useState(!taskId);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -45,29 +47,32 @@ export function TaskDescriptionField({
     <div className="inline-block mt-4">
       <p className="font-bold text-xl">Description</p>
       <div style={{ width: "350px", height: "100px" }}>
-        {isEditing ? (
+        {isEditing && !disabled ? (
           <Textarea
             ref={textareaRef}
             className="mt-2 border-2 p-1"
             value={description}
             onChange={(e) => handleChange(e.target.value)}
             onBlur={() => setIsEditing(false)}
+            disabled={disabled} // Disable textarea if disabled is true
             style={{
               boxShadow: "none",
-              height: "80px", // Match the height of the non-editing <p>
+              height: "80px",
             }}
           />
         ) : (
           <p
             ref={descriptionRef}
-            className="text-muted-foreground mt-2 cursor-pointer text-sm overflow-hidden"
-            onClick={() => setIsEditing(true)}
+            className={`text-muted-foreground mt-2 text-sm overflow-hidden ${
+              disabled ? "" : "cursor-pointer"
+            }`}
+            onClick={() => !disabled && setIsEditing(true)} // Prevent entering edit mode if disabled
             style={{
-              height: "80px", // Ensure this matches the Textarea height
+              height: "80px",
               maxHeight: "80px",
-              whiteSpace: "pre-wrap", // Keep line breaks
-              overflowY: "hidden", // Hide overflow
-              textOverflow: "ellipsis", // Add ellipsis when content overflows
+              whiteSpace: "pre-wrap",
+              overflowY: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
             {description || "No description available. Click to add one."}

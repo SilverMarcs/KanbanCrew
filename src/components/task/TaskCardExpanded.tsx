@@ -139,6 +139,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     setDescription(newDescription);
                     logHistory();
                   }}
+                  disabled={!isEditable}
                 />
               </div>
               <div className="mt-14 ml-6">
