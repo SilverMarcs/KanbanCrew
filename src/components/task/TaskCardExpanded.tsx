@@ -169,10 +169,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     }}
                     taskId={task.id}
                   />
-                  <DeleteButton
-                    taskId={task.id}
-                    closeDialog={onClose || (() => {})}
-                  />
+                  <DeleteButton taskId={task.id} closeDialog={onClose} />
                 </div>
               </div>
             </div>

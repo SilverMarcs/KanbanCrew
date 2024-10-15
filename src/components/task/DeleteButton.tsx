@@ -21,15 +21,12 @@ interface DeleteButtonProps {
 }
 
 const DeleteButton: FC<DeleteButtonProps> = ({ taskId, closeDialog }) => {
-  const router = useRouter();
-
   // Function to handle deletion
   const handleDelete = async () => {
     try {
       const taskDocRef = doc(db, "tasks", taskId);
       await deleteDoc(taskDocRef);
       closeDialog(); // Close the dialog
-      router.push("/"); // Redirect to home page after deletion
     } catch (error) {
       console.error("Error deleting task:", error);
     }

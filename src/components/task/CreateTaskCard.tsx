@@ -65,7 +65,7 @@ export const CreateTaskCard = () => {
       storyPoints,
       priority,
       tags,
-      assignee: assignee, // TODO: shouldnt need such complexity
+      assignee: doc(db, "members", assignee!.id), // TODO: shouldnt need
       description,
       projectStage,
       status: defaultStatus,
