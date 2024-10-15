@@ -1,23 +1,18 @@
 // @/components/Sidebar.tsx
 "use client";
 
-import {
-  Component,
-  Zap,
-  ContactRound,
-  Palette,
-  Sun,
-  LogOut,
-} from "lucide-react";
+import { Component, Zap, UserCog, CircleUser } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeCommandBox } from "@/components/themes/ThemeCommandBox";
 import { ThemeToggle } from "@/components/themes/ThemeToggle";
 import { SignOut } from "@/components/auth/SignOut";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 const Sidebar = () => {
   const pathname = usePathname();
+  const { member } = useAuthContext(); //
 
   const size = 33;
 
@@ -25,7 +20,8 @@ const Sidebar = () => {
   const menuItems = [
     { icon: <Component size={size} />, link: "/productbacklog" },
     { icon: <Zap size={size} />, link: "/sprints" },
-    { icon: <ContactRound size={size} />, link: "/team-board" },
+    { icon: <CircleUser size={size} />, link: `/${member?.id}` },
+    { icon: <UserCog size={size} />, link: "/admin" },
   ];
 
   return (
@@ -42,7 +38,7 @@ const Sidebar = () => {
             href={item.link}
             className={cn(
               "p-2 rounded-md",
-              pathname === item.link
+              pathname.startsWith(item.link)
                 ? "bg-primary/95 text-primary-foreground"
                 : "text-secondary-foreground"
             )}
