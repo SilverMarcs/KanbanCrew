@@ -14,7 +14,6 @@ import { UserAvatar } from "@/components/UserAvatar";
 interface TaskCardCompactProps {
   task: Task;
   members: Member[];
-  topTrailingChild?: React.ReactNode;
   isKanbanBoard?: boolean;
 }
 
