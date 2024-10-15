@@ -162,11 +162,12 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
               <div className="flex justify-between items-center">
                 <TaskProjectStageField
                   projectStage={projectStage}
+                  taskId={task.id}
                   setProjectStage={(newStage) => {
                     setProjectStage(newStage);
                     logHistory();
                   }}
-                  taskId={task.id}
+                  disabled={!isEditable}
                 />
                 <div className="flex items-center space-x-2 justify-end">
                   <TaskTagField
