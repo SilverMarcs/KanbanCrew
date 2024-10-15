@@ -21,7 +21,22 @@ export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
 
+  const isValidEmail = (email: string) => {
+    // Basic email validation regex
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
   const handleSignIn = async () => {
+    if (!isValidEmail(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
@@ -54,7 +69,7 @@ export default function SignInForm() {
     } catch (error) {
       console.error("Error checking email methods:", error);
       toast({
-        title: "Error",
+        title: "Invalid Email",
         description: "An error occurred. Please try again.",
         variant: "destructive",
       });
@@ -85,7 +100,7 @@ export default function SignInForm() {
               onChange={(e) => setPassword(e.target.value)}
             />
           )}
-          <UserResetPassword/>
+          <UserResetPassword />
         </div>
         <Button
           onClick={showPassword ? handleSignIn : () => setShowPassword(true)}
