@@ -17,13 +17,7 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
   droppableId,
 }) => (
   <div className="flex-1 min-w-[29rem] max-w-[29rem] rounded-lg p-4 sprint-backlog">
-    {/* Column heading outside of ScrollArea */}
-    <h3
-      className="text-xl font-semibold mb-4 drop-shadow"
-      // style={{ color: "#FCE79C" }}
-    >
-      {title}
-    </h3>
+    <h3 className="text-xl font-semibold mb-4 drop-shadow">{title}</h3>
 
     <Droppable droppableId={droppableId}>
       {(provided) => (
@@ -50,6 +44,7 @@ const SprintBacklogTaskColumn: React.FC<SprintBacklogTaskColumnProps> = ({
                         task={task}
                         members={[]}
                         topTrailingChild={<Grip size={20} />}
+                        isEditable={false}
                       />
                     </div>
                   )}

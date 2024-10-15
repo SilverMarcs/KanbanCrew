@@ -64,15 +64,13 @@ export const StoryPointsField: React.FC<StoryPointsFieldProps> = ({
           className="w-full h-full text-center p-0 text-sm"
           style={{ height: "29px", minHeight: "24px", boxShadow: "none" }}
           autoFocus
-          disabled={disabled} // Disable the input if disabled is true
+          disabled={disabled}
         />
       ) : (
         <div
           onClick={handleClick}
           className={`w-full h-full flex items-center justify-center ${
-            disabled
-              ? "cursor-not-allowed text-gray-400"
-              : "cursor-pointer text-muted-foreground"
+            disabled ? "" : "cursor-pointer text-muted-foreground"
           } font-bold text-sm`}
         >
           {storyPoints} SP
