@@ -31,6 +31,7 @@ interface TaskCardExpandedProps {
   isOpen: boolean;
   onClose: () => void;
   isKanbanBoard?: boolean;
+  isEditable?: boolean;
 }
 
 export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
@@ -38,6 +39,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
   isOpen,
   onClose,
   isKanbanBoard = false,
+  isEditable = true,
 }) => {
   const members = useMembers();
   const { member: currentMember } = useAuthContext();
@@ -86,6 +88,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                       logHistory();
                     }}
                     taskId={task.id}
+                    disabled={!isEditable}
                   />
                   <TaskTypeField
                     taskId={task.id}
@@ -140,7 +143,7 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     taskId={task.id}
                     timeLogs={task.timeLogs}
                     members={members}
-                    assignee={assignee}
+                    assignee={assignee || members[0]}
                   />
                 ) : (
                   <HistoryLogs
@@ -169,7 +172,10 @@ export const TaskCardExpanded: React.FC<TaskCardExpandedProps> = ({
                     }}
                     taskId={task.id}
                   />
-                  <DeleteButton taskId={task.id} closeDialog={onClose} />
+                  <DeleteButton
+                    taskId={task.id}
+                    closeDialog={onClose || (() => {})}
+                  />
                 </div>
               </div>
             </div>
